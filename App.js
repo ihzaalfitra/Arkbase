@@ -16,7 +16,8 @@ class ResourceCalculator extends Component {
         targetedValue: 0,
         sanityUsed: 0,
         droppedAmount: 0,
-        result: 0
+        result: 0,
+        overflow: 0
     };
 
     changeCalculationParameter(stageIndex) {
@@ -34,6 +35,7 @@ class ResourceCalculator extends Component {
         let runAmount = target / drop;
         if(runAmount - Math.floor(runAmount) != 0) {
             runAmount = Math.floor(runAmount) + 1;
+            this.setState({overflow: (runAmount*drop) - target});
         }
         this.setState({result: runAmount});
         
@@ -75,6 +77,8 @@ class ResourceCalculator extends Component {
                     <Text>Calulate</Text>
                 </TouchableOpacity>
                 <Text>You need {parseInt(this.state.result)}x run</Text>
+                <Text>You'll need need {parseInt(this.state.result) * parseInt(this.state.sanityUsed)} sanity</Text>
+                <Text>You'll get extra {parseInt(this.state.overflow)} LMD</Text>
             </View>
             
         )
