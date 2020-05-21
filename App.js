@@ -24,10 +24,10 @@ class ResourceCalculator extends Component {
 
     changeCalculationParameter(stageIndex) {
         switch(stageIndex){
-            case "-1":
+            case -1:
                 this.setState({sanityUsed: 0}, this.setState({droppedAmount: 0}));
                 break;
-            case "5":
+            case 5:
                 this.setState({sanityUsed: 30}, this.setState({droppedAmount: 7500}));
                 break;
         }
