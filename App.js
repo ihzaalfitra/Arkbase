@@ -14,31 +14,38 @@ import {
 class ResourceCalculator extends Component {
     state = {
         resource: "none",
-        stage: -1,
-        targetedValue: 0,
-        sanityUsed: 0,
-        droppedAmount: 0,
-        result: 0,
+        lmdStage: -1,
+        lmdTargetedValue: 0,
+        lmdSanityUsed: 0,
+        lmdDropAmount: 0,
+        lmdTotalRun: 0,
+        lmdResult: 0,
+        lmdOverflow: 0,
         operatorRarity:-1
     };
 
     changeCalculationParameter(stageIndex) {
-        switch(stageIndex){
+        let stageInt = parseInt(stageIndex);
+        switch(stageInt){
             case -1:
-                this.setState({sanityUsed: 0}, this.setState({droppedAmount: 0}));
+                this.setState({lmdSanityUsed: 0}, this.setState({lmdDropAmount: 0}));
                 break;
             case 5:
-                this.setState({sanityUsed: 30}, this.setState({droppedAmount: 7500}));
+                this.setState({lmdSanityUsed: 30}, this.setState({lmdDropAmount: 7500}));
                 break;
         }
     }
 
     calculateLMD(target, sanity, drop) {
         let runAmount = target / drop;
+        let overflow = 0;
         if(runAmount - Math.floor(runAmount) != 0) {
             runAmount = Math.floor(runAmount) + 1;
         }
-        this.setState({result: runAmount});
+        overflow = (drop*runAmount) - target;
+        this.setState({lmdResult: runAmount});
+        this.setState({lmdTotalRun: runAmount*sanity});
+        this.setState({lmdOverflow: overflow});
 
     }
 
@@ -51,7 +58,7 @@ class ResourceCalculator extends Component {
     resourceExp = () => {
         return(
           <View style={picker.container}>
-              <View style={picker.underline}>
+              {/* <View style={picker.underline}>
                 <Picker
                     style={picker.style}
                     selectedValue={this.state.stage}
@@ -82,7 +89,7 @@ class ResourceCalculator extends Component {
                     style={styles.input}
                     placeholder="Current level"
                     value={this.input}
-                    onChangeText={(input) => this.setState({targetedValue: input})}
+                    onChangeText={(input) => this.setState({lmdTargetedValue: input})}
                     keyboardType="numeric"
               />
               <View style={picker.underline}>
@@ -101,7 +108,7 @@ class ResourceCalculator extends Component {
                     style={styles.input}
                     placeholder="Target level"
                     value={this.input}
-                    onChangeText={(input) => this.setState({targetedValue: input})}
+                    onChangeText={(input) => this.setState({lmdTargetedValue: input})}
                     keyboardType="numeric"
               />
               <View style={picker.underline}>
@@ -113,23 +120,10 @@ class ResourceCalculator extends Component {
                     <Picker.Item label="Select stage" value={-1}/>
                     <Picker.Item label="LS-5" value={5}/>
                 </Picker>
-              </View>
-              <TextInput
-                    style={styles.input}
-                    placeholder="Target LMD amount"
-                    value={this.input}
-                    onChangeText={(input) => this.setState({targetedValue: input})}
-                    keyboardType="numeric"
-              />
-              <TouchableOpacity
-                    onPress= {() => this.calculateLMD(parseFloat(this.state.targetedValue), parseFloat(this.state.sanityUsed), parseFloat(this.state.droppedAmount))}
-                    style={styles.button}
-              >
-                  <Text style={styles.buttonText}>Calculate</Text>
-              </TouchableOpacity>
+              </View> */}
               <Text style={styles.textRequire}>Require:</Text>
-              <Text style={styles.textLeft}>{parseInt(this.state.result)} run</Text>
-              <Text style={styles.textLeft}>{parseInt(this.state.result)*30} sanity</Text>
+              <Text style={styles.textLeft}>{parseInt(this.state.lmdResult)} run</Text>
+              <Text style={styles.textLeft}>{parseInt(this.state.lmdResult)*30} sanity</Text>
             </View>
         )
     }
@@ -141,8 +135,8 @@ class ResourceCalculator extends Component {
               <View style={picker.underline}>
                 <Picker
                     style={picker.style}
-                    selectedValue={this.state.stage}
-                    onValueChange={(itemValue, itemIndex) => this.setState({stage: itemValue}, this.changeCalculationParameter(itemValue))}
+                    selectedValue={this.state.lmdStage}
+                    onValueChange={(itemValue, itemIndex) => this.setState({lmdStage: itemValue}, this.changeCalculationParameter(itemValue))}
                 >
                     <Picker.Item label="Select stage" value={-1}/>
                     <Picker.Item label="CE-5" value={5}/>
@@ -152,18 +146,20 @@ class ResourceCalculator extends Component {
                     style={styles.input}
                     placeholder="Target LMD amount"
                     value={this.input}
-                    onChangeText={(input) => this.setState({targetedValue: input})}
+                    onChangeText={(input) => this.setState({lmdTargetedValue: input})}
                     keyboardType="numeric"
               />
               <TouchableOpacity
-                    onPress= {() => this.calculateLMD(parseFloat(this.state.targetedValue), parseFloat(this.state.sanityUsed), parseFloat(this.state.droppedAmount))}
+                    onPress= {() => this.calculateLMD(parseFloat(this.state.lmdTargetedValue), parseFloat(this.state.lmdSanityUsed), parseFloat(this.state.lmdDropAmount))}
                     style={styles.button}
               >
                   <Text style={styles.buttonText}>Calculate</Text>
               </TouchableOpacity>
               <Text style={styles.textRequire}>Require:</Text>
-              <Text style={styles.textLeft}>{parseInt(this.state.result)} run</Text>
-              <Text style={styles.textLeft}>{parseInt(this.state.result)*30} sanity</Text>
+              <Text style={styles.textLeft}>{parseInt(this.state.lmdResult)} run</Text>
+              <Text style={styles.textLeft}>{parseInt(this.state.lmdTotalRun)} sanity</Text>
+              <Text style={styles.textLeft}> </Text>
+              <Text style={styles.textLeft}>You will get {parseInt(this.state.lmdOverflow)} extra LMD</Text>
             </View>
 
         )
@@ -184,8 +180,8 @@ class ResourceCalculator extends Component {
 
     render() {
 
-        let sanityUsed = 0;
-        let droppedAmount = 0;
+        let lmdSanityUsed = 0;
+        let lmdDropAmount = 0;
 
         return(
           // <ScrollView style={{backgroundColor:'#123456',height:'auto'}}>
