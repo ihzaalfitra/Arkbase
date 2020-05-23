@@ -12,7 +12,12 @@ import {
 	Dimensions
 } from 'react-native';
 
+
+
 const contentHeight=Math.round(Dimensions.get('window').height)-100;
+
+
+
 class ResourceCalculator extends Component {
     state = {
 		screenHeight:contentHeight,
@@ -34,6 +39,47 @@ class ResourceCalculator extends Component {
         expOpTargetedLevel: 0
     };
 
+
+
+    //OTHER METHOD
+	changeScreenHeight(itemValue){
+		switch(itemValue){
+			case 'exp':
+				this.setState({screenHeight:700})
+				break;
+			case 'lmd':
+				this.setState({screenHeight:contentHeight})
+				break;
+			default:
+				this.setState({screenHeight:contentHeight})
+				break;
+		}
+    }
+
+    getExpReqAndDiffrence(currentElite, exp) {
+        switch(currentElite){
+            case -1:
+                exp.reqAmountToNextLevel = 0;
+                exp.difference = 0;
+                break;
+            case 0:
+                exp.reqAmountToNextLevel = 100;
+                exp.difference = 17;
+                break;
+            case 1:
+                exp.reqAmountToNextLevel = 120;
+                exp.difference = 52;
+                break;
+            case 2:
+                exp.reqAmountToNextLevel = 191;
+                exp.difference = 112;
+                break;
+        };
+    }
+
+
+
+    //METHOD FOR CHANGING CALCULATION PARAMETER
     changeLmdCalculationParameter(stageIndex) {
         let stageInt = parseInt(stageIndex);
         switch(stageInt){
@@ -58,6 +104,9 @@ class ResourceCalculator extends Component {
         }
     }
 
+    
+
+    //METHOD TO CALCULATE
     calculateLMD(target, sanity, drop) {
         let runAmount = target / drop;
         let overflow = 0;
@@ -72,27 +121,14 @@ class ResourceCalculator extends Component {
     }
 
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanity, drop) {
-        let startingExpReq = 0;
+        let exp = {
+            'req' : 0,
+            'difference' : 0
+        };
+        let currentExpReq = 0;
         let expDifference = 0;
         let levelLimit = 0
-        switch(currentElite){
-            case -1:
-                startingExpReq = 0;
-                expDifference = 0;
-                break;
-            case 0:
-                startingExpReq = 100;
-                expDifference = 17;
-                break;
-            case 1:
-                startingExpReq = 120;
-                expDifference = 52;
-                break;
-            case 2:
-                startingExpReq = 191;
-                expDifference = 112;
-                break;
-        };
+        this.getExpReqAndDiffrence(currentElite, exp);
         switch(rarity) {
             case -1:
                 levelLimit = 0;
@@ -114,12 +150,18 @@ class ResourceCalculator extends Component {
         }
         if(currentElite <= targetedElite) {
             if(!(currentElite == targetedElite && currentLevel > targetedLevel)) {
-                console.log("WORKING");
+                for(let level = 2; level <= currentLevel; level++) {
+                    exp.reqAmountToNextLevel += exp.difference;
+                }
+                console.log(exp.reqAmountToNextLevel);
             }
         }
 
     }
 
+    
+
+    //METHOD TO VIEW WHAT RESOURCE USER WANT TO FARM
     resourceNone = () => {
         return(
             <Text style={styles.textLeft}>Please select the resource you want to farm.</Text>
@@ -239,6 +281,9 @@ class ResourceCalculator extends Component {
         )
     }
 
+
+
+    //IMPORTANT METHOD
     checkSelectedResource(selectedResource) {
         switch(selectedResource) {
             case "none":
@@ -251,19 +296,7 @@ class ResourceCalculator extends Component {
                 return this.resourceLmd()
         }
     }
-	changeScreenHeight(itemValue){
-		switch(itemValue){
-			case 'exp':
-				this.setState({screenHeight:700})
-				break;
-			case 'lmd':
-				this.setState({screenHeight:contentHeight})
-				break;
-			default:
-				this.setState({screenHeight:contentHeight})
-				break;
-		}
-	}
+    
     render() {
 
         let lmdSanityUsed = 0;
@@ -301,7 +334,11 @@ class ResourceCalculator extends Component {
     }
 }
 
+
+
 export default ResourceCalculator;
+
+
 
 const styles = StyleSheet.create({
   container: {
