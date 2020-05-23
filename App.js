@@ -8,12 +8,14 @@ import {
     TextInput,
     ScrollView,
     Modal,
-    SafeAreaView
+    SafeAreaView,
+	Dimensions
 } from 'react-native';
 
-
+const contentHeight=Math.round(Dimensions.get('window').height)-100;
 class ResourceCalculator extends Component {
     state = {
+		screenHeight:contentHeight,
         resource: "none",
         lmdStage: -1,
         lmdSanityUsed: 0,
@@ -137,7 +139,6 @@ class ResourceCalculator extends Component {
                         <Picker.Item label="LS-5" value={5}/>
                     </Picker>
                 </View>
-                <Text style={styles.textLeft}>Your Operator:</Text>
                 <View style={picker.underline}>
                     <Picker
                         style={picker.style}
@@ -172,8 +173,6 @@ class ResourceCalculator extends Component {
                     onChangeText={(input) => this.setState({expOpCurrentLevel: input})}
                     keyboardType="numeric"
                 />
-                <Text> </Text>
-                <Text>Your target:</Text>
                 <View style={picker.underline}>
                     <Picker
                         style={picker.style}
@@ -213,7 +212,7 @@ class ResourceCalculator extends Component {
                     selectedValue={this.state.lmdStage}
                     onValueChange={(itemValue, itemIndex) => this.setState({lmdStage: itemValue}, this.changeLmdCalculationParameter(itemValue))}
                 >
-                    <Picker.Item label="Select stage" value={-1}/>
+					<Picker.Item label="Select stage" value={-1}/>
                     <Picker.Item label="CE-5" value={5}/>
                 </Picker>
               </View>
@@ -252,25 +251,41 @@ class ResourceCalculator extends Component {
                 return this.resourceLmd()
         }
     }
-
+	changeScreenHeight(itemValue){
+		switch(itemValue){
+			case 'exp':
+				this.setState({screenHeight:700})
+				break;
+			case 'lmd':
+				this.setState({screenHeight:contentHeight})
+				break;
+			default:
+				this.setState({screenHeight:contentHeight})
+				break;
+		}
+	}
     render() {
 
         let lmdSanityUsed = 0;
         let lmdDropAmount = 0;
 
         return(
-          // <ScrollView style={{backgroundColor:'#123456',height:'auto'}}>
-            <View style={styles.container}>
-                <ScrollView>
-                    <SafeAreaView>
-                    <Text style={styles.header}>Resource Calculator</Text>
+			<View style={{flex:1,backgroundColor:'#000',paddingTop:25}}>
+			<Text style={styles.header}>Resource Calculator</Text>
+			<ScrollView>
+				<View style={{
+					alignItems:'center',
+				    backgroundColor:'#000',
+				    flex:1,
+				    height:this.state.screenHeight
+				}}>
                     <View style={picker.container}>
                       <View style={picker.underline}>
                         <Picker
                           style={picker.style}
                           itemStyle={picker.itemStyle}
                           selectedValue={this.state.resource}
-                          onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue})}
+                          onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue}, this.changeScreenHeight(itemValue))}
                         >
                           <Picker.Item label="Select resource" value={null}/>
                           <Picker.Item label="EXP" value="exp"/>
@@ -278,12 +293,10 @@ class ResourceCalculator extends Component {
                           </Picker>
                       </View>
                       {this.checkSelectedResource(this.state.resource)}
-                    </View>  
-                    </SafeAreaView>
+                    </View>
+                    </View>
                 </ScrollView>
-                
-            </View>
-          // </ScrollView>
+			</View>
         )
     }
 }
