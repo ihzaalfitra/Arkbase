@@ -31,46 +31,59 @@ class ResourceCalculator extends Component {
         expOpCurrentElite: -1,
         expOpCurrentLevel: 0,
         expOpTargetedElite: -1,
-        expOpTargetedLevel: 0
+        expOpTargetedLevel: 0,
+		errorStatement:'',
     };
 
-    changeLmdCalculationParameter(stageIndex) {
-        let stageInt = parseInt(stageIndex);
-        switch(stageInt){
-            case -1:
-                this.setState({lmdSanityUsed: 0}, this.setState({lmdDropAmount: 0}));
-                break;
-            case 5:
-                this.setState({lmdSanityUsed: 30}, this.setState({lmdDropAmount: 7500}));
-                break;
-        }
-    }
+//-----------------------------------------------
+//----------------------GENERAL------------------
+//-----------------------------------------------
 
-    changeExpCalculationParameter(stageIndex) {
-        let stageInt = parseInt(stageIndex);
-        switch(stageInt){
-            case -1:
-                this.setState({expSanityUsed: 0}, this.setState({expDropAmount: 0}));
-                break;
-            case 5:
-                this.setState({expSanityUsed: 30}, this.setState({expDropAmount: 7400}));
-                break;
-        }
-    }
+	checkSelectedResource(selectedResource) {
+		switch(selectedResource) {
+			case "none":
+				return this.resourceNone();
+				break;
+			case "exp":
+				return this.resourceExp();
+				break;
+			case "lmd":
+				return this.resourceLmd()
+		}
+	}
+	changeScreenHeight(itemValue){
+		switch(itemValue){
+			case 'exp':
+				this.setState({screenHeight:700})
+				break;
+			case 'lmd':
+				this.setState({screenHeight:contentHeight})
+				break;
+			default:
+				this.setState({screenHeight:contentHeight})
+				break;
+		}
+	}
 
-    calculateLMD(target, sanity, drop) {
-        let runAmount = target / drop;
-        let overflow = 0;
-        if(runAmount - Math.floor(runAmount) != 0) {
-            runAmount = Math.floor(runAmount) + 1;
-        }
-        overflow = (drop*runAmount) - target;
-        this.setState({lmdTotalRun: runAmount});
-        this.setState({lmdTotalSanity: runAmount*sanity});
-        this.setState({lmdOverflow: overflow});
+    resourceNone = () => {
 
     }
 
+//-----------------------------------------------
+//----------------------EXP----------------------
+//-----------------------------------------------
+
+	changeExpCalculationParameter(stageIndex) {
+		let stageInt = parseInt(stageIndex);
+		switch(stageInt){
+			case -1:
+				this.setState({expSanityUsed: 0}, this.setState({expDropAmount: 0}));
+				break;
+			case 5:
+				this.setState({expSanityUsed: 30}, this.setState({expDropAmount: 7400}));
+				break;
+		}
+	}
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanity, drop) {
         let startingExpReq = 0;
         let expDifference = 0;
@@ -117,15 +130,7 @@ class ResourceCalculator extends Component {
                 console.log("WORKING");
             }
         }
-
     }
-
-    resourceNone = () => {
-        return(
-            <Text style={styles.textLeft}>Please select the resource you want to farm.</Text>
-        )
-    }
-
     resourceExp = () => {
         return(
             <View style={picker.container}>
@@ -202,8 +207,60 @@ class ResourceCalculator extends Component {
         )
     }
 
-    resourceLmd = () => {
+//-----------------------------------------------
+//----------------------LMD----------------------
+//-----------------------------------------------
 
+	changeLmdCalculationParameter(stageIndex) {
+		let stageInt = parseInt(stageIndex);
+		switch(stageInt){
+			case -1:
+				this.setState({lmdSanityUsed: 0}, this.setState({lmdDropAmount: 0}));
+				break;
+			case 5:
+				this.setState({lmdSanityUsed: 30}, this.setState({lmdDropAmount: 7500}));
+				break;
+		}
+	}
+    calculateLMD(target, sanity, drop) {
+        let runAmount = target / drop;
+        let overflow = 0;
+        if(runAmount - Math.floor(runAmount) != 0) {
+            runAmount = Math.floor(runAmount) + 1;
+        }
+        overflow = (drop*runAmount) - target;
+        this.setState({lmdTotalRun: runAmount});
+        this.setState({lmdTotalSanity: runAmount*sanity});
+        this.setState({lmdOverflow: overflow});
+		if (sanity == 0 && drop == 0) {
+			this.setState({errorStatement: 'Please select stage.'})
+		}else if(target == 0 || isNaN(target)){
+			this.setState({errorStatement: 'Target amount cannot be zero or blank.'})
+		}else{
+			this.setState({errorStatement: 'no_error'})
+		}
+    }
+
+	outputLmd = () => {
+
+		if(this.state.errorStatement == 'no_error'){
+			return(
+				<View style={{width:'80%'}}>
+					<Text style={styles.textRequire}>Require:</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.lmdTotalRun)} run</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.lmdTotalSanity)} sanity</Text>
+					<Text style={styles.textLeft}> </Text>
+					<Text style={styles.textLeft}>You will get {parseInt(this.state.lmdOverflow)} extra LMD</Text>
+				</View>
+			)
+		}else{
+			return(
+				null
+			)
+		}
+	}
+
+    resourceLmd = () => {
         return(
           <View style={picker.container}>
               <View style={picker.underline}>
@@ -229,41 +286,18 @@ class ResourceCalculator extends Component {
               >
                   <Text style={styles.buttonText}>Calculate</Text>
               </TouchableOpacity>
-              <Text style={styles.textRequire}>Require:</Text>
-              <Text style={styles.textLeft}>{parseInt(this.state.lmdTotalRun)} run</Text>
-              <Text style={styles.textLeft}>{parseInt(this.state.lmdTotalSanity)} sanity</Text>
-              <Text style={styles.textLeft}> </Text>
-              <Text style={styles.textLeft}>You will get {parseInt(this.state.lmdOverflow)} extra LMD</Text>
+			  <Text style={{color:'#fff'}}>{this.state.lmdTargetedValue}
+			  </Text>
+			  {this.state.errorStatement != 'no_error' && this.state.errorStatement != '' ? <Text style={styles.textError}>{this.state.errorStatement}</Text>: this.outputLmd()}
             </View>
 
         )
     }
 
-    checkSelectedResource(selectedResource) {
-        switch(selectedResource) {
-            case "none":
-                return this.resourceNone();
-                break;
-            case "exp":
-                return this.resourceExp();
-                break;
-            case "lmd":
-                return this.resourceLmd()
-        }
-    }
-	changeScreenHeight(itemValue){
-		switch(itemValue){
-			case 'exp':
-				this.setState({screenHeight:700})
-				break;
-			case 'lmd':
-				this.setState({screenHeight:contentHeight})
-				break;
-			default:
-				this.setState({screenHeight:contentHeight})
-				break;
-		}
-	}
+//-----------------------------------------------
+//----------------------MAIN---------------------
+//-----------------------------------------------
+
     render() {
 
         let lmdSanityUsed = 0;
@@ -303,6 +337,10 @@ class ResourceCalculator extends Component {
 
 export default ResourceCalculator;
 
+//-----------------------------------------------
+//----------------------STYLE--------------------
+//-----------------------------------------------
+
 const styles = StyleSheet.create({
   container: {
     alignItems:'center',
@@ -334,6 +372,12 @@ const styles = StyleSheet.create({
   textLeft: {
     textAlign: 'left',
     color: '#eee',
+    width:'80%',
+    fontSize:16,
+  },
+  textError: {
+    textAlign: 'left',
+    color: '#f22',
     width:'80%',
     fontSize:16,
   },
