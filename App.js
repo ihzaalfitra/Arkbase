@@ -37,13 +37,33 @@ class ResourceCalculator extends Component {
         expOpCurrentLevel: 0,
         expOpTargetedElite: -1,
         expOpTargetedLevel: 0,
+        expTotalExpNeeded: 0,
+        expTotalRun: 0,
+        expTotalSanity: 0,
+        expOverflow: 0,
 		errorStatement:'',
     };
 
 //-----------------------------------------------
 //----------------------GENERAL------------------
 //-----------------------------------------------
+<<<<<<< HEAD
 	//CHANGE SCREEN HEIGHT DEPENDING ON THE RESOURCE SELECTED
+=======
+
+	checkSelectedResource(selectedResource) {
+		switch(selectedResource) {
+			case "none":
+				return this.resourceNone();
+				break;
+			case "exp":
+				return this.resourceExp();
+				break;
+			case "lmd":
+				return this.resourceLmd()
+		}
+	}
+>>>>>>> 8fea701bf866c36908e51c4883323fcbf623a5aa
 	changeScreenHeight(itemValue){
 		switch(itemValue){
 			case 'exp':
@@ -56,6 +76,7 @@ class ResourceCalculator extends Component {
 				this.setState({screenHeight:contentHeight})
 				break;
 		}
+<<<<<<< HEAD
     }
 	//TO CHECK SELECTED RESOURCE
 	checkSelectedResource(selectedResource) {
@@ -95,12 +116,43 @@ class ResourceCalculator extends Component {
                 break;
             case 2:
                 exp.reqAmountToNextLevel = 191;
+=======
+	}
+
+    resourceNone = () => {
+
+    }
+
+//-----------------------------------------------
+//----------------------EXP----------------------
+//-----------------------------------------------
+
+    getExpReqAndDiffrence(currentElite, exp) {
+        switch(currentElite){
+            case -1:
+                exp.req= 0;
+                exp.difference = 0;
+                break;
+            case 0:
+                exp.req = 100;
+                exp.difference = 17;
+                break;
+            case 1:
+                exp.req = 120;
+                exp.difference = 52;
+                break;
+            case 2:
+                exp.req = 191;
+>>>>>>> 8fea701bf866c36908e51c4883323fcbf623a5aa
                 exp.difference = 112;
                 break;
         };
     }
 
+<<<<<<< HEAD
 	//METHOD FOR CHANGING CALCULATION PARAMETER
+=======
+>>>>>>> 8fea701bf866c36908e51c4883323fcbf623a5aa
 	changeExpCalculationParameter(stageIndex) {
 		let stageInt = parseInt(stageIndex);
 		switch(stageInt){
@@ -111,45 +163,117 @@ class ResourceCalculator extends Component {
 				this.setState({expSanityUsed: 30}, this.setState({expDropAmount: 7400}));
 				break;
 		}
+<<<<<<< HEAD
 	}
 
 	//METHOD TO CALCULATE
+=======
+    }
+    
+>>>>>>> 8fea701bf866c36908e51c4883323fcbf623a5aa
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanity, drop) {
         let exp = {
             'req' : 0,
-            'difference' : 0
+            'difference' : 0,
+            'total' : 0
         };
-        let currentExpReq = 0;
-        let expDifference = 0;
-        let levelLimit = 0
+        let rarityLevelLimit;
+        let currentLevelLimit;
         this.getExpReqAndDiffrence(currentElite, exp);
+        let runAmount;
+        let overflow = 0;
         switch(rarity) {
             case -1:
-                levelLimit = 0;
+                rarityLevelLimit = {
+                    'e0' : 0,
+                    'e1' : 0,
+                    'e2' : 0
+                };
                 break;
             case 1:
             case 2:
-                levelLimit = 30;
+                rarityLevelLimit = {
+                    'e0' : 30,
+                    'e1' : 0,
+                    'e2' : 0
+                };
                 break;
             case 3:
-                levelLimit = 40;
+                rarityLevelLimit = {
+                    'e0' : 40,
+                    'e1' : 55,
+                    'e2' : 0
+                };
                 break;
             case 4:
-                levelLimit = 45;
+                rarityLevelLimit = {
+                    'e0' : 45,
+                    'e1' : 60,
+                    'e2' : 70
+                };
                 break;
             case 5:
+                rarityLevelLimit = {
+                    'e0' : 50,
+                    'e1' : 70,
+                    'e2' : 80
+                };
+                break;
             case 6:
-                levelLimit = 50;
+                rarityLevelLimit = {
+                    'e0' : 50,
+                    'e1' : 80,
+                    'e2' : 90
+                };
+                break;
+        }
+        switch(currentElite) {
+            case 0:
+                currentLevelLimit = rarityLevelLimit.e0;
+                break;
+            case 1:
+                currentLevelLimit = rarityLevelLimit.e1;
+                break;
+            case 2:
+                currentLevelLimit = rarityLevelLimit.e2;
                 break;
         }
         if(currentElite <= targetedElite) {
-            if(!(currentElite == targetedElite && currentLevel > targetedLevel)) {
+            if(!(currentElite == targetedElite && currentLevel > targetedLevel) && !(targetedElite - currentElite == 1 && currentLevel == currentLevelLimit && targetedLevel == 1)) {
                 for(let level = 2; level <= currentLevel; level++) {
-                    exp.reqAmountToNextLevel += exp.difference;
+                    exp.req += exp.difference;
                 }
-                console.log(exp.reqAmountToNextLevel);
+                while(!(currentElite == targetedElite && currentLevel == targetedLevel)) {
+                    if(currentElite < targetedElite && currentLevel == currentLevelLimit) {
+                        currentLevel = 1;
+                        currentElite++;
+                        switch(currentElite) {
+                            case 1:
+                                currentLevelLimit = rarityLevelLimit.e1;
+                                break;
+                            case 2:
+                                currentLevelLimit = rarityLevelLimit.e2;
+                                break;
+                        }
+                    }
+                    exp.total += exp.req;
+                    exp.req += exp.difference;
+                    currentLevel++;
+                }
             }
         }
+<<<<<<< HEAD
+=======
+        runAmount = exp.total / drop;
+        if(runAmount - Math.floor(runAmount) != 0) {
+            runAmount = Math.floor(runAmount) + 1;
+        }
+        overflow = (drop*runAmount) - exp.total;
+        this.setState({expTotalExpNeeded: exp.total});
+        this.setState({expTotalRun: runAmount});
+        this.setState({expTotalSanity: runAmount*sanity});
+        this.setState({expOverflow: overflow});
+>>>>>>> 8fea701bf866c36908e51c4883323fcbf623a5aa
     }
 
     resourceExp = () => {
@@ -224,6 +348,12 @@ class ResourceCalculator extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
+                <Text style={styles.textRequire}>Require:</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.expTotalExpNeeded)} exp</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.expTotalRun)} run</Text>
+				<Text style={styles.textLeft}>{parseInt(this.state.expTotalSanity)} sanity</Text>
+				<Text style={styles.textLeft}> </Text>
+				<Text style={styles.textLeft}>You will get {parseInt(this.state.expOverflow)} extra EXP</Text>
             </View>
         )
     }
@@ -310,7 +440,11 @@ class ResourceCalculator extends Component {
                     style={styles.button}
               >
                   <Text style={styles.buttonText}>Calculate</Text>
+<<<<<<< HEAD
               </TouchableOpacity>
+=======
+              </TouchableOpacity>   
+>>>>>>> 8fea701bf866c36908e51c4883323fcbf623a5aa
 			  {this.state.errorStatement != 'no_error' && this.state.errorStatement != '' ? <Text style={styles.textError}>{this.state.errorStatement}</Text>: this.outputLmd()}
             </View>
 
@@ -321,7 +455,10 @@ class ResourceCalculator extends Component {
 //----------------------MAIN---------------------
 //-----------------------------------------------
 
+<<<<<<< HEAD
     //IMPORTANT METHOD
+=======
+>>>>>>> 8fea701bf866c36908e51c4883323fcbf623a5aa
     render() {
 
         let lmdSanityUsed = 0;
