@@ -37,67 +37,16 @@ class ResourceCalculator extends Component {
         expOpCurrentLevel: 0,
         expOpTargetedElite: -1,
         expOpTargetedLevel: 0,
+        expTotalExpNeeded: 0,
+        expTotalRun: 0,
+        expTotalSanity: 0,
+        expOverflow: 0,
 		errorStatement:'',
     };
 
-<<<<<<< HEAD
 //-----------------------------------------------
 //----------------------GENERAL------------------
 //-----------------------------------------------
-=======
-
-
-    //OTHER METHOD
-	changeScreenHeight(itemValue){
-		switch(itemValue){
-			case 'exp':
-				this.setState({screenHeight:700})
-				break;
-			case 'lmd':
-				this.setState({screenHeight:contentHeight})
-				break;
-			default:
-				this.setState({screenHeight:contentHeight})
-				break;
-		}
-    }
-
-    getExpReqAndDiffrence(currentElite, exp) {
-        switch(currentElite){
-            case -1:
-                exp.reqAmountToNextLevel = 0;
-                exp.difference = 0;
-                break;
-            case 0:
-                exp.reqAmountToNextLevel = 100;
-                exp.difference = 17;
-                break;
-            case 1:
-                exp.reqAmountToNextLevel = 120;
-                exp.difference = 52;
-                break;
-            case 2:
-                exp.reqAmountToNextLevel = 191;
-                exp.difference = 112;
-                break;
-        };
-    }
-
-
-
-    //METHOD FOR CHANGING CALCULATION PARAMETER
-    changeLmdCalculationParameter(stageIndex) {
-        let stageInt = parseInt(stageIndex);
-        switch(stageInt){
-            case -1:
-                this.setState({lmdSanityUsed: 0}, this.setState({lmdDropAmount: 0}));
-                break;
-            case 5:
-                this.setState({lmdSanityUsed: 30}, this.setState({lmdDropAmount: 7500}));
-                break;
-        }
-    }
->>>>>>> a36b474e824363c4960540f143cc402e44d07779
 
 	checkSelectedResource(selectedResource) {
 		switch(selectedResource) {
@@ -125,29 +74,34 @@ class ResourceCalculator extends Component {
 		}
 	}
 
-<<<<<<< HEAD
     resourceNone = () => {
-=======
-    
-
-    //METHOD TO CALCULATE
-    calculateLMD(target, sanity, drop) {
-        let runAmount = target / drop;
-        let overflow = 0;
-        if(runAmount - Math.floor(runAmount) != 0) {
-            runAmount = Math.floor(runAmount) + 1;
-        }
-        overflow = (drop*runAmount) - target;
-        this.setState({lmdTotalRun: runAmount});
-        this.setState({lmdTotalSanity: runAmount*sanity});
-        this.setState({lmdOverflow: overflow});
->>>>>>> a36b474e824363c4960540f143cc402e44d07779
 
     }
 
 //-----------------------------------------------
 //----------------------EXP----------------------
 //-----------------------------------------------
+
+    getExpReqAndDiffrence(currentElite, exp) {
+        switch(currentElite){
+            case -1:
+                exp.req= 0;
+                exp.difference = 0;
+                break;
+            case 0:
+                exp.req = 100;
+                exp.difference = 17;
+                break;
+            case 1:
+                exp.req = 120;
+                exp.difference = 52;
+                break;
+            case 2:
+                exp.req = 191;
+                exp.difference = 112;
+                break;
+        };
+    }
 
 	changeExpCalculationParameter(stageIndex) {
 		let stageInt = parseInt(stageIndex);
@@ -159,57 +113,110 @@ class ResourceCalculator extends Component {
 				this.setState({expSanityUsed: 30}, this.setState({expDropAmount: 7400}));
 				break;
 		}
-	}
+    }
+    
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanity, drop) {
         let exp = {
             'req' : 0,
-            'difference' : 0
+            'difference' : 0,
+            'total' : 0
         };
-        let currentExpReq = 0;
-        let expDifference = 0;
-        let levelLimit = 0
+        let rarityLevelLimit;
+        let currentLevelLimit;
         this.getExpReqAndDiffrence(currentElite, exp);
+        let runAmount;
+        let overflow = 0;
         switch(rarity) {
             case -1:
-                levelLimit = 0;
+                rarityLevelLimit = {
+                    'e0' : 0,
+                    'e1' : 0,
+                    'e2' : 0
+                };
                 break;
             case 1:
             case 2:
-                levelLimit = 30;
+                rarityLevelLimit = {
+                    'e0' : 30,
+                    'e1' : 0,
+                    'e2' : 0
+                };
                 break;
             case 3:
-                levelLimit = 40;
+                rarityLevelLimit = {
+                    'e0' : 40,
+                    'e1' : 55,
+                    'e2' : 0
+                };
                 break;
             case 4:
-                levelLimit = 45;
+                rarityLevelLimit = {
+                    'e0' : 45,
+                    'e1' : 60,
+                    'e2' : 70
+                };
                 break;
             case 5:
+                rarityLevelLimit = {
+                    'e0' : 50,
+                    'e1' : 70,
+                    'e2' : 80
+                };
+                break;
             case 6:
-                levelLimit = 50;
+                rarityLevelLimit = {
+                    'e0' : 50,
+                    'e1' : 80,
+                    'e2' : 90
+                };
+                break;
+        }
+        switch(currentElite) {
+            case 0:
+                currentLevelLimit = rarityLevelLimit.e0;
+                break;
+            case 1:
+                currentLevelLimit = rarityLevelLimit.e1;
+                break;
+            case 2:
+                currentLevelLimit = rarityLevelLimit.e2;
                 break;
         }
         if(currentElite <= targetedElite) {
-            if(!(currentElite == targetedElite && currentLevel > targetedLevel)) {
+            if(!(currentElite == targetedElite && currentLevel > targetedLevel) && !(targetedElite - currentElite == 1 && currentLevel == currentLevelLimit && targetedLevel == 1)) {
                 for(let level = 2; level <= currentLevel; level++) {
-                    exp.reqAmountToNextLevel += exp.difference;
+                    exp.req += exp.difference;
                 }
-                console.log(exp.reqAmountToNextLevel);
+                while(!(currentElite == targetedElite && currentLevel == targetedLevel)) {
+                    if(currentElite < targetedElite && currentLevel == currentLevelLimit) {
+                        currentLevel = 1;
+                        currentElite++;
+                        switch(currentElite) {
+                            case 1:
+                                currentLevelLimit = rarityLevelLimit.e1;
+                                break;
+                            case 2:
+                                currentLevelLimit = rarityLevelLimit.e2;
+                                break;
+                        }
+                    }
+                    exp.total += exp.req;
+                    exp.req += exp.difference;
+                    currentLevel++;
+                }
             }
         }
-<<<<<<< HEAD
-=======
-
+        runAmount = exp.total / drop;
+        if(runAmount - Math.floor(runAmount) != 0) {
+            runAmount = Math.floor(runAmount) + 1;
+        }
+        overflow = (drop*runAmount) - exp.total;
+        this.setState({expTotalExpNeeded: exp.total});
+        this.setState({expTotalRun: runAmount});
+        this.setState({expTotalSanity: runAmount*sanity});
+        this.setState({expOverflow: overflow});
     }
 
-    
-
-    //METHOD TO VIEW WHAT RESOURCE USER WANT TO FARM
-    resourceNone = () => {
-        return(
-            <Text style={styles.textLeft}>Please select the resource you want to farm.</Text>
-        )
->>>>>>> a36b474e824363c4960540f143cc402e44d07779
-    }
     resourceExp = () => {
         return(
             <View style={picker.container}>
@@ -282,6 +289,12 @@ class ResourceCalculator extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
+                <Text style={styles.textRequire}>Require:</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.expTotalExpNeeded)} exp</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.expTotalRun)} run</Text>
+				<Text style={styles.textLeft}>{parseInt(this.state.expTotalSanity)} sanity</Text>
+				<Text style={styles.textLeft}> </Text>
+				<Text style={styles.textLeft}>You will get {parseInt(this.state.expOverflow)} extra EXP</Text>
             </View>
         )
     }
@@ -364,38 +377,17 @@ class ResourceCalculator extends Component {
                     style={styles.button}
               >
                   <Text style={styles.buttonText}>Calculate</Text>
-              </TouchableOpacity>
-			  <Text style={{color:'#fff'}}>{this.state.lmdTargetedValue}
-			  </Text>
+              </TouchableOpacity>   
 			  {this.state.errorStatement != 'no_error' && this.state.errorStatement != '' ? <Text style={styles.textError}>{this.state.errorStatement}</Text>: this.outputLmd()}
             </View>
 
         )
     }
 
-<<<<<<< HEAD
 //-----------------------------------------------
 //----------------------MAIN---------------------
 //-----------------------------------------------
 
-=======
-
-
-    //IMPORTANT METHOD
-    checkSelectedResource(selectedResource) {
-        switch(selectedResource) {
-            case "none":
-                return this.resourceNone();
-                break;
-            case "exp":
-                return this.resourceExp();
-                break;
-            case "lmd":
-                return this.resourceLmd()
-        }
-    }
-    
->>>>>>> a36b474e824363c4960540f143cc402e44d07779
     render() {
 
         let lmdSanityUsed = 0;
@@ -437,13 +429,9 @@ class ResourceCalculator extends Component {
 
 export default ResourceCalculator;
 
-<<<<<<< HEAD
 //-----------------------------------------------
 //----------------------STYLE--------------------
 //-----------------------------------------------
-=======
-
->>>>>>> a36b474e824363c4960540f143cc402e44d07779
 
 const styles = StyleSheet.create({
   container: {
