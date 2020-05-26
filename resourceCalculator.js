@@ -11,11 +11,15 @@ import {
     SafeAreaView,
 	Dimensions
 } from 'react-native';
+import firebase from './Component/FirebaseDatabase.js';
+import styles from './assets/stylesheet/styles.js';
+import picker from './assets/stylesheet/picker.js';
+
+
 
 const contentHeight=Math.round(Dimensions.get('window').height)-100;
 
-import styles from './assets/stylesheet/styles.js';
-import picker from './assets/stylesheet/picker.js';
+
 
 class ResourceCalculator extends Component {
     state = {
@@ -36,6 +40,9 @@ class ResourceCalculator extends Component {
         expOpCurrentLevel: 0,
         expOpTargetedElite: -1,
         expOpTargetedLevel: 0,
+        expOpExpReqE0: [],
+        expOpExpReqE1: [],
+        expOpExpReqE2: [],
         expTotalExpNeeded: 0,
         expTotalRun: 0,
         expTotalSanity: 0,
@@ -76,6 +83,27 @@ class ResourceCalculator extends Component {
     resourceNone = () => {
 
     }
+
+//-----------------------------------------------
+//--------------------DATABASE-------------------
+//-----------------------------------------------
+
+loadDatabase() {
+    let refDir = "CalculationData/Operator/Leveling/ExpReq";
+    // let eliteDir = "";
+    let elite0 = [];
+    let elite1 = [];
+    let elite2 = [];
+    firebase.database().ref(refDir).on('value', (snapshot) => {
+        elite0 = snapshot.child("E0").val();
+        elite1 = snapshot.child("E1").val();
+        elite2 = snapshot.child("E2").val();
+
+        this.setState({expOpExpReqE0: elite0});
+        this.setState({expOpExpReqE1: elite1});
+        this.setState({expOpExpReqE2: elite2});
+    });
+}
 
 //-----------------------------------------------
 //----------------------EXP----------------------
@@ -386,6 +414,10 @@ class ResourceCalculator extends Component {
 //-----------------------------------------------
 //----------------------MAIN---------------------
 //-----------------------------------------------
+
+    componentDidMount() {
+        this.loadDatabase();
+    }
 
     render() {
 
