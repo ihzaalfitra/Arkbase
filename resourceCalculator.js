@@ -101,7 +101,7 @@ loadDatabase() {
     let refDir = "CalculationData/Operator/Leveling/";
     let refDirExpReq = refDir + "ExpReq";
     let refDirLevelLimit = refDir + "LevelLimit";
-    
+
     let elite0 = [];
     let elite1 = [];
     let elite2 = [];
@@ -264,6 +264,18 @@ loadDatabase() {
 		switch(stageInt){
 			case -1:
 				this.setState({lmdSanityUsed: 0}, this.setState({lmdDropAmount: 0}));
+				break;
+			case 1:
+				this.setState({lmdSanityUsed: 10}, this.setState({lmdDropAmount: 1700}));
+				break;
+			case 2:
+				this.setState({lmdSanityUsed: 15}, this.setState({lmdDropAmount: 2800}));
+				break;
+			case 3:
+				this.setState({lmdSanityUsed: 20}, this.setState({lmdDropAmount: 4100}));
+				break;
+			case 4:
+				this.setState({lmdSanityUsed: 25}, this.setState({lmdDropAmount: 5700}));
 				break;
 			case 5:
 				this.setState({lmdSanityUsed: 30}, this.setState({lmdDropAmount: 7500}));
