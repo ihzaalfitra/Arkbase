@@ -62,7 +62,17 @@ class ResourceCalculator extends Component {
 				return this.resourceExp();
 				break;
 			case "lmd":
-				return this.resourceLmd()
+                return this.resourceLmd();
+                break;
+            case "skill":
+                return this.resourceSkill();
+                break;
+            case "furniture":
+                return this.resourceFurniture();
+                break;
+            case "voucher":
+                return this.resourceVoucher();
+                break;
 		}
 	}
 	changeScreenHeight(itemValue){
@@ -331,6 +341,42 @@ loadDatabase() {
     }
 
 //-----------------------------------------------
+//---------------------SKILL---------------------
+//-----------------------------------------------
+
+    resourceSkill = () => {
+        return(
+            <View style={picker.container}>
+                <Text style={styles.textLeft}>SKILL SUMARRY ON PROGRESS</Text>
+            </View>
+        )
+    }
+
+//-----------------------------------------------
+//-------------------FURNITURE-------------------
+//-----------------------------------------------
+
+    resourceFurniture = () => {
+        return(
+            <View style={picker.container}>
+                <Text style={styles.textLeft}>FURNITURE PART AND CARBON ON PROGRESS</Text>
+            </View>
+        )
+    }
+
+//-----------------------------------------------
+//--------------------VOUCHER--------------------
+//-----------------------------------------------
+
+    resourceVoucher = () => {
+        return(
+            <View style={picker.container}>
+                <Text style={styles.textLeft}>SHOP VOUCHER ON PROGRESS</Text>
+            </View>
+        )
+    }
+
+//-----------------------------------------------
 //----------------------MAIN---------------------
 //-----------------------------------------------
 
@@ -362,8 +408,11 @@ loadDatabase() {
                           onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue}, this.changeScreenHeight(itemValue))}
                         >
                           <Picker.Item label="Select resource" value={null}/>
-                          <Picker.Item label="EXP" value="exp"/>
+                          <Picker.Item label="BATTLE RECORD (EXP)" value="exp"/>
                           <Picker.Item label="LMD" value="lmd"/>
+                          <Picker.Item label="SKILL SUMMARY" value={"skill"}/>
+                          <Picker.Item label="FURNITURE PART AND CORBON" value={"furniture"}/>
+                          <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
                           </Picker>
                       </View>
                       {this.checkSelectedResource(this.state.resource)}
@@ -376,7 +425,3 @@ loadDatabase() {
 }
 
 export default ResourceCalculator;
-
-//-----------------------------------------------
-//----------------------STYLE--------------------
-//-----------------------------------------------
