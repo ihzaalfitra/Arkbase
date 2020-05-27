@@ -25,6 +25,8 @@ class ResourceCalculator extends Component {
     state = {
 		screenHeight:contentHeight,
         resource: "none",
+        errorStatement:'',
+        
         lmdStage: -1,
         lmdSanityUsed: 0,
         lmdDropAmount: 0,
@@ -32,6 +34,7 @@ class ResourceCalculator extends Component {
         lmdTotalSanity: 0,
         lmdTotalRun: 0,
         lmdOverflow: 0,
+
         expStage: -1,
         expSanityUsed: 0,
         expDropAmount: 0,
@@ -46,7 +49,22 @@ class ResourceCalculator extends Component {
         expTotalRun: 0,
         expTotalSanity: 0,
         expOverflow: 0,
-		errorStatement:''
+
+        furnPartStage: -1,
+        furnPartSanityUsed: 0,
+        furnPartDropAmount: 0,
+        furnPartTargetedValue: 0,
+        furnPartTotalSanity: 0,
+        furnPartTotalRun: 0,
+        furnPartOverflow: 0,
+
+        shpVocStage: -1,
+        shpVocSanityUsed: 0,
+        shpVocMinDropAmount: 0,
+        shpVocTargetedValue: 0,
+        shpVocTotalRun: 0,
+        shpVocTotalSanity: 0,
+        shpVocOverflow: 0
     };
 
 //-----------------------------------------------
@@ -67,8 +85,11 @@ class ResourceCalculator extends Component {
             case "skill":
                 return this.resourceSkill();
                 break;
-            case "furniture":
-                return this.resourceFurniture();
+            case "furnPart":
+                return this.resourceFurnPart();
+                break;
+            case "buildMat":
+                return this.resourceBuildMat();
                 break;
             case "voucher":
                 return this.resourceVoucher();
@@ -261,7 +282,7 @@ loadDatabase() {
 
 	changeLmdCalculationParameter(stageIndex) {
 		let stageInt = parseInt(stageIndex);
-		switch(stageInt){
+		switch(stageInt) {
 			case -1:
 				this.setState({lmdSanityUsed: 0}, this.setState({lmdDropAmount: 0}));
 				break;
@@ -281,7 +302,8 @@ loadDatabase() {
 				this.setState({lmdSanityUsed: 30}, this.setState({lmdDropAmount: 7500}));
 				break;
 		}
-	}
+    }
+    
     calculateLMD(target, sanity, drop) {
         let runAmount = target / drop;
         let overflow = 0;
@@ -330,6 +352,10 @@ loadDatabase() {
                     onValueChange={(itemValue, itemIndex) => this.setState({lmdStage: itemValue}, this.changeLmdCalculationParameter(itemValue))}
                 >
 					<Picker.Item label="Select stage" value={-1}/>
+                    <Picker.Item label="CE-1" value={1}/>
+                    <Picker.Item label="CE-2" value={2}/>
+                    <Picker.Item label="CE-3" value={3}/>
+                    <Picker.Item label="CE-4" value={4}/>
                     <Picker.Item label="CE-5" value={5}/>
                 </Picker>
               </View>
@@ -359,19 +385,82 @@ loadDatabase() {
     resourceSkill = () => {
         return(
             <View style={picker.container}>
-                <Text style={styles.textLeft}>SKILL SUMARRY ON PROGRESS</Text>
+                <Text style={styles.textLeft}>SKILL SUMMARY ON PROGRESS</Text>
             </View>
         )
-    }
+    } 
 
 //-----------------------------------------------
 //-------------------FURNITURE-------------------
 //-----------------------------------------------
 
-    resourceFurniture = () => {
+    changeFurnPartCalculationParameter(stageIndex) {
+        let stageInt = parseInt(stageIndex);
+        switch(stageInt) {
+            case -1:
+                this.setState({furnPartSanityUsed: 0}, this.setState({furnPartDropAmount: 0}));
+                break;
+            case 5:
+                this.setState({furnPartSanityUsed: 30}, this.setState({furnPartDropAmount: 10}));
+                break;
+        }
+    }
+
+    calculateFurnPart(target, sanity, drop) {
+        let runAmount = target / drop;
+        let overflow = 0;
+        if(runAmount - Math.floor(runAmount) != 0) {
+            runAmount = Math.floor(runAmount) + 1;
+        }
+        overflow = (drop*runAmount) - target;
+        this.setState({furnPartTotalRun: runAmount});
+        this.setState({furnPartTotalSanity: runAmount*sanity});
+        this.setState({furnPartOverflow: overflow});
+    }
+
+    resourceFurnPart = () => {
         return(
             <View style={picker.container}>
-                <Text style={styles.textLeft}>FURNITURE PART AND CARBON ON PROGRESS</Text>
+                <View style={picker.underline}>
+                    <Picker
+                        style={picker.style}
+                        selectedValue={this.state.furnPartStage}
+                        onValueChange={(itemValue, itemIndex) => this.setState({furnPartStage: itemValue}, this.changeFurnPartCalculationParameter(itemValue))}
+                    >
+                        <Picker.Item label="Select stage" value={-1}/>
+                        <Picker.Item label="SK-5" value={5}/>
+                    </Picker>
+                </View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Target Furniture Part amount"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({furnPartTargetedValue: input})}
+                    keyboardType="numeric"
+                />
+                <TouchableOpacity
+                    onPress={() => this.calculateFurnPart(parseFloat(this.state.furnPartTargetedValue), parseFloat(this.state.furnPartSanityUsed), parseFloat(this.state.furnPartDropAmount))}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Calculate</Text>
+                </TouchableOpacity>
+                <Text style={styles.textRequire}>Require:</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.furnPartTotalRun)} run</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.furnPartTotalSanity)} sanity</Text>
+                <Text style={styles.textLeft}> </Text>
+                <Text style={styles.textLeft}>You will get {parseInt(this.state.furnPartOverflow)} extra furniture part</Text>
+            </View>
+        )
+    }
+
+//-----------------------------------------------
+//-------------------BUILDING--------------------
+//-----------------------------------------------
+
+    resourceBuildMat = () => {
+        return(
+            <View style={picker.container}>
+                <Text style={styles.textLeft}>BUILDING MATERIAL ON PROGRESS</Text>
             </View>
         )
     }
@@ -380,10 +469,61 @@ loadDatabase() {
 //--------------------VOUCHER--------------------
 //-----------------------------------------------
 
+    changeShpVocCalculationParameter(stageIndex) {
+        let stageInt = parseInt(stageIndex);
+        switch(stageInt) {
+            case -1:
+                this.setState({shpVocSanityUsed: 0}, this.setState({shpVocMinDropAmount: 0}));
+                break;
+            case 5:
+                this.setState({shpVocSanityUsed: 30}, this.setState({shpVocMinDropAmount: 20}));
+                break;
+        }
+    }
+
+    calculateShpVoc(target, sanity, drop) {
+        let runAmount = target / drop;
+        let overflow = 0;
+        if(runAmount - Math.floor(runAmount) != 0) {
+            runAmount = Math.floor(runAmount) + 1;
+        }
+        overflow = (drop*runAmount) - target;
+        this.setState({shpVocTotalRun: runAmount});
+        this.setState({shpVocTotalSanity: runAmount*sanity});
+        this.setState({shpVocOverflow: overflow});
+    }
+
     resourceVoucher = () => {
         return(
             <View style={picker.container}>
-                <Text style={styles.textLeft}>SHOP VOUCHER ON PROGRESS</Text>
+                <View style={picker.underline}>
+                    <Picker
+                        style={picker.style}
+                        selectedValue={this.state.shpVocStage}
+                        onValueChange={(itemValue, itemIndex) => this.setState({shpVocStage: itemValue}, this.changeShpVocCalculationParameter(itemValue))}
+                    >
+                        <Picker.Item label="Selec stage" value={-1}/>
+                        <Picker.Item label="AP-5" value={5}/>
+                    </Picker>
+                </View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Target Shop Voucher amount"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({shpVocTargetedValue: input})}
+                    keyboardType="numeric"
+                />
+                <TouchableOpacity
+                    onPress={() => this.calculateShpVoc(parseFloat(this.state.shpVocTargetedValue), parseFloat(this.state.shpVocSanityUsed), parseFloat(this.state.shpVocMinDropAmount))}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Calculate</Text>
+                </TouchableOpacity>
+                <Text style={styles.textRequire}>Require minimal:</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.shpVocTotalRun)} run</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.shpVocTotalSanity)} sanity</Text>
+                <Text style={styles.textLeft}> </Text>
+                <Text style={styles.textLeft}>You will get {parseInt(this.state.shpVocOverflow)} extra shop voucher</Text>
             </View>
         )
     }
@@ -423,7 +563,8 @@ loadDatabase() {
                           <Picker.Item label="BATTLE RECORD (EXP)" value="exp"/>
                           <Picker.Item label="LMD" value="lmd"/>
                           <Picker.Item label="SKILL SUMMARY" value={"skill"}/>
-                          <Picker.Item label="FURNITURE PART AND CORBON" value={"furniture"}/>
+                          <Picker.Item label="FURNITURE PART" value={"furnPart"}/>
+                          <Picker.Item label="BUILDING MATERIAL" value={"buildMat"}/>
                           <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
                           </Picker>
                       </View>
