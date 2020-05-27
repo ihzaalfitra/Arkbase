@@ -40,14 +40,13 @@ class ResourceCalculator extends Component {
         expOpCurrentLevel: 0,
         expOpTargetedElite: -1,
         expOpTargetedLevel: 0,
-        expOpExpReqE0: [],
-        expOpExpReqE1: [],
-        expOpExpReqE2: [],
+        expOpExpReqAllElite: [],
+        expOpLevelLimit: [],
         expTotalExpNeeded: 0,
         expTotalRun: 0,
         expTotalSanity: 0,
         expOverflow: 0,
-		errorStatement:'',
+		errorStatement:''
     };
 
 //-----------------------------------------------
@@ -89,46 +88,43 @@ class ResourceCalculator extends Component {
 //-----------------------------------------------
 
 loadDatabase() {
-    let refDir = "CalculationData/Operator/Leveling/ExpReq";
-    // let eliteDir = "";
+    let refDir = "CalculationData/Operator/Leveling/";
+    let refDirExpReq = refDir + "ExpReq";
+    let refDirLevelLimit = refDir + "LevelLimit";
+    
     let elite0 = [];
     let elite1 = [];
     let elite2 = [];
-    firebase.database().ref(refDir).on('value', (snapshot) => {
+    let allElite = [];
+    let levelLimit = [];
+    let tempLimit = [];
+
+    firebase.database().ref(refDirExpReq).once('value', (snapshot) => {
         elite0 = snapshot.child("E0").val();
         elite1 = snapshot.child("E1").val();
         elite2 = snapshot.child("E2").val();
 
-        this.setState({expOpExpReqE0: elite0});
-        this.setState({expOpExpReqE1: elite1});
-        this.setState({expOpExpReqE2: elite2});
+        allElite.push(elite0);
+        allElite.push(elite1);
+        allElite.push(elite2);
+
+        this.setState({expOpExpReqAllElite: allElite});
     });
+
+    firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
+        levelLimit.push(tempLimit);
+        snapshot.forEach((snapchild) => {
+            tempLimit = snapchild.val();
+            levelLimit.push(tempLimit);
+        });
+        this.setState({expOpLevelLimit: levelLimit});
+    });
+
 }
 
 //-----------------------------------------------
 //----------------------EXP----------------------
 //-----------------------------------------------
-
-    getExpReqAndDiffrence(currentElite, exp) {
-        switch(currentElite){
-            case -1:
-                exp.req= 0;
-                exp.difference = 0;
-                break;
-            case 0:
-                exp.req = 100;
-                exp.difference = 17;
-                break;
-            case 1:
-                exp.req = 120;
-                exp.difference = 52;
-                break;
-            case 2:
-                exp.req = 191;
-                exp.difference = 112;
-                break;
-        };
-    }
 
 	changeExpCalculationParameter(stageIndex) {
 		let stageInt = parseInt(stageIndex);
@@ -143,102 +139,25 @@ loadDatabase() {
     }
 
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanity, drop) {
-        let exp = {
-            'req' : 0,
-            'difference' : 0,
-            'total' : 0
-        };
-        let rarityLevelLimit;
-        let currentLevelLimit;
-        this.getExpReqAndDiffrence(currentElite, exp);
-        let runAmount;
+        let expReqPerLevel = this.state.expOpExpReqAllElite;
+        let levelLimit = this.state.expOpLevelLimit;
+        let totalExp = 0;
+        let runAmount = 0;
         let overflow = 0;
-        switch(rarity) {
-            case -1:
-                rarityLevelLimit = {
-                    'e0' : 0,
-                    'e1' : 0,
-                    'e2' : 0
-                };
-                break;
-            case 1:
-            case 2:
-                rarityLevelLimit = {
-                    'e0' : 30,
-                    'e1' : 0,
-                    'e2' : 0
-                };
-                break;
-            case 3:
-                rarityLevelLimit = {
-                    'e0' : 40,
-                    'e1' : 55,
-                    'e2' : 0
-                };
-                break;
-            case 4:
-                rarityLevelLimit = {
-                    'e0' : 45,
-                    'e1' : 60,
-                    'e2' : 70
-                };
-                break;
-            case 5:
-                rarityLevelLimit = {
-                    'e0' : 50,
-                    'e1' : 70,
-                    'e2' : 80
-                };
-                break;
-            case 6:
-                rarityLevelLimit = {
-                    'e0' : 50,
-                    'e1' : 80,
-                    'e2' : 90
-                };
-                break;
-        }
-        switch(currentElite) {
-            case 0:
-                currentLevelLimit = rarityLevelLimit.e0;
-                break;
-            case 1:
-                currentLevelLimit = rarityLevelLimit.e1;
-                break;
-            case 2:
-                currentLevelLimit = rarityLevelLimit.e2;
-                break;
-        }
-        if(currentElite <= targetedElite) {
-            if(!(currentElite == targetedElite && currentLevel > targetedLevel) && !(targetedElite - currentElite == 1 && currentLevel == currentLevelLimit && targetedLevel == 1)) {
-                for(let level = 2; level <= currentLevel; level++) {
-                    exp.req += exp.difference;
-                }
-                while(!(currentElite == targetedElite && currentLevel == targetedLevel)) {
-                    if(currentElite < targetedElite && currentLevel == currentLevelLimit) {
-                        currentLevel = 1;
-                        currentElite++;
-                        switch(currentElite) {
-                            case 1:
-                                currentLevelLimit = rarityLevelLimit.e1;
-                                break;
-                            case 2:
-                                currentLevelLimit = rarityLevelLimit.e2;
-                                break;
-                        }
-                    }
-                    exp.total += exp.req;
-                    exp.req += exp.difference;
-                    currentLevel++;
-                }
+        while((currentElite <= targetedElite) && !(currentElite == targetedElite && currentLevel >= targetedLevel)) {
+            totalExp += expReqPerLevel[currentElite][currentLevel];
+            currentLevel++;
+            if(currentLevel == levelLimit[rarity][currentElite]) {
+                currentLevel = 1;
+                currentElite++;
             }
         }
-        runAmount = exp.total / drop;
+        runAmount = totalExp / drop;
         if(runAmount - Math.floor(runAmount) != 0) {
             runAmount = Math.floor(runAmount) + 1;
         }
-        overflow = (drop*runAmount) - exp.total;
-        this.setState({expTotalExpNeeded: exp.total});
+        overflow = (drop*runAmount) - totalExp;
+        this.setState({expTotalExpNeeded: totalExp});
         this.setState({expTotalRun: runAmount});
         this.setState({expTotalSanity: runAmount*sanity});
         this.setState({expOverflow: overflow});
