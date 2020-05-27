@@ -330,6 +330,10 @@ loadDatabase() {
                     onValueChange={(itemValue, itemIndex) => this.setState({lmdStage: itemValue}, this.changeLmdCalculationParameter(itemValue))}
                 >
 					<Picker.Item label="Select stage" value={-1}/>
+                    <Picker.Item label="CE-1" value={1}/>
+                    <Picker.Item label="CE-2" value={2}/>
+                    <Picker.Item label="CE-3" value={3}/>
+                    <Picker.Item label="CE-4" value={4}/>
                     <Picker.Item label="CE-5" value={5}/>
                 </Picker>
               </View>
