@@ -66,7 +66,9 @@ class ResourceCalculator extends Component {
         shpVocTotalSanity: 0,
         shpVocOverflow: 0,
 
-        buildMatBuilding: "none"
+        buildMatBuilding: "none",
+        buildMatCurrentPhase: 0,
+        buildMatTargetedPhase: 0
     };
 
 //-----------------------------------------------
@@ -459,6 +461,83 @@ loadDatabase() {
 //-------------------BUILDING--------------------
 //-----------------------------------------------
 
+    calculateBuildMat(building, currentPhase, targetedPhase) {
+        // let buildingData = {
+        //     controlCenter: {
+        //         maxPhase: 5,
+        //     },
+        //     dormitory: {
+        //         maxPhase: 5,
+        //         1: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         },
+        //         2: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         },
+        //         3: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         },
+        //         4: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         },
+        //         5: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         }
+        //     },
+        //     powerPlant: {
+        //         maxPhase: 3
+        //     },
+        //     factory: {
+        //         maxPhase: 3
+        //     },
+        //     tradingPost: {
+        //         maxPhase: 3
+        //     },
+        //     receptionRoom: {
+        //         maxPhase: 3
+        //     },
+        //     workshop: {
+        //         maxPhase: 3
+        //     },
+        //     office: {
+        //         maxPhase: 3
+        //     },
+        //     trainingRoom: {
+        //         maxPhase: 3
+        //     }
+        // };
+    }
+
     resourceBuildMat = () => {
         return(
             <View style={picker.container}>
@@ -480,7 +559,24 @@ loadDatabase() {
                         <Picker.Item label="Training Room" value="trainingRoom"/>
                     </Picker>
                 </View>
-                
+                <TextInput
+                    style={styles.input}
+                    placeholder="Current Phase"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({buildMatCurrentPhase: input})}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Targeted Phase"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({buildMatTargetedPhase: input})}
+                />
+                <TouchableOpacity
+                    onPress={() => this.calculateBuildMat(this.state.buildMatBuilding, parseInt(this.state.buildMatCurrentPhase), parseInt(this.state.buildMatTargetedPhase))}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Calculate</Text>
+                </TouchableOpacity>
             </View>
         )
     }
