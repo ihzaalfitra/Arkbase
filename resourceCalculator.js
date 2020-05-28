@@ -64,7 +64,9 @@ class ResourceCalculator extends Component {
         shpVocTargetedValue: 0,
         shpVocTotalRun: 0,
         shpVocTotalSanity: 0,
-        shpVocOverflow: 0
+        shpVocOverflow: 0,
+
+        buildMatBuilding: "none"
     };
 
 //-----------------------------------------------
@@ -460,7 +462,25 @@ loadDatabase() {
     resourceBuildMat = () => {
         return(
             <View style={picker.container}>
-                <Text style={styles.textLeft}>BUILDING MATERIAL ON PROGRESS</Text>
+                <View style={picker.underline}>
+                    <Picker
+                        style={picker.style}
+                        selectedValue={this.state.buildMatBuilding}
+                        onValueChange={(itemValue, itemIndex) => this.setState({buildMatBuilding: itemValue})}
+                    >
+                        <Picker.Item label="Select the building you want tp build" value="none"/>
+                        <Picker.Item label="Control Center" value="controlCenter"/>
+                        <Picker.Item label="Dormitory" value="dormitory"/>
+                        <Picker.Item label="Power Plant" value="powerPlat"/>
+                        <Picker.Item label="Factory" value="factory"/>
+                        <Picker.Item label="Trading Post" value="tradingPost"/>
+                        <Picker.Item label="Reception Room" value="receptionRoom"/>
+                        <Picker.Item label="Workshop" value="workshop"/>
+                        <Picker.Item label="Office" value="office"/>
+                        <Picker.Item label="Training Room" value="trainingRoom"/>
+                    </Picker>
+                </View>
+                
             </View>
         )
     }
