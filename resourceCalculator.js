@@ -66,7 +66,16 @@ class ResourceCalculator extends Component {
         shpVocTotalSanity: 0,
         shpVocOverflow: 0,
 
-        buildMatBuilding: "none"
+        buildMatBuilding: "none",
+        buildMatCurrentPhase: 0,
+        buildMatTargetedPhase: 0,
+
+        skillTargetedSummary: -1,
+        skillTargetedAmount: 0,
+        skillRecommendedStage: "none",
+        skillTotalRun: 0,
+        skillTotalSanity: 0,
+        skillOverflow: 0
     };
 
 //-----------------------------------------------
@@ -384,10 +393,85 @@ loadDatabase() {
 //---------------------SKILL---------------------
 //-----------------------------------------------
 
+    calculateSkill(targetedSummary, targetedAmount) {
+        let data = {
+            1: {
+                stageName: "CA-2",
+                sanityUsed: 15,
+                dropAmount: 5
+            },
+            2: {
+                stageName: "CA-3",
+                sanityUsed: 20,
+                dropAmount: 3
+            },
+            3: {
+                stageName: "CA-5",
+                sanityUsed: 30,
+                dropAmount: 2
+            }
+        };
+        let stageName;
+        let sanityUsed;
+        let dropAmount;
+        let runAmount;
+        let overflow;
+
+        if(targetedSummary == -1) {
+            stageName = "None";
+            sanityUsed = 0;
+            dropAmount = 0;
+            runAmount = 0;
+            overflow = 0;
+        }
+        else {
+            stageName = data[targetedSummary]["stageName"];
+            sanityUsed = data[targetedSummary]["sanityUsed"];
+            dropAmount = data[targetedSummary]["dropAmount"];
+            runAmount = Math.ceil(targetedAmount / dropAmount);
+            overflow = 0;
+        }
+            
+        this.setState({skillRecommendedStage: stageName});
+        this.setState({skillTotalRun: runAmount});
+        this.setState({skillTotalSanity: runAmount*sanityUsed});
+        this.setState({skillOverflow: overflow});
+    }
+
     resourceSkill = () => {
         return(
             <View style={picker.container}>
-                <Text style={styles.textLeft}>SKILL SUMMARY ON PROGRESS</Text>
+                <View style={picker.underline}>
+                    <Picker
+                        style={picker.style}
+                        selectedValue={this.state.skillTargetedSummary}
+                        onValueChange={(itemValue, itemIndex) => this.setState({skillTargetedSummary: itemValue})}
+                    >
+                        <Picker.Item label="Select Skill Summary you want" value={-1}/>
+                        <Picker.Item label="Skill Summary -1" value={1}/>
+                        <Picker.Item label="Skill Summary -2" value={2}/>
+                        <Picker.Item label="Skill Summary -3" value={3}/>
+                    </Picker>
+                </View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Target Skill Summary Amount"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({skillTargetedAmount: input})}
+                    keyboardType="numeric"
+                />
+                <TouchableOpacity
+                    onPress={() => this.calculateSkill(parseInt(this.state.skillTargetedSummary), parseInt(this.state.skillTargetedAmount))}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Calculate</Text>
+                </TouchableOpacity>
+                <Text style={styles.textRequire}>Result:</Text>
+                <Text style={styles.textLeft}>Recommended Stage: {this.state.skillRecommendedStage}</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.skillTotalRun)} run</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.skillTotalSanity)} sanity</Text>
+                <Text style={styles.textLeft}> </Text>
+                <Text style={styles.textLeft}>You will get extra {parseInt(this.state.skillOverflow)} extra Skull Summary</Text>
             </View>
         )
     } 
@@ -459,6 +543,83 @@ loadDatabase() {
 //-------------------BUILDING--------------------
 //-----------------------------------------------
 
+    calculateBuildMat(building, currentPhase, targetedPhase) {
+        // let buildingData = {
+        //     controlCenter: {
+        //         maxPhase: 5,
+        //     },
+        //     dormitory: {
+        //         maxPhase: 5,
+        //         1: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         },
+        //         2: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         },
+        //         3: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         },
+        //         4: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         },
+        //         5: {
+        //             droneUsed: 100,
+        //             materialType: [
+        //                 "light"  
+        //             ],
+        //             materialQuantity: [
+        //                 1
+        //             ]
+        //         }
+        //     },
+        //     powerPlant: {
+        //         maxPhase: 3
+        //     },
+        //     factory: {
+        //         maxPhase: 3
+        //     },
+        //     tradingPost: {
+        //         maxPhase: 3
+        //     },
+        //     receptionRoom: {
+        //         maxPhase: 3
+        //     },
+        //     workshop: {
+        //         maxPhase: 3
+        //     },
+        //     office: {
+        //         maxPhase: 3
+        //     },
+        //     trainingRoom: {
+        //         maxPhase: 3
+        //     }
+        // };
+    }
+
     resourceBuildMat = () => {
         return(
             <View style={picker.container}>
@@ -480,7 +641,24 @@ loadDatabase() {
                         <Picker.Item label="Training Room" value="trainingRoom"/>
                     </Picker>
                 </View>
-                
+                <TextInput
+                    style={styles.input}
+                    placeholder="Current Phase"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({buildMatCurrentPhase: input})}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Targeted Phase"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({buildMatTargetedPhase: input})}
+                />
+                <TouchableOpacity
+                    onPress={() => this.calculateBuildMat(this.state.buildMatBuilding, parseInt(this.state.buildMatCurrentPhase), parseInt(this.state.buildMatTargetedPhase))}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Calculate</Text>
+                </TouchableOpacity>
             </View>
         )
     }
