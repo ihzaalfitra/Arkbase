@@ -1,15 +1,14 @@
 import * as firebase from 'firebase';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCL7ESTEvhsatoZNBtc6qLZySotQFEBUEs",
-    authDomain: "arkbase-250520.firebaseapp.com",
-    databaseURL: "https://arkbase-250520.firebaseio.com",
-    projectId: "arkbase-250520",
-    storageBucket: "arkbase-250520.appspot.com",
-    messagingSenderId: "975226992003",
-    appId: "1:975226992003:web:996f1967e9ba30a673b2b6",
-    measurementId: "G-ZT7QLEDGXF"
-};
+    apiKey: "AIzaSyDRNRHRSMKX_IMS7Tp118bpA-AxkLv1mWQ",
+    authDomain: "arkbase-300520.firebaseapp.com",
+    databaseURL: "https://arkbase-300520.firebaseio.com",
+    projectId: "arkbase-300520",
+    storageBucket: "arkbase-300520.appspot.com",
+    messagingSenderId: "590435218387",
+    appId: "1:590435218387:web:b8281bbbc395d09fec3526"
+  };
 
 if(!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);

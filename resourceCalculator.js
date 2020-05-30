@@ -740,7 +740,7 @@ loadDatabase() {
         let lmdDropAmount = 0;
 
         return(
-			<View style={{flex:1,backgroundColor:'#000',paddingTop:25}}>
+			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
 			<Text style={styles.header}>Resource Calculator</Text>
 			<ScrollView>
 				<View style={{
