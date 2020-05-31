@@ -12,8 +12,8 @@ import {
 	Dimensions
 } from 'react-native';
 
-import ResourceCalculator from './resourceCalculator.js';
-import navigation from './assets/stylesheet/navigation.js';
+import ResourceCalculator from './Component/ResourceCalculator.js';
+import navigation from './assets/Stylesheet/navigation.js';
 
 const contentHeight=Math.round(Dimensions.get('window').height)-100;
 
