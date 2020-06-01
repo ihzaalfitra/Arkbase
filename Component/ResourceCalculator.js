@@ -23,25 +23,27 @@ class ResourceCalculator extends Component {
 		screenHeight:contentHeight,
         resource: "none",
         errorStatement:'',
-    };
 
-//-----------------------------------------------
-//----------------------GENERAL------------------
-//-----------------------------------------------
+        expOpExpReqAllElite: [],
+        expOpLevelLimit: [],
+        expData: [],
+
+        lmdData: []
+    };
 
 	checkSelectedResource(selectedResource) {
 		switch(selectedResource) {
 			case "none":
-				return this.resourceNone();
+				return;
 				break;
 			case "exp":
                 return(
-                    <ExpModule expReq={this.state.expOpExpReqAllElite} levelLimit={this.state.expOpLevelLimit}/>
+                    <ExpModule expReq={this.state.expOpExpReqAllElite} levelLimit={this.state.expOpLevelLimit} stageData={this.state.expData}/>
                 );
 				break;
 			case "lmd":
                 return(
-                    <LmdModule/>
+                    <LmdModule lmdData={this.state.lmdData}/>
                 );
                 break;
             case "skill":
@@ -80,14 +82,11 @@ class ResourceCalculator extends Component {
 		}
 	}
 
-    resourceNone = () => {
-
-    }
-
-    loadDatabase() {
+    loadOpDatabase() {
         let refDir = "CalculationData/Operator/Leveling/";
         let refDirExpReq = refDir + "ExpReq";
         let refDirLevelLimit = refDir + "LevelLimit";
+        let refDirStageData = "CalculationData/Farming/Exp"
 
         let elite0 = [];
         let elite1 = [];
@@ -95,6 +94,7 @@ class ResourceCalculator extends Component {
         let allElite = [];
         let levelLimit = [];
         let tempLimit = [];
+        let stageData = [];
 
         firebase.database().ref(refDirExpReq).once('value', (snapshot) => {
             elite0 = snapshot.child("E0").val();
@@ -117,16 +117,32 @@ class ResourceCalculator extends Component {
             this.setState({expOpLevelLimit: levelLimit});
         });
 
+        firebase.database().ref(refDirStageData).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                stageData.push(snapchild.val());
+            });
+            this.setState({expData: stageData});
+        });
+    }
+
+    loadLmdDatabase() {
+        let refDir = "CalculationData/Farming/Lmd";
+        let data = [];
+
+        firebase.database().ref(refDir).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                data.push(snapchild.val());
+            });
+            this.setState({lmdData: data});
+        });
     }
 
     componentDidMount() {
-        this.loadDatabase();
+        this.loadOpDatabase();
+        this.loadLmdDatabase();
     }
 
     render() {
-
-        let lmdSanityUsed = 0;
-        let lmdDropAmount = 0;
 
         return(
 			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>

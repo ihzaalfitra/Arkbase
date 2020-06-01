@@ -12,7 +12,7 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class ExpModule extends Component {
     state = {
-        stage: -1,
+        stage: 0,
         sanityUsed: 0,
         dropAmount: 0,
         opRarity: -1,
@@ -22,6 +22,7 @@ class ExpModule extends Component {
         opTargetedLevel: 0,
         opExpReqAllElite: this.props.expReq,
         opLevelLimit: this.props.levelLimit,
+        stageData: this.props.stageData,
         totalExpNeeded: 0,
         totalRun: 0,
         totalSanity: 0,
@@ -29,15 +30,9 @@ class ExpModule extends Component {
     }
 
     changeExpCalculationParameter(stageIndex) {
-		let stageInt = parseInt(stageIndex);
-		switch(stageInt){
-			case -1:
-				this.setState({sanityUsed: 0}, this.setState({dropAmount: 0}));
-				break;
-			case 5:
-				this.setState({sanityUsed: 30}, this.setState({dropAmount: 7400}));
-				break;
-		}
+        let data = this.state.stageData[parseInt(stageIndex)];
+        this.setState({dropAmount: data["dropAmount"]});
+        this.setState({sanityUsed: data["sanityUsed"]});
     }
 
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanity, drop) {
@@ -71,7 +66,7 @@ class ExpModule extends Component {
                         selectedValue={this.state.stage}
                         onValueChange={(itemValue, itemIndex) => this.setState({stage: itemValue}, this.changeExpCalculationParameter(itemValue))}
                     >
-                        <Picker.Item label="Select stage" value={-1}/>
+                        <Picker.Item label="Select stage" value={0}/>
                         <Picker.Item label="LS-5" value={5}/>
                     </Picker>
                 </View>

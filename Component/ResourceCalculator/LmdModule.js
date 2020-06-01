@@ -13,8 +13,9 @@ import picker from '../../assets/Stylesheet/picker.js';
 class LmdModule extends Component {
     state = {
         errorStatement:'',
-
-        stage: -1,
+        
+        data: this.props.lmdData,
+        stage: 0,
         sanityUsed: 0,
         dropAmount: 0,
         targetedValue: 0,
@@ -24,27 +25,9 @@ class LmdModule extends Component {
     }
 
     changeLmdCalculationParameter(stageIndex) {
-		let stageInt = parseInt(stageIndex);
-		switch(stageInt) {
-			case -1:
-				this.setState({sanityUsed: 0}, this.setState({dropAmount: 0}));
-				break;
-			case 1:
-				this.setState({sanityUsed: 10}, this.setState({dropAmount: 1700}));
-				break;
-			case 2:
-				this.setState({sanityUsed: 15}, this.setState({dropAmount: 2800}));
-				break;
-			case 3:
-				this.setState({sanityUsed: 20}, this.setState({dropAmount: 4100}));
-				break;
-			case 4:
-				this.setState({sanityUsed: 25}, this.setState({dropAmount: 5700}));
-				break;
-			case 5:
-				this.setState({sanityUsed: 30}, this.setState({dropAmount: 7500}));
-				break;
-		}
+        let data = this.state.data[parseInt(stageIndex)];
+        this.setState({dropAmount: data["dropAmount"]});
+        this.setState({sanityUsed: data["sanityUsed"]});
     }
 
     calculateLMD(target, sanity, drop) {
@@ -79,39 +62,39 @@ class LmdModule extends Component {
 				null
 			)
 		}
-	}
+    }
 
     render() {
         return(
             <View style={picker.container}>
-              <View style={picker.underline}>
-                <Picker
-                    style={picker.style}
-                    selectedValue={this.state.stage}
-                    onValueChange={(itemValue, itemIndex) => this.setState({stage: itemValue}, this.changeLmdCalculationParameter(itemValue))}
-                >
-					<Picker.Item label="Select stage" value={-1}/>
-                    <Picker.Item label="CE-1" value={1}/>
-                    <Picker.Item label="CE-2" value={2}/>
-                    <Picker.Item label="CE-3" value={3}/>
-                    <Picker.Item label="CE-4" value={4}/>
-                    <Picker.Item label="CE-5" value={5}/>
-                </Picker>
-              </View>
-              <TextInput
+                <View style={picker.underline}>
+                    <Picker
+                        style={picker.style}
+                        selectedValue={this.state.stage}
+                        onValueChange={(itemValue, itemIndex) => this.setState({stage: itemValue}, this.changeLmdCalculationParameter(itemValue))}
+                    >
+					    <Picker.Item label="Select stage" value={0}/>
+                        <Picker.Item label="CE-1" value={1}/>
+                        <Picker.Item label="CE-2" value={2}/>
+                        <Picker.Item label="CE-3" value={3}/>
+                        <Picker.Item label="CE-4" value={4}/>
+                        <Picker.Item label="CE-5" value={5}/>
+                    </Picker>
+                </View>
+                <TextInput
                     style={styles.input}
                     placeholder="Target LMD amount"
                     value={this.input}
                     onChangeText={(input) => this.setState({targetedValue: input})}
                     keyboardType="numeric"
-              />
-              <TouchableOpacity
+                />
+                <TouchableOpacity
                     onPress= {() => this.calculateLMD(parseFloat(this.state.targetedValue), parseFloat(this.state.sanityUsed), parseFloat(this.state.dropAmount))}
                     style={styles.button}
-              >
-                  <Text style={styles.buttonText}>Calculate</Text>
-              </TouchableOpacity>
-			  {this.state.errorStatement != 'no_error' && this.state.errorStatement != '' ? <Text style={styles.textError}>{this.state.errorStatement}</Text>: this.outputLmd()}
+                >
+                    <Text style={styles.buttonText}>Calculate</Text>
+                </TouchableOpacity>
+			    {this.state.errorStatement != 'no_error' && this.state.errorStatement != '' ? <Text style={styles.textError}>{this.state.errorStatement}</Text>: this.outputLmd()}
             </View>
         )
     }
