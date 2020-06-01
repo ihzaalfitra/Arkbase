@@ -12,7 +12,8 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class ShpVocModule extends Component {
     state = {
-        stage: -1,
+        data: this.props.shpVocData,
+        stage: 0,
         sanityUsed: 0,
         dropAmount: 0,
         targetedValue: 0,
@@ -22,24 +23,14 @@ class ShpVocModule extends Component {
     }
 
     changeShpVocCalculationParameter(stageIndex) {
-        let stageInt = parseInt(stageIndex);
-        switch(stageInt) {
-            case -1:
-                this.setState({sanityUsed: 0}, this.setState({dropAmount: 0}));
-                break;
-            case 5:
-                this.setState({sanityUsed: 30}, this.setState({dropAmount: 20}));
-                break;
-        }
+        let data = this.state.data[parseInt(stageIndex)];
+        this.setState({dropAmount: data["dropAmount"]});
+        this.setState({sanityUsed: data["sanityUsed"]});
     }
 
     calculateShpVoc(target, sanity, drop) {
-        let runAmount = target / drop;
-        let overflow = 0;
-        if(runAmount - Math.floor(runAmount) != 0) {
-            runAmount = Math.floor(runAmount) + 1;
-        }
-        overflow = (drop*runAmount) - target;
+        let runAmount = Math.ceil(target / drop);
+        let overflow = (drop*runAmount) - target;
         this.setState({totalRun: runAmount});
         this.setState({totalSanity: runAmount*sanity});
         this.setState({overflow: overflow});
@@ -54,7 +45,11 @@ class ShpVocModule extends Component {
                         selectedValue={this.state.stage}
                         onValueChange={(itemValue, itemIndex) => this.setState({stage: itemValue}, this.changeShpVocCalculationParameter(itemValue))}
                     >
-                        <Picker.Item label="Selec stage" value={-1}/>
+                        <Picker.Item label="Selec stage" value={0}/>
+                        <Picker.Item label="AP-1" value={1}/>
+                        <Picker.Item label="AP-2" value={2}/>
+                        <Picker.Item label="AP-3" value={3}/>
+                        <Picker.Item label="AP-4" value={4}/>
                         <Picker.Item label="AP-5" value={5}/>
                     </Picker>
                 </View>

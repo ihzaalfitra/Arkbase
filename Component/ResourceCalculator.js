@@ -28,7 +28,15 @@ class ResourceCalculator extends Component {
         expOpLevelLimit: [],
         expData: [],
 
-        lmdData: []
+        lmdData: [],
+
+        skillData: [],
+        
+        furnPartData: [],
+
+        buildMatData: [],
+
+        shpVocData: []
     };
 
 	checkSelectedResource(selectedResource) {
@@ -48,12 +56,12 @@ class ResourceCalculator extends Component {
                 break;
             case "skill":
                 return(
-                    <SkillModule/>
+                    <SkillModule skillData={this.state.skillData}/>
                 );
                 break;
             case "furnPart":
                 return(
-                    <FurnPartModule/>
+                    <FurnPartModule furnPartData={this.state.furnPartData}/>
                 );
                 break;
             case "buildMat":
@@ -63,7 +71,7 @@ class ResourceCalculator extends Component {
                 break;
             case "voucher":
                 return(
-                    <ShpVocModule/>
+                    <ShpVocModule shpVocData={this.state.shpVocData}/>
                 );
                 break;
 		}
@@ -137,9 +145,52 @@ class ResourceCalculator extends Component {
         });
     }
 
+    loadSkillDatabase() {
+        let refDir = "CalculationData/Farming/Skill";
+        let data = [];
+
+        firebase.database().ref(refDir).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                data.push(snapchild.val());
+            });
+            this.setState({skillData: data});
+        });
+    }
+    loadFurnPartDatabase() {
+        let refDir = "CalculationData/Farming/FurniturePart"
+        let data = [];
+
+        firebase.database().ref(refDir).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                data.push(snapchild.val());
+            });
+            this.setState({furnPartData: data});
+        });
+    }
+
+    loadBuildMatDatabase() {
+        //on progress
+    }
+
+    loadShpVocDatabase() {
+        let refDir = "CalculationData/Farming/ShopVoucher"
+        let data = [];
+
+        firebase.database().ref(refDir).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                data.push(snapchild.val());
+            });
+            this.setState({shpVocData: data});
+        });
+    }
+
     componentDidMount() {
         this.loadOpDatabase();
         this.loadLmdDatabase();
+        this.loadSkillDatabase();
+        this.loadFurnPartDatabase();
+        this.loadBuildMatDatabase();
+        this.loadShpVocDatabase();
     }
 
     render() {

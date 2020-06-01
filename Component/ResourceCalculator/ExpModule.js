@@ -67,6 +67,10 @@ class ExpModule extends Component {
                         onValueChange={(itemValue, itemIndex) => this.setState({stage: itemValue}, this.changeExpCalculationParameter(itemValue))}
                     >
                         <Picker.Item label="Select stage" value={0}/>
+                        <Picker.Item label="LS-1" value={1}/>
+                        <Picker.Item label="LS-2" value={2}/>
+                        <Picker.Item label="LS-3" value={3}/>
+                        <Picker.Item label="LS-4" value={4}/>
                         <Picker.Item label="LS-5" value={5}/>
                     </Picker>
                 </View>

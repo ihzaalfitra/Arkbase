@@ -12,7 +12,8 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class FurnPartModule extends Component {
     state = {
-        stage: -1,
+        data: this.props.furnPartData,
+        stage: 0,
         sanityUsed: 0,
         dropAmount: 0,
         targetedValue: 0,
@@ -22,15 +23,9 @@ class FurnPartModule extends Component {
     }
     
     changeFurnPartCalculationParameter(stageIndex) {
-        let stageInt = parseInt(stageIndex);
-        switch(stageInt) {
-            case -1:
-                this.setState({sanityUsed: 0}, this.setState({dropAmount: 0}));
-                break;
-            case 5:
-                this.setState({sanityUsed: 30}, this.setState({dropAmount: 10}));
-                break;
-        }
+        let data = this.state.data[parseInt(stageIndex)];
+        this.setState({dropAmount: data["dropAmount"]});
+        this.setState({sanityUsed: data["sanityUsed"]});
     }
 
     calculateFurnPart(target, sanity, drop) {
@@ -50,7 +45,11 @@ class FurnPartModule extends Component {
                         selectedValue={this.state.stage}
                         onValueChange={(itemValue, itemIndex) => this.setState({stage: itemValue}, this.changeFurnPartCalculationParameter(itemValue))}
                     >
-                        <Picker.Item label="Select stage" value={-1}/>
+                        <Picker.Item label="Select stage" value={0}/>
+                        <Picker.Item label="SK-1" value={1}/>
+                        <Picker.Item label="SK-2" value={2}/>
+                        <Picker.Item label="SK-3" value={3}/>
+                        <Picker.Item label="SK-4" value={4}/>
                         <Picker.Item label="SK-5" value={5}/>
                     </Picker>
                 </View>

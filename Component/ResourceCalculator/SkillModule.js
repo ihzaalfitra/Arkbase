@@ -12,6 +12,7 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class SkillModule extends Component {
     state = {
+        data: this.props.skillData,
         targetedSummary: -1,
         targetedAmount: 0,
         recommendedStage: "none",
@@ -21,43 +22,15 @@ class SkillModule extends Component {
     }
 
     calculateSkill(targetedSummary, targetedAmount) {
-        let data = {
-            1: {
-                stageName: "CA-2",
-                sanityUsed: 15,
-                dropAmount: 5
-            },
-            2: {
-                stageName: "CA-3",
-                sanityUsed: 20,
-                dropAmount: 3
-            },
-            3: {
-                stageName: "CA-5",
-                sanityUsed: 30,
-                dropAmount: 2
-            }
-        };
-        let stageName;
-        let sanityUsed;
-        let dropAmount;
-        let runAmount;
-        let overflow;
+        let data = this.state.data[targetedSummary];
 
-        if(targetedSummary == -1) {
-            stageName = "None";
-            sanityUsed = 0;
-            dropAmount = 0;
-            runAmount = 0;
-            overflow = 0;
-        }
-        else {
-            stageName = data[targetedSummary]["stageName"];
-            sanityUsed = data[targetedSummary]["sanityUsed"];
-            dropAmount = data[targetedSummary]["dropAmount"];
-            runAmount = Math.ceil(targetedAmount / dropAmount);
-            overflow = 0;
-        }
+        
+
+        let stageName = data["stageName"];
+        let sanityUsed = data["sanityUsed"];
+        let dropAmount = data["dropAmount"];
+        let runAmount = Math.ceil(targetedAmount / dropAmount);
+        let overflow = (runAmount*dropAmount) - targetedAmount;
             
         this.setState({recommendedStage: stageName});
         this.setState({totalRun: runAmount});
