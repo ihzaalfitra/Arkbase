@@ -14,84 +14,77 @@ class BuildMatModule extends Component {
     state = {
         building: "none",
         currentPhase: 0,
-        targetedPhase: 0
+        targetedPhase: 0,
+        buildingData: this.props.buildingData,
+        buildMatData: this.props.buildMatData,
+        matUsed: [],
+        matAmount: []
     }
 
-    calculateBuildMat(building, currentPhase, targetedPhase) {
-        // let buildingData = {
-        //     controlCenter: {
-        //         maxPhase: 5,
-        //     },
-        //     dormitory: {
-        //         maxPhase: 5,
-        //         1: {
-        //             droneUsed: 100,
-        //             materialType: [
-        //                 "light"  
-        //             ],
-        //             materialQuantity: [
-        //                 1
-        //             ]
-        //         },
-        //         2: {
-        //             droneUsed: 100,
-        //             materialType: [
-        //                 "light"  
-        //             ],
-        //             materialQuantity: [
-        //                 1
-        //             ]
-        //         },
-        //         3: {
-        //             droneUsed: 100,
-        //             materialType: [
-        //                 "light"  
-        //             ],
-        //             materialQuantity: [
-        //                 1
-        //             ]
-        //         },
-        //         4: {
-        //             droneUsed: 100,
-        //             materialType: [
-        //                 "light"  
-        //             ],
-        //             materialQuantity: [
-        //                 1
-        //             ]
-        //         },
-        //         5: {
-        //             droneUsed: 100,
-        //             materialType: [
-        //                 "light"  
-        //             ],
-        //             materialQuantity: [
-        //                 1
-        //             ]
-        //         }
-        //     },
-        //     powerPlant: {
-        //         maxPhase: 3
-        //     },
-        //     factory: {
-        //         maxPhase: 3
-        //     },
-        //     tradingPost: {
-        //         maxPhase: 3
-        //     },
-        //     receptionRoom: {
-        //         maxPhase: 3
-        //     },
-        //     workshop: {
-        //         maxPhase: 3
-        //     },
-        //     office: {
-        //         maxPhase: 3
-        //     },
-        //     trainingRoom: {
-        //         maxPhase: 3
-        //     }
-        // };
+    calculateBuildMat(selectedBuilding, currentPhase, targetedPhase) {
+        let building = this.state.buildingData[selectedBuilding];
+        let matUsed = [];
+        let matAmount = [];
+        let matIndex = 0;
+
+        if(currentPhase < targetedPhase && targetedPhase <= building["maxPhase"]){
+            while(currentPhase < targetedPhase) {
+                currentPhase += 1;
+                building["phase"][currentPhase]["matName"].forEach(function(item, index) {
+                    matIndex = matUsed.indexOf(item);
+                    if(matIndex == -1) {
+                        matUsed.push(item);
+                        matAmount.push(building["phase"][currentPhase]["matQuantity"][index]);
+                    }
+                    else {
+                        matAmount[matIndex] += building["phase"][currentPhase]["matQuantity"][index];
+                    }
+                });
+            }
+        }
+        this.setState({matUsed: matUsed});
+        this.setState({matAmount: matAmount});
+    }
+
+    getResult() {
+        let matUsed = this.state.matUsed;
+        let matAmount = this.state.matAmount;
+        let buildMatData = this.state.buildMatData;
+        let buildMatName = "";
+        let buildMatAmount = "";
+        let reqMat = "";
+        let reqMatName = "";
+        let reqMatAmount = "";
+        let stage = "";
+        if(matUsed.length == 0) {
+            return;
+        }
+        else {
+            let outputText = matUsed.map(function(item, index) {
+                if(item != "none") {
+                    if(item != "keel") {
+                        buildMatName = buildMatData["BuildingMaterial"][item]["name"];
+                        buildMatAmount = matAmount[index];
+                        reqMat = buildMatData["BuildingMaterial"][item]["reqMat"];
+                        reqMatName = buildMatData["Carbon"][reqMat]["name"];
+                        reqMatAmount = buildMatData["BuildingMaterial"][item]["reqAmount"] * buildMatAmount;
+                        return(
+                            <View style={picker.container}>
+                                <Text style={styles.textLeft}>You need {buildMatAmount} {buildMatName} ({reqMatAmount} {reqMatName})</Text>
+                                <Text> </Text>
+                            </View>
+    
+                        )                        
+                    }
+                    else {
+                        return(
+                            <Text style={styles.textLeft}>You need {matAmount[index]} Keel from Main Story</Text>
+                        )
+                    }
+                }
+            });
+            return outputText;
+        }
     }
 
     render() {
@@ -106,7 +99,7 @@ class BuildMatModule extends Component {
                         <Picker.Item label="Select the building you want tp build" value="none"/>
                         <Picker.Item label="Control Center" value="controlCenter"/>
                         <Picker.Item label="Dormitory" value="dormitory"/>
-                        <Picker.Item label="Power Plant" value="powerPlat"/>
+                        <Picker.Item label="Power Plant" value="powerPlant"/>
                         <Picker.Item label="Factory" value="factory"/>
                         <Picker.Item label="Trading Post" value="tradingPost"/>
                         <Picker.Item label="Reception Room" value="receptionRoom"/>
@@ -133,6 +126,7 @@ class BuildMatModule extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
+                {this.getResult()}
             </View>
         ) 
     }

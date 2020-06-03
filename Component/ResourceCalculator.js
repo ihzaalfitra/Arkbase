@@ -34,7 +34,8 @@ class ResourceCalculator extends Component {
         
         furnPartData: [],
 
-        buildMatData: [],
+        buildMatBuildingData: {},
+        buildMatBuildMatData: {},
 
         shpVocData: []
     };
@@ -66,7 +67,7 @@ class ResourceCalculator extends Component {
                 break;
             case "buildMat":
                 return(
-                    <BuildMatModule/>
+                    <BuildMatModule buildingData={this.state.buildMatBuildingData} buildMatData={this.state.buildMatBuildMatData}/>
                 );
                 break;
             case "voucher":
@@ -169,7 +170,24 @@ class ResourceCalculator extends Component {
     }
 
     loadBuildMatDatabase() {
-        //on progress
+        let refDirBuilding = "CalculationData/Building";
+        let refDirBuildMat = "CalculationData/BuildMat";
+        let buildingData = {};
+        let buildMatData = {};
+
+        firebase.database().ref(refDirBuilding).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                buildingData[snapchild.key] = snapchild.val();
+            });
+            this.setState({buildMatBuildingData: buildingData});
+        });
+
+        firebase.database().ref(refDirBuildMat).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                buildMatData[snapchild.key] = snapchild.val();
+            });
+            this.setState({buildMatBuildMatData: buildMatData});
+        });
     }
 
     loadShpVocDatabase() {
