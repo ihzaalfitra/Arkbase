@@ -56,6 +56,11 @@ class BuildMatModule extends Component {
         let reqMatName = "";
         let reqMatAmount = "";
         let stage = "";
+        let sanityUsed = 0;
+        let dropAmount = 0;
+        let totalRun = 0;
+        let totalSanity = 0;
+        let overflow = 0;
         if(matUsed.length == 0) {
             return;
         }
@@ -67,11 +72,21 @@ class BuildMatModule extends Component {
                         buildMatAmount = matAmount[index];
                         reqMat = buildMatData["BuildingMaterial"][item]["reqMat"];
                         reqMatName = buildMatData["Carbon"][reqMat]["name"];
+                        stage = buildMatData["Carbon"][reqMat]["bestStage"];
                         reqMatAmount = buildMatData["BuildingMaterial"][item]["reqAmount"] * buildMatAmount;
+                        sanityUsed = buildMatData["Carbon"][reqMat]["sanityUsed"];
+                        dropAmount = buildMatData["Carbon"][reqMat]["dropAmount"];
+                        totalRun = Math.ceil(reqMatAmount/dropAmount);
+                        totalSanity = totalRun * sanityUsed;
+                        overflow = (totalRun * dropAmount) - reqMatAmount;
                         return(
                             <View style={picker.container}>
-                                <Text style={styles.textLeft}>You need {buildMatAmount} {buildMatName} ({reqMatAmount} {reqMatName})</Text>
-                                <Text> </Text>
+                                <Text style={styles.textLeft}>You need {buildMatAmount} {buildMatName} ({reqMatAmount} {reqMatName} from {stage})</Text>
+                                <Text style={styles.textLeft}>You need minimal: </Text>
+                                <Text style={styles.textLeft}>{totalRun} run</Text>
+                                <Text style={styles.textLeft}>{totalSanity} sanity</Text>
+                                <Text style={styles.textLeft}>You will get {overflow} extra {reqMatName}</Text>
+                                <Text style={styles.textLeft}> </Text>
                             </View>
     
                         )                        
