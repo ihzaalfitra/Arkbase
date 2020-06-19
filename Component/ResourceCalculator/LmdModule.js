@@ -13,7 +13,7 @@ import picker from '../../assets/Stylesheet/picker.js';
 class LmdModule extends Component {
     state = {
         errorStatement:'',
-        
+
         data: this.props.lmdData,
         stage: 0,
         sanityUsed: 0,
@@ -39,7 +39,7 @@ class LmdModule extends Component {
 		if (sanity == 0 && drop == 0) {
 			this.setState({errorStatement: 'Please select stage.'})
 		}else if(target == 0 || isNaN(target)){
-			this.setState({errorStatement: 'Target amount cannot be zero or blank.'})
+			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
 		}else{
 			this.setState({errorStatement: 'no_error'})
 		}

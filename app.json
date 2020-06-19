@@ -9,7 +9,8 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
+
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -22,7 +23,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+		"bundleIdentifier" : "com.katabo.arkbase",
+		"buildNumber" : "0.0.1",
+		"supportsTablet": true
+  },
+    "android": {
+		"adaptiveIcon":{
+			"backgroundColor":"#000",
+			"foregroundImage":"./assets/Graphic/ArkbaseLogo_android.icon_1024.png"
+		},
+		"icon":"./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
+      	"package" : "com.katabo.arkbase",
+	  	"versionCode" : 1
     }
   }
 }

@@ -12,10 +12,11 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class ExpModule extends Component {
     state = {
+		errorStatement:'',
         stage: 0,
         sanityUsed: 0,
         dropAmount: 0,
-        opRarity: -1,
+		opRarity: -1,
         opCurrentElite: -1,
         opCurrentLevel: 0,
         opTargetedElite: -1,

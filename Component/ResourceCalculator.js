@@ -31,7 +31,7 @@ class ResourceCalculator extends Component {
         lmdData: [],
 
         skillData: [],
-        
+
         furnPartData: [],
 
         buildMatBuildingData: {},
@@ -83,6 +83,9 @@ class ResourceCalculator extends Component {
 				this.setState({screenHeight:850})
 				break;
 			case 'lmd':
+				this.setState({screenHeight:contentHeight})
+				break;
+			case 'buildMat':
 				this.setState({screenHeight:contentHeight})
 				break;
 			default:
@@ -216,12 +219,14 @@ class ResourceCalculator extends Component {
         return(
 			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
 			<Text style={styles.header}>Resource Calculator</Text>
-			<ScrollView>
+			<View>
+			<ScrollView
+			vertical
+			style={{backgroundColor:'blue'}}>
 				<View style={{
+					height:this.state.screenHeight,
 					alignItems:'center',
 				    backgroundColor:'#000',
-				    flex:1,
-				    height:this.state.screenHeight
 				}}>
                     <View style={picker.container}>
                       <View style={picker.underline}>
@@ -232,8 +237,8 @@ class ResourceCalculator extends Component {
                           onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue}, this.changeScreenHeight(itemValue))}
                         >
                           <Picker.Item label="Select resource" value={null}/>
-                          <Picker.Item label="BATTLE RECORD (EXP)" value="exp"/>
-                          <Picker.Item label="LMD" value="lmd"/>
+                          <Picker.Item label="BATTLE RECORD (EXP)" value={"exp"}/>
+                          <Picker.Item label="LMD" value={"lmd"}/>
                           <Picker.Item label="SKILL SUMMARY" value={"skill"}/>
                           <Picker.Item label="FURNITURE PART" value={"furnPart"}/>
                           <Picker.Item label="BUILDING MATERIAL" value={"buildMat"}/>
@@ -244,6 +249,7 @@ class ResourceCalculator extends Component {
                     </View>
                     </View>
                 </ScrollView>
+				</View>
 			</View>
         )
     }
