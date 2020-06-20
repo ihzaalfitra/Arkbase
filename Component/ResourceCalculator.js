@@ -217,9 +217,9 @@ class ResourceCalculator extends Component {
     render() {
 
         return(
-			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
-			<Text style={styles.header}>Resource Calculator</Text>
-			<View>
+			// <View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
+			//     <Text style={styles.header}>Resource Calculator</Text>
+			// <View>
 			<ScrollView
 			vertical
 			style={{backgroundColor:'blue'}}>
