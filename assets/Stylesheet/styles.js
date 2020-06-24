@@ -5,8 +5,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     paddingTop: 60,
     backgroundColor:'#000',
-    flex:1,
-    height:'auto'
+    flex:1
   },
   flexStart:{
     flex:1,

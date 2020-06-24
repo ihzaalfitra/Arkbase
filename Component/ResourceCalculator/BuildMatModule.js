@@ -21,8 +21,7 @@ class BuildMatModule extends Component {
         buildingData: this.props.buildingData,
         buildMatData: this.props.buildMatData,
         matUsed: [],
-        matAmount: [],
-		outputHeight:0
+        matAmount: []
     }
 
     calculateBuildMat(selectedBuilding, currentPhase, targetedPhase) {
@@ -91,7 +90,6 @@ class BuildMatModule extends Component {
 			this.setState({errorStatement: ""});
 		}
 		this.setState({matUsed: matUsed});
-		this.setState({outputHeight:this.state.outputHeight+120*this.state.matUsed.length});
         this.setState({matAmount: matAmount});
     }
 
@@ -200,13 +198,8 @@ class BuildMatModule extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
-					<ScrollView
-						vertical
-					>
-						<View style={{height:this.state.outputHeight}}>
-							{this.getResult()}
-						</View>
-					</ScrollView>
+				
+					{this.getResult()}
             </View>
         )
     }
