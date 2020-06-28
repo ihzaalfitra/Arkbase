@@ -1,21 +1,12 @@
 import React, {Component} from 'react';
 import {
-    StyleSheet,
     Text,
     View,
-    TouchableOpacity,
-    Picker,
-    TextInput,
-    ScrollView,
-    Modal,
-    SafeAreaView,
-	Dimensions
+    TouchableOpacity
 } from 'react-native';
 
 import ResourceCalculator from './Component/ResourceCalculator.js';
 import navigation from './assets/Stylesheet/navigation.js';
-
-const contentHeight=Math.round(Dimensions.get('window').height)-100;
 
 class MainClass extends Component {
 	state = {
@@ -43,6 +34,7 @@ class MainClass extends Component {
 		}
 	}
 	render(){
+
 		return(
 			<View style={{flex:1}}>
 				{

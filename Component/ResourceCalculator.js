@@ -16,11 +16,8 @@ import FurnPartModule from './ResourceCalculator/FurnPartModule.js';
 import BuildMatModule from './ResourceCalculator/BuildMatModule.js';
 import ShpVocModule from './ResourceCalculator/ShpVocModule.js';
 
-const contentHeight=Math.round(Dimensions.get('window').height)-100;
-
 class ResourceCalculator extends Component {
     state = {
-		screenHeight:contentHeight,
         resource: "none",
         errorStatement:'',
 
@@ -75,22 +72,6 @@ class ResourceCalculator extends Component {
                     <ShpVocModule shpVocData={this.state.shpVocData}/>
                 );
                 break;
-		}
-	}
-	changeScreenHeight(itemValue){
-		switch(itemValue){
-			case 'exp':
-				this.setState({screenHeight:850})
-				break;
-			case 'lmd':
-				this.setState({screenHeight:contentHeight})
-				break;
-			case 'buildMat':
-				this.setState({screenHeight:contentHeight})
-				break;
-			default:
-				this.setState({screenHeight:contentHeight})
-				break;
 		}
 	}
 
@@ -218,23 +199,21 @@ class ResourceCalculator extends Component {
 
         return(
 			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
-			<Text style={styles.header}>Resource Calculator</Text>
-			<View>
-			<ScrollView
-			vertical
-			style={{backgroundColor:'blue'}}>
+			    
+			
+			<ScrollView>
 				<View style={{
-					height:this.state.screenHeight,
 					alignItems:'center',
 				    backgroundColor:'#000',
 				}}>
+                    <Text style={styles.header}>Resource Calculator</Text>
                     <View style={picker.container}>
                       <View style={picker.underline}>
                         <Picker
                           style={picker.style}
                           itemStyle={picker.itemStyle}
                           selectedValue={this.state.resource}
-                          onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue}, this.changeScreenHeight(itemValue))}
+                          onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue})}
                         >
                           <Picker.Item label="Select resource" value={null}/>
                           <Picker.Item label="BATTLE RECORD (EXP)" value={"exp"}/>
@@ -249,7 +228,7 @@ class ResourceCalculator extends Component {
                     </View>
                     </View>
                 </ScrollView>
-				</View>
+				
 			</View>
         )
     }

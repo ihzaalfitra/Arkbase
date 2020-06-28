@@ -12,12 +12,10 @@ const picker = StyleSheet.create({
   container:{
     flex:1,
     width:'100%',
-    height:40,
     alignItems:'center'
   },
   underline:{
     width:'80%',
-    height:91,
     marginBottom:-15,
     borderColor:'#aaa',
     borderBottomWidth: 1
