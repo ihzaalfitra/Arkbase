@@ -34,7 +34,9 @@ class ResourceCalculator extends Component {
         buildMatBuildingData: {},
         buildMatBuildMatData: {},
 
-        shpVocData: []
+        shpVocData: [],
+
+        isDataLoaded: false
     };
 
 	checkSelectedResource(selectedResource) {
@@ -122,7 +124,7 @@ class ResourceCalculator extends Component {
         let refDir = "CalculationData/Farming/Lmd";
         let data = [];
 
-        firebase.database().ref(refDir).once('value', (snapshot) => {
+        return firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -188,7 +190,7 @@ class ResourceCalculator extends Component {
 
     componentDidMount() {
         this.loadOpDatabase();
-        this.loadLmdDatabase();
+        this.loadLmdDatabase().then(() => this.setState({isDataLoaded: true}));
         this.loadSkillDatabase();
         this.loadFurnPartDatabase();
         this.loadBuildMatDatabase();
@@ -196,6 +198,8 @@ class ResourceCalculator extends Component {
     }
 
     render() {
+
+        const blank = <View></View>;
 
         return(
 			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
@@ -224,7 +228,7 @@ class ResourceCalculator extends Component {
                           <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
                           </Picker>
                       </View>
-                      {this.checkSelectedResource(this.state.resource)}
+                      {this.state.isDataLoaded ? this.checkSelectedResource(this.state.resource) : blank}
                     </View>
                     </View>
                 </ScrollView>
