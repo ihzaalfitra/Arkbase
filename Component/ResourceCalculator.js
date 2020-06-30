@@ -199,36 +199,35 @@ class ResourceCalculator extends Component {
 
         return(
 			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
-			    
-			
-			<ScrollView>
-				<View style={{
-					alignItems:'center',
-				    backgroundColor:'#000',
-				}}>
+			    <ScrollView>
+					<View style={{
+						alignItems:'center',
+					    backgroundColor:'#000',
+					}}>
                     <Text style={styles.header}>Resource Calculator</Text>
                     <View style={picker.container}>
-                      <View style={picker.underline}>
-                        <Picker
-                          style={picker.style}
-                          itemStyle={picker.itemStyle}
-                          selectedValue={this.state.resource}
-                          onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue})}
-                        >
-                          <Picker.Item label="Select resource" value={null}/>
-                          <Picker.Item label="BATTLE RECORD (EXP)" value={"exp"}/>
-                          <Picker.Item label="LMD" value={"lmd"}/>
-                          <Picker.Item label="SKILL SUMMARY" value={"skill"}/>
-                          <Picker.Item label="FURNITURE PART" value={"furnPart"}/>
-                          <Picker.Item label="BUILDING MATERIAL" value={"buildMat"}/>
-                          <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
-                          </Picker>
-                      </View>
-                      {this.checkSelectedResource(this.state.resource)}
+						<View style={picker.underline}>
+	                        <Picker
+	                          style={picker.style}
+	                          itemStyle={picker.itemStyle}
+	                          selectedValue={this.state.resource}
+	                          onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue})}
+	                        >
+	                          <Picker.Item label="Select resource" value={null}/>
+	                          <Picker.Item label="BATTLE RECORD (EXP)" value={"exp"}/>
+	                          <Picker.Item label="LMD" value={"lmd"}/>
+	                          <Picker.Item label="SKILL SUMMARY" value={"skill"}/>
+	                          <Picker.Item label="FURNITURE PART" value={"furnPart"}/>
+	                          <Picker.Item label="BUILDING MATERIAL" value={"buildMat"}/>
+	                          <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
+	                          </Picker>
+	                      	</View>
+                      	{this.checkSelectedResource(this.state.resource)}
+                    	</View>
                     </View>
-                    </View>
+					<Text>
+					</Text>
                 </ScrollView>
-				
 			</View>
         )
     }

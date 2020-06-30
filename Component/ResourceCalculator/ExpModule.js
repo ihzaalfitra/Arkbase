@@ -13,7 +13,7 @@ import picker from '../../assets/Stylesheet/picker.js';
 class ExpModule extends Component {
     state = {
 		errorStatement:'',
-        stage: 0,
+        stage: -1,
         sanityUsed: 0,
         dropAmount: 0,
 		opRarity: -1,
@@ -37,19 +37,41 @@ class ExpModule extends Component {
     }
 
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanity, drop) {
+		currentLevel = parseInt(currentLevel);
+		targetedLevel = parseInt(targetedLevel);
         let expReqPerLevel = this.state.opExpReqAllElite;
         let levelLimit = this.state.opLevelLimit;
         let totalExp = 0;
         let runAmount = 0;
         let overflow = 0;
-        while((currentElite <= targetedElite) && !(currentElite == targetedElite && currentLevel >= targetedLevel)) {
-            totalExp += expReqPerLevel[currentElite][currentLevel];
-            currentLevel++;
-            if(currentLevel == levelLimit[rarity][currentElite]) {
-                currentLevel = 1;
-                currentElite++;
-            }
-        }
+		if(
+			rarity == -1 ||
+			currentElite == -1 ||
+			targetedElite == -1 ||
+			currentElite > targetedElite ||
+			(currentElite == targetedElite && currentLevel == targetedLevel) ||
+			this.state.stage == -1 ||
+			isNaN(currentLevel) ||
+			isNaN(targetedLevel) ||
+			currentLevel == 0 ||
+			targetedLevel == 0 ||
+			levelLimit[rarity][currentElite] == -1 ||
+			levelLimit[rarity][targetedElite] == -1 ||
+			currentLevel > levelLimit[rarity][currentElite] ||
+			targetedLevel > levelLimit[rarity][targetedElite]
+		){
+			this.setState({errorStatement:'Input is incorrect.'});
+		}else{
+			this.setState({errorStatement:''});
+	        while((currentElite <= targetedElite) && !(currentElite == targetedElite && currentLevel >= targetedLevel)) {
+	            totalExp += expReqPerLevel[currentElite][currentLevel];
+	            currentLevel++;
+	            if(currentLevel == levelLimit[rarity][currentElite]) {
+	                currentLevel = 1;
+	                currentElite++;
+	            }
+	        }
+		}
         runAmount = Math.ceil(totalExp / drop);
         overflow = (drop*runAmount) - totalExp;
         this.setState({totalExpNeeded: totalExp});
@@ -57,7 +79,26 @@ class ExpModule extends Component {
         this.setState({totalSanity: runAmount*sanity});
         this.setState({overflow: overflow});
     }
-
+	getResult(){
+		if(this.state.errorStatement){
+			return(
+				<View>
+					<Text style={styles.textError}>{this.state.errorStatement}</Text>
+				</View>
+			)
+		}else{
+			return(
+				<View>
+					<Text style={styles.textRequire}>Require:</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalExpNeeded)} exp</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
+					<Text style={styles.textLeft}> </Text>
+					<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra EXP</Text>
+				</View>
+			)
+		}
+	}
     render() {
         return(
             <View style={picker.container}>
@@ -67,7 +108,7 @@ class ExpModule extends Component {
                         selectedValue={this.state.stage}
                         onValueChange={(itemValue, itemIndex) => this.setState({stage: itemValue}, this.changeExpCalculationParameter(itemValue))}
                     >
-                        <Picker.Item label="Select stage" value={0}/>
+                        <Picker.Item label="Select stage" value={-1}/>
                         <Picker.Item label="LS-1" value={1}/>
                         <Picker.Item label="LS-2" value={2}/>
                         <Picker.Item label="LS-3" value={3}/>
@@ -134,12 +175,8 @@ class ExpModule extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
-                <Text style={styles.textRequire}>Require:</Text>
-                <Text style={styles.textLeft}>{parseInt(this.state.totalExpNeeded)} exp</Text>
-                <Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
-				<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
-				<Text style={styles.textLeft}> </Text>
-				<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra EXP</Text>
+				<Text style={styles.textLeft}>{this.state.opCurrentLevel}</Text>
+				{this.getResult()}
             </View>
         )
     }
