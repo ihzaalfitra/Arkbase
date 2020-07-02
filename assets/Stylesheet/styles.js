@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   input:{
     backgroundColor:'#151515',
     marginTop:40,
+	marginBottom:-10,
     color:'#eee',
     paddingHorizontal:12,
     paddingVertical:6,
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
   inputError:{
     backgroundColor:'#151515',
     marginTop:40,
+	marginBottom:-10,
     color:'#eee',
     paddingHorizontal:12,
     paddingVertical:6,

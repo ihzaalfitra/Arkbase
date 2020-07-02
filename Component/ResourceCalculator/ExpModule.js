@@ -334,7 +334,6 @@ class ExpModule extends Component {
                     onChangeText={(input) => this.setState({opCurrentLevel: input})}
                     keyboardType="numeric"
                 />
-				<Text style={{color:'white'}}>{this.state.opTargetedLevel}</Text>
                 <View style={this.styleUnderline(this.state.opTargetedElite,'picker', 'targetedElite')}>
                     <Picker
                         style={picker.style}
