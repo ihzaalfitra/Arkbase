@@ -13,7 +13,7 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class BuildMatModule extends Component {
     state = {
-		errorStatement:'',
+		errorStatement:-1,
 		buildingName:"",
         building: "none",
         currentPhase: 0,
@@ -74,6 +74,7 @@ class BuildMatModule extends Component {
 		}else if(targetedPhase > building["maxPhase"]){
 			this.setState({errorStatement: "The max phase of " + this.state.buildingName + " is " + building["maxPhase"]});
 		}else if(currentPhase < targetedPhase && targetedPhase <= building["maxPhase"]){
+			this.setState({errorStatement: ""});
             while(currentPhase < targetedPhase) {
                 currentPhase += 1;
                 building["phase"][currentPhase]["matName"].forEach(function(item, index) {
@@ -87,73 +88,78 @@ class BuildMatModule extends Component {
                     }
                 });
             }
-			this.setState({errorStatement: ""});
 		}
 		this.setState({matUsed: matUsed});
         this.setState({matAmount: matAmount});
     }
 
     getResult() {
-		if(this.state.errorStatement!=''){
+		if(this.state.errorStatement==''){
+			let matUsed = this.state.matUsed;
+			let matAmount = this.state.matAmount;
+			let buildMatData = this.state.buildMatData;
+			let buildMatName = "";
+			let buildMatAmount = "";
+			let reqMat = "";
+			let reqMatName = "";
+			let reqMatAmount = "";
+			let stage = "";
+			let sanityUsed = 0;
+			let dropAmount = 0;
+			let totalRun = 0;
+			let totalSanity = 0;
+			let overflow = 0;
+			if(matUsed.length == 0) {
+				return;
+			}
+			else {
+				let outputText = matUsed.map(function(item, index) {
+					if(item != "none") {
+						if(item != "keel") {
+							buildMatName = buildMatData["BuildingMaterial"][item]["name"];
+							buildMatAmount = matAmount[index];
+							reqMat = buildMatData["BuildingMaterial"][item]["reqMat"];
+							reqMatName = buildMatData["Carbon"][reqMat]["name"];
+							stage = buildMatData["Carbon"][reqMat]["bestStage"];
+							reqMatAmount = buildMatData["BuildingMaterial"][item]["reqAmount"] * buildMatAmount;
+							sanityUsed = buildMatData["Carbon"][reqMat]["sanityUsed"];
+							dropAmount = buildMatData["Carbon"][reqMat]["dropAmount"];
+							totalRun = Math.ceil(reqMatAmount/dropAmount);
+							totalSanity = totalRun * sanityUsed;
+							overflow = (totalRun * dropAmount) - reqMatAmount;
+							return(
+								<View style={{width:'80%'}}>
+								<Text style={styles.textLeft}>You need {buildMatAmount} {buildMatName} ({reqMatAmount} {reqMatName} from {stage})</Text>
+								<Text style={styles.textLeft}>You need minimal: </Text>
+								<Text style={styles.textLeft}>{totalRun} run</Text>
+								<Text style={styles.textLeft}>{totalSanity} sanity</Text>
+								<Text style={styles.textLeft}>You will get {overflow} extra {reqMatName}</Text>
+								<Text style={styles.textLeft}> </Text>
+								</View>
+
+							)
+						}
+						else {
+							return(
+								<Text style={styles.textLeft}>You need {matAmount[index]} Keel from Main Story</Text>
+							)
+						}
+					}
+				});
+				return outputText;
+			}
+		//uninitialized errorStatement
+		}else if (this.state.errorStatement==-1) {
+			return(
+				null
+			)
+		//errorStatement was thrown
+		}else{
 			return(
 				<View style={picker.container}>
-					<Text style={styles.textError}>{this.state.errorStatement}</Text>
+				<Text style={styles.textError}>{this.state.errorStatement}</Text>
 				</View>
 			)
-		}else{
-	        let matUsed = this.state.matUsed;
-	        let matAmount = this.state.matAmount;
-	        let buildMatData = this.state.buildMatData;
-	        let buildMatName = "";
-	        let buildMatAmount = "";
-	        let reqMat = "";
-	        let reqMatName = "";
-	        let reqMatAmount = "";
-	        let stage = "";
-	        let sanityUsed = 0;
-	        let dropAmount = 0;
-	        let totalRun = 0;
-	        let totalSanity = 0;
-	        let overflow = 0;
-	        if(matUsed.length == 0) {
-	            return;
-	        }
-	        else {
-	            let outputText = matUsed.map(function(item, index) {
-	                if(item != "none") {
-	                    if(item != "keel") {
-	                        buildMatName = buildMatData["BuildingMaterial"][item]["name"];
-	                        buildMatAmount = matAmount[index];
-	                        reqMat = buildMatData["BuildingMaterial"][item]["reqMat"];
-	                        reqMatName = buildMatData["Carbon"][reqMat]["name"];
-	                        stage = buildMatData["Carbon"][reqMat]["bestStage"];
-	                        reqMatAmount = buildMatData["BuildingMaterial"][item]["reqAmount"] * buildMatAmount;
-	                        sanityUsed = buildMatData["Carbon"][reqMat]["sanityUsed"];
-	                        dropAmount = buildMatData["Carbon"][reqMat]["dropAmount"];
-	                        totalRun = Math.ceil(reqMatAmount/dropAmount);
-	                        totalSanity = totalRun * sanityUsed;
-	                        overflow = (totalRun * dropAmount) - reqMatAmount;
-	                        return(
-	                            <View style={{width:'80%'}}>
-	                                <Text style={styles.textLeft}>You need {buildMatAmount} {buildMatName} ({reqMatAmount} {reqMatName} from {stage})</Text>
-	                                <Text style={styles.textLeft}>You need minimal: </Text>
-	                                <Text style={styles.textLeft}>{totalRun} run</Text>
-	                                <Text style={styles.textLeft}>{totalSanity} sanity</Text>
-	                                <Text style={styles.textLeft}>You will get {overflow} extra {reqMatName}</Text>
-	                                <Text style={styles.textLeft}> </Text>
-	                            </View>
-
-	                        )
-	                    }
-	                    else {
-	                        return(
-	                            <Text style={styles.textLeft}>You need {matAmount[index]} Keel from Main Story</Text>
-	                        )
-	                    }
-	                }
-	            });
-	            return outputText;
-	        }
 		}
     }
 
@@ -198,7 +204,7 @@ class BuildMatModule extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
-				
+
 					{this.getResult()}
             </View>
         )

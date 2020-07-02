@@ -73,6 +73,17 @@ const styles = StyleSheet.create({
     fontSize:16,
     borderColor:'#aaa',
     borderBottomWidth: 1
+},
+  inputError:{
+    backgroundColor:'#151515',
+    marginTop:40,
+    color:'#eee',
+    paddingHorizontal:12,
+    paddingVertical:6,
+    width:'80%',
+    fontSize:16,
+    borderColor:'#f22',
+    borderBottomWidth: 1
   }
 });
 
