@@ -14,7 +14,6 @@ import picker from '../../assets/Stylesheet/picker.js';
 class BuildMatModule extends Component {
     state = {
 		errorStatement:'',
-		buildingName:"",
         building: "none",
         currentPhase: 0,
         targetedPhase: 0,
@@ -26,38 +25,6 @@ class BuildMatModule extends Component {
 
     calculateBuildMat(selectedBuilding, currentPhase, targetedPhase) {
         let building = this.state.buildingData[selectedBuilding];
-		switch(selectedBuilding){
-			case 'controlCenter':
-				this.setState({buildingName:'Control Center'});
-			break;
-			case 'dormitory':
-				this.setState({buildingName:'Dormitory'});
-			break;
-			case 'powerPlant':
-				this.setState({buildingName:'Power Plant'});
-			break;
-			case 'factory':
-				this.setState({buildingName:'Factory'});
-			break;
-			case 'tradingPost':
-				this.setState({buildingName:'Trading Post'});
-			break;
-			case 'receptionRoom':
-				this.setState({buildingName:'Reception Room'});
-			break;
-			case 'workshop':
-				this.setState({buildingName:'Workshop'});
-			break;
-			case 'office':
-				this.setState({buildingName:'Office'});
-			break;
-			case 'trainingRoom':
-				this.setState({buildingName:'Training Room'});
-			break;
-			default:
-				this.setState({buildingName:''});
-			break;
-		}
         let matUsed = [];
         let matAmount = [];
         let matIndex = 0;
