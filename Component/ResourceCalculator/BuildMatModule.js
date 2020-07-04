@@ -72,7 +72,7 @@ class BuildMatModule extends Component {
         }else if(currentPhase == 0 && selectedBuilding == "controlCenter" ){
 			this.setState({errorStatement: "Control Center current phase cannot be zero"});
 		}else if(targetedPhase > building["maxPhase"]){
-			this.setState({errorStatement: "The max phase of " + this.state.buildingName + " is " + building["maxPhase"]});
+			this.setState({errorStatement: "The max phase of " + building["name"] + " is " + building["maxPhase"]});
 		}else if(currentPhase < targetedPhase && targetedPhase <= building["maxPhase"]){
             while(currentPhase < targetedPhase) {
                 currentPhase += 1;
