@@ -206,9 +206,7 @@ class ResourceCalculator extends Component {
         const blank = <View></View>;
 
         return(
-			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
-			    
-			
+			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>			
 			<ScrollView keyboardShouldPersistTaps='handled'>
 				<View style={{
 					alignItems:'center',
@@ -234,9 +232,11 @@ class ResourceCalculator extends Component {
                       </View>
                       {this.state.isDataLoaded ? this.checkSelectedResource(this.state.resource) : blank}
                     </View>
+
                     </View>
+					<Text>
+					</Text>
                 </ScrollView>
-				
 			</View>
         )
     }
