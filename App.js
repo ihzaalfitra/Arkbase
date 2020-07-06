@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React, {Component} from 'react';
 import {
     Text,
@@ -37,7 +38,7 @@ class MainClass extends Component {
 
 		return(
 			<View style={{flex:1}}>
-				{
+				{/* {
 					this.changeContent(this.state.navigationContent)
 				}
 				<View style={navigation.container}>
@@ -79,7 +80,8 @@ class MainClass extends Component {
 						</TouchableOpacity>
 
 					</View>
-				</View>
+				</View> */}
+                <ResourceCalculator/>
 			</View>
 
 		)
