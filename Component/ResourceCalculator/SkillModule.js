@@ -82,7 +82,7 @@ class SkillModule extends Component {
                         selectedValue={this.state.targetedSummary}
                         onValueChange={(itemValue, itemIndex) => this.setState({targetedSummary: itemValue})}
                     >
-                        <Picker.Item label="Select Skill Summary you want" value={0}/>
+                        <Picker.Item label="Select Skill Summary Type" value={0}/>
                         <Picker.Item label="Skill Summary -1" value={1}/>
                         <Picker.Item label="Skill Summary -2" value={2}/>
                         <Picker.Item label="Skill Summary -3" value={3}/>
