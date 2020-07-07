@@ -1,88 +1,34 @@
 import 'react-native-gesture-handler';
 import React, {Component} from 'react';
-import {
-    Text,
-    View,
-    TouchableOpacity
-} from 'react-native';
 
 import ResourceCalculator from './Component/ResourceCalculator.js';
-import navigation from './assets/Stylesheet/navigation.js';
+import {NavigationContainer,DefaultTheme} from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+import Dummy from './dummy.js';
+
+const Tab = createMaterialTopTabNavigator();
+
+const MyTheme = {
+    dark: false,
+        colors: {
+            primary: 'rgb(230,230,230)',
+            background: 'rgb(255, 255, 255)',
+            card: 'rgb(41, 41, 41)',
+            text: 'rgb(255, 255, 255)',
+            border: 'rgb(230,230,230)',
+  },
+};
 
 class MainClass extends Component {
-	state = {
-		navigationContent:'',
-    }
-	changeContent(selectedContent){
-		switch(selectedContent){
-			case 'ResourceCalculator':
-				return(
-					<ResourceCalculator/>
-				)
-				break;
-			case 'StageInformation':
-				return(
-					<View>
-						<Text>Stage Information</Text>
-					</View>
-				)
-				break;
-			default:
-				return(
-					<ResourceCalculator/>
-				)
-				break;
-		}
-	}
 	render(){
-
 		return(
-			<View style={{flex:1}}>
-				{/* {
-					this.changeContent(this.state.navigationContent)
-				}
-				<View style={navigation.container}>
-					<View style={{flexDirection:'row'}}>
-						<TouchableOpacity
-							style={navigation.button}
-							onPress={() => this.changeContent('ResourceCalculator')}
-						>
-							<Text style={navigation.text}>
-								Resource Calculator
-							</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							style={navigation.button}
-							onPress={() => this.changeContent('StageInformation')}
-						>
-							<Text style={navigation.text}>
-								Stage Information
-							</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							style={navigation.button}
-							onPress={() => this.changeContent('Operator')}
-						>
-							<Text style={navigation.text}>
-								Operator
-							</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							style={navigation.button}
-							onPress={() => this.changeContent('About')}
-						>
-							<Text style={navigation.text}>
-								About
-							</Text>
-						</TouchableOpacity>
-
-					</View>
-				</View> */}
-                <ResourceCalculator/>
-			</View>
+			<NavigationContainer theme={MyTheme}>
+                <Tab.Navigator tabBarPosition="bottom">
+                    <Tab.Screen name="ResourceCalculator" component={ResourceCalculator} options={{title: 'Resource Calculator'}}/>
+                    <Tab.Screen name="Dummy" component={Dummy} options={{title: 'Dummy'}}/>
+                </Tab.Navigator>
+            </NavigationContainer>
 
 		)
 	}
