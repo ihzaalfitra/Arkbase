@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, View, FlatList, Dimensions, ScrollView } from 'react-native'
+import {StyleSheet, Text, View, FlatList, Dimensions, ScrollView, Image } from 'react-native'
 
 import default_styles from '../assets/Stylesheet/styles.js';
 
-const dataList = [{key: '1'}, {key: '2'}, {key: '3'}, {key: '4'}, {key: '5'},{key: '6'}, {key: '7'}, {key: '8'}, {key: '9'}, {key: '10'},{key: '11'}, {key: '12'}, {key: '13'}, {key: '14'}, {key: '15'}
-,{key: '16'}, {key: '17'}, {key: '18'}, {key: '19'}, {key: '20'},{key: '21'}, {key: '22'}, {key: '23'}, {key: '24'}, {key: '25'},{key: '26'}, {key: '27'}, {key: '28'}, {key: '29'}, {key: '30'}]
+
+const dataList = [{key:''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}
+,{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}
+,{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}]
 
 
 
@@ -42,11 +44,11 @@ export default class App extends Component {
       let {container, itemText} = styles
 
       return (
-        <View style = {{container,backgroundColor:'#000',paddingTop: 25,flex:9}}>
+        <View style = {{container,backgroundColor:'#000',paddingTop: 45,flex:9}}>
 			<ScrollView>
 				<Text style={default_styles.header}>Materials
 				</Text>
-		        <FlatList
+		        <FlatList style = {{marginTop: 30}}
 					data = {this.formatData(dataList, numColumns)}
 		          	renderItem = {this._renderItem}
 		          	keyExtractor = {(item, index) => index.toString()}
@@ -75,11 +77,11 @@ const styles = StyleSheet.create(
     justifyContent : 'center',
     height : 100,
     flex:1,
-    margin : 20,
+    margin : 30,
     borderWidth: 2,
-    borderRadius: 5,
-    marginHorizontal: 20,
-    marginVertical: 20,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginVertical: 30,
     borderColor: '#fff',
     height: WIDTH/ numColumns,
 
