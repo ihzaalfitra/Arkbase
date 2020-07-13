@@ -12,6 +12,7 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class ShpVocModule extends Component {
     state = {
+		errorStatement:-1,
         data: this.props.shpVocData,
         stage: 0,
         sanityUsed: 0,
@@ -29,13 +30,49 @@ class ShpVocModule extends Component {
     }
 
     calculateShpVoc(target, sanity, drop) {
-        let runAmount = Math.ceil(target / drop);
-        let overflow = (drop*runAmount) - target;
-        this.setState({totalRun: runAmount});
-        this.setState({totalSanity: runAmount*sanity});
-        this.setState({overflow: overflow});
+		if(
+			this.state.stage == 0 ||
+			isNaN(target) ||
+			isNaN(sanity) ||
+			isNaN(drop) ||
+			target == 0
+		){
+			this.setState({errorStatement:'Input is incorrect.'});
+		}else{
+			this.setState({errorStatement:''});
+	        let runAmount = Math.ceil(target / drop);
+	        let overflow = (drop*runAmount) - target;
+	        this.setState({totalRun: runAmount});
+	        this.setState({totalSanity: runAmount*sanity});
+	        this.setState({overflow: overflow});
+		}
     }
-
+	getResult(){
+		//no errorStatement
+		if(this.state.errorStatement==''){
+			return(
+				<View>
+					<Text style={styles.textRequire}>Require minimal:</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
+					<Text style={styles.textLeft}> </Text>
+					<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra shop voucher</Text>
+				</View>
+			)
+		//uninitialized errorStatement
+		}else if (this.state.errorStatement==-1) {
+			return(
+				null
+			)
+		//errorStatement was thrown
+		}else{
+			return(
+				<View>
+					<Text style={styles.textError}>{this.state.errorStatement}</Text>
+				</View>
+			)
+		}
+	}
     render() {
         return(
             <View style={picker.container}>
@@ -66,11 +103,7 @@ class ShpVocModule extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
-                <Text style={styles.textRequire}>Require minimal:</Text>
-                <Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
-                <Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
-                <Text style={styles.textLeft}> </Text>
-                <Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra shop voucher</Text>
+				{this.getResult()}
             </View>
         )
     }

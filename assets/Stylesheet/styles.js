@@ -66,12 +66,25 @@ const styles = StyleSheet.create({
   input:{
     backgroundColor:'#151515',
     marginTop:40,
+	marginBottom:-10,
     color:'#eee',
     paddingHorizontal:12,
     paddingVertical:6,
     width:'80%',
     fontSize:16,
     borderColor:'#aaa',
+    borderBottomWidth: 1
+},
+  inputError:{
+    backgroundColor:'#151515',
+    marginTop:40,
+	marginBottom:-10,
+    color:'#eee',
+    paddingHorizontal:12,
+    paddingVertical:6,
+    width:'80%',
+    fontSize:16,
+    borderColor:'#f22',
     borderBottomWidth: 1
   }
 });
