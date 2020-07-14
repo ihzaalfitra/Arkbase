@@ -12,7 +12,7 @@ const navigation = StyleSheet.create({
 	button:{
 		flex:1,
 		height:'120%',
-		
+		borderWidth:1,
 		backgroundColor:'#222',
 		borderColor:'#333',
 		justifyContent:'center'

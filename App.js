@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 
 import ResourceCalculator from './Component/ResourceCalculator.js';
-import Material from './Component/Material.js';
 import navigation from './assets/Stylesheet/navigation.js';
 
 class MainClass extends Component {
@@ -20,9 +19,11 @@ class MainClass extends Component {
 					<ResourceCalculator/>
 				)
 				break;
-			case 'Material':
+			case 'StageInformation':
 				return(
-					<Material/>
+					<View>
+						<Text>Stage Information</Text>
+					</View>
 				)
 				break;
 			default:
@@ -43,7 +44,7 @@ class MainClass extends Component {
 					<View style={{flexDirection:'row'}}>
 						<TouchableOpacity
 							style={navigation.button}
-							onPress={() => this.setState({navigationContent:'ResourceCalculator'})}
+							onPress={() => this.changeContent('ResourceCalculator')}
 						>
 							<Text style={navigation.text}>
 								Resource Calculator
@@ -52,10 +53,10 @@ class MainClass extends Component {
 
 						<TouchableOpacity
 							style={navigation.button}
-							onPress={() => this.setState({navigationContent:'Material'})}
+							onPress={() => this.changeContent('StageInformation')}
 						>
 							<Text style={navigation.text}>
-								Material
+								Stage Information
 							</Text>
 						</TouchableOpacity>
 
