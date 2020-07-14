@@ -12,9 +12,8 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class FurnPartModule extends Component {
     state = {
-		errorStatement:-1,
         data: this.props.furnPartData,
-        stage: -1,
+        stage: 0,
         sanityUsed: 0,
         dropAmount: 0,
         targetedValue: 0,
@@ -22,7 +21,7 @@ class FurnPartModule extends Component {
         totalRun: 0,
         overflow: 0
     }
-
+    
     changeFurnPartCalculationParameter(stageIndex) {
         let data = this.state.data[parseInt(stageIndex)];
         this.setState({dropAmount: data["dropAmount"]});
@@ -30,49 +29,13 @@ class FurnPartModule extends Component {
     }
 
     calculateFurnPart(target, sanity, drop) {
-		if(
-			this.state.stage == 0 ||
-			isNaN(target) ||
-			isNaN(sanity) ||
-			isNaN(drop) ||
-			target == 0
-		){
-			this.setState({errorStatement:'Input is incorrect.'});
-		}else{
-			this.setState({errorStatement:''});
-	        let runAmount = Math.ceil(target / drop);
-	        let overflow = (drop*runAmount) - target;
-	        this.setState({totalRun: runAmount});
-	        this.setState({totalSanity: runAmount*sanity});
-	        this.setState({overflow: overflow});
-		}
+        let runAmount = Math.ceil(target / drop);
+        let overflow = (drop*runAmount) - target;
+        this.setState({totalRun: runAmount});
+        this.setState({totalSanity: runAmount*sanity});
+        this.setState({overflow: overflow});
     }
-	getResult(){
-		//no errorStatement
-		if(this.state.errorStatement==''){
-			return(
-				<View>
-					<Text style={styles.textRequire}>Require:</Text>
-					<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
-					<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
-					<Text style={styles.textLeft}> </Text>
-					<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra furniture part</Text>
-				</View>
-			)
-		//uninitialized errorStatement
-		}else if (this.state.errorStatement==-1) {
-			return(
-				null
-			)
-		//errorStatement was thrown
-		}else{
-			return(
-				<View>
-					<Text style={styles.textError}>{this.state.errorStatement}</Text>
-				</View>
-			)
-		}
-	}
+
     render() {
         return(
             <View style={picker.container}>
@@ -103,8 +66,12 @@ class FurnPartModule extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
-				{this.getResult()}
-            </View>
+                <Text style={styles.textRequire}>Require:</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
+                <Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
+                <Text style={styles.textLeft}> </Text>
+                <Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra furniture part</Text>
+            </View> 
         )
     }
 }

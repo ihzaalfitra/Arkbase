@@ -35,9 +35,7 @@ class ResourceCalculator extends Component {
         buildMatBuildingData: {},
         buildMatBuildMatData: {},
 
-        shpVocData: [],
-
-        isDataLoaded: false
+        shpVocData: []
     };
 
 	checkSelectedResource(selectedResource) {
@@ -92,7 +90,7 @@ class ResourceCalculator extends Component {
         let tempLimit = [];
         let stageData = [];
 
-        return firebase.database().ref(refDirExpReq).once('value', (snapshot) => {
+        firebase.database().ref(refDirExpReq).once('value', (snapshot) => {
             elite0 = snapshot.child("E0").val();
             elite1 = snapshot.child("E1").val();
             elite2 = snapshot.child("E2").val();
@@ -102,24 +100,22 @@ class ResourceCalculator extends Component {
             allElite.push(elite2);
 
             this.setState({expOpExpReqAllElite: allElite});
-        })
-        .then(() => {
-            return firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
+        });
+
+        firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
+            levelLimit.push(tempLimit);
+            snapshot.forEach((snapchild) => {
+                tempLimit = snapchild.val();
                 levelLimit.push(tempLimit);
-                snapshot.forEach((snapchild) => {
-                    tempLimit = snapchild.val();
-                    levelLimit.push(tempLimit);
-                });
-                this.setState({expOpLevelLimit: levelLimit});
             });
-        })
-        .then(() => {
-            return firebase.database().ref(refDirStageData).once('value', (snapshot) => {
-                snapshot.forEach((snapchild) => {
-                    stageData.push(snapchild.val());
-                });
-                this.setState({expData: stageData});
+            this.setState({expOpLevelLimit: levelLimit});
+        });
+
+        firebase.database().ref(refDirStageData).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                stageData.push(snapchild.val());
             });
+            this.setState({expData: stageData});
         });
     }
 
@@ -127,7 +123,7 @@ class ResourceCalculator extends Component {
         let refDir = "CalculationData/Farming/Lmd";
         let data = [];
 
-        return firebase.database().ref(refDir).once('value', (snapshot) => {
+        firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -139,7 +135,7 @@ class ResourceCalculator extends Component {
         let refDir = "CalculationData/Farming/Skill";
         let data = [];
 
-        return firebase.database().ref(refDir).once('value', (snapshot) => {
+        firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -150,7 +146,7 @@ class ResourceCalculator extends Component {
         let refDir = "CalculationData/Farming/FurniturePart"
         let data = [];
 
-        return firebase.database().ref(refDir).once('value', (snapshot) => {
+        firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -164,19 +160,18 @@ class ResourceCalculator extends Component {
         let buildingData = {};
         let buildMatData = {};
 
-        return firebase.database().ref(refDirBuilding).once('value', (snapshot) => {
+        firebase.database().ref(refDirBuilding).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 buildingData[snapchild.key] = snapchild.val();
             });
             this.setState({buildMatBuildingData: buildingData});
-        })
-        .then(() => {
-            return firebase.database().ref(refDirBuildMat).once('value', (snapshot) => {
-                snapshot.forEach((snapchild) => {
-                    buildMatData[snapchild.key] = snapchild.val();
-                });
-                this.setState({buildMatBuildMatData: buildMatData});
+        });
+
+        firebase.database().ref(refDirBuildMat).once('value', (snapshot) => {
+            snapshot.forEach((snapchild) => {
+                buildMatData[snapchild.key] = snapchild.val();
             });
+            this.setState({buildMatBuildMatData: buildMatData});
         });
     }
 
@@ -184,7 +179,7 @@ class ResourceCalculator extends Component {
         let refDir = "CalculationData/Farming/ShopVoucher"
         let data = [];
 
-        return firebase.database().ref(refDir).once('value', (snapshot) => {
+        firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -193,22 +188,21 @@ class ResourceCalculator extends Component {
     }
 
     componentDidMount() {
-        this.loadLmdDatabase()
-        .then(() => this.loadSkillDatabase())
-        .then(() => this.loadFurnPartDatabase())
-        .then(() => this.loadShpVocDatabase())
-        .then(() => this.loadOpDatabase())
-        .then(() => this.loadBuildMatDatabase())
-        .then(() => this.setState({isDataLoaded: true}));
+        this.loadOpDatabase();
+        this.loadLmdDatabase();
+        this.loadSkillDatabase();
+        this.loadFurnPartDatabase();
+        this.loadBuildMatDatabase();
+        this.loadShpVocDatabase();
     }
 
     render() {
 
-        const blank = <View></View>;
-
         return(
-			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>			
-			<ScrollView keyboardShouldPersistTaps='handled'>
+			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
+			    
+			
+			<ScrollView>
 				<View style={{
 					alignItems:'center',
 				    backgroundColor:'#000',
@@ -231,13 +225,11 @@ class ResourceCalculator extends Component {
                           <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
                           </Picker>
                       </View>
-                      {this.state.isDataLoaded ? this.checkSelectedResource(this.state.resource) : blank}
+                      {this.checkSelectedResource(this.state.resource)}
                     </View>
-
                     </View>
-					<Text>
-					</Text>
                 </ScrollView>
+				
 			</View>
         )
     }
