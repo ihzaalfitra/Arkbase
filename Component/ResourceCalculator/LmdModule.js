@@ -12,7 +12,8 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class LmdModule extends Component {
     state = {
-        errorStatement:-1,
+        errorStatement:'',
+
         data: this.props.lmdData,
         stage: 0,
         sanityUsed: 0,
@@ -40,35 +41,28 @@ class LmdModule extends Component {
 		}else if(target == 0 || isNaN(target)){
 			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
 		}else{
-			this.setState({errorStatement: ''})
+			this.setState({errorStatement: 'no_error'})
 		}
     }
 
-	getResult(){
-		if(this.state.errorStatement == ''){
+	outputLmd = () => {
+
+		if(this.state.errorStatement == 'no_error'){
 			return(
 				<View style={{width:'80%'}}>
-				<Text style={styles.textRequire}>Require:</Text>
-				<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
-				<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
-				<Text style={styles.textLeft}> </Text>
-				<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra LMD</Text>
+					<Text style={styles.textRequire}>Require:</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
+					<Text style={styles.textLeft}> </Text>
+					<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra LMD</Text>
 				</View>
 			)
-			//uninitialized errorStatement
-		}else if (this.state.errorStatement==-1) {
+		}else{
 			return(
 				null
 			)
-		//errorStatement was thrown
-		}else{
-			return(
-				<View>
-					<Text style={styles.textError}>{this.state.errorStatement}</Text>
-				</View>
-			)
 		}
-	}
+    }
 
     render() {
         return(
@@ -100,7 +94,7 @@ class LmdModule extends Component {
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
-			    {this.getResult()}
+			    {this.state.errorStatement != 'no_error' && this.state.errorStatement != '' ? <Text style={styles.textError}>{this.state.errorStatement}</Text>: this.outputLmd()}
             </View>
         )
     }
