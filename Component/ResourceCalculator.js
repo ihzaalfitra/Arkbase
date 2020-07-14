@@ -16,7 +16,6 @@ import FurnPartModule from './ResourceCalculator/FurnPartModule.js';
 import BuildMatModule from './ResourceCalculator/BuildMatModule.js';
 import ShpVocModule from './ResourceCalculator/ShpVocModule.js';
 
-
 class ResourceCalculator extends Component {
     state = {
         resource: "none",
