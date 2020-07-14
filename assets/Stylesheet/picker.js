@@ -20,12 +20,6 @@ const picker = StyleSheet.create({
     borderColor:'#aaa',
     borderBottomWidth: 1
   },
-  underlineError:{
-    width:'80%',
-    marginBottom:-15,
-    borderColor:'#f22',
-    borderBottomWidth: 1
-  },
   itemStyle:{
     backgroundColor:'#151515',
     color:'#eee'
