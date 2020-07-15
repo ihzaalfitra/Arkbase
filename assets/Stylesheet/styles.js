@@ -1,9 +1,5 @@
 import { StyleSheet } from 'react-native';
-<<<<<<< HEAD
 //berubah
-=======
-//test
->>>>>>> fc460761f568474a5e475e73cfc17dc79302f265
 const styles = StyleSheet.create({
   container: {
     alignItems:'center',
