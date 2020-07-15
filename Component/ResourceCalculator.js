@@ -199,8 +199,6 @@ class ResourceCalculator extends Component {
 
         return(
 			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
-			    
-			
 			<ScrollView>
 				<View style={{
 					alignItems:'center',
@@ -228,7 +226,7 @@ class ResourceCalculator extends Component {
                     </View>
                     </View>
                 </ScrollView>
-				
+
 			</View>
         )
     }
