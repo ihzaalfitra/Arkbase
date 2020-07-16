@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React, {Component} from 'react';
-import ResourceCalculator from './Component/ResourceCalculator.js';
 import {NavigationContainer,DefaultTheme} from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import Material from './Component/Material.js';
+import Material from './Component/Material/Material.js';
+import ResourceCalculator from './Component/ResourceCalculator/ResourceCalculator.js';
 
 const Tab = createMaterialTopTabNavigator();
 

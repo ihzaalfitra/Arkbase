@@ -6,15 +6,15 @@ import {
     ScrollView,
 	Dimensions
 } from 'react-native';
-import firebase from '../assets/Firebase/FirebaseDatabase.js';
-import styles from '../assets/Stylesheet/styles.js';
-import picker from '../assets/Stylesheet/picker.js';
-import LmdModule from './ResourceCalculator/LmdModule.js';
-import ExpModule from './ResourceCalculator/ExpModule.js';
-import SkillModule from './ResourceCalculator/SkillModule.js';
-import FurnPartModule from './ResourceCalculator/FurnPartModule.js';
-import BuildMatModule from './ResourceCalculator/BuildMatModule.js';
-import ShpVocModule from './ResourceCalculator/ShpVocModule.js';
+import firebase from '../../assets/Firebase/FirebaseDatabase.js';
+import styles from '../../assets/Stylesheet/styles.js';
+import picker from '../../assets/Stylesheet/picker.js';
+import LmdModule from './LmdModule.js';
+import ExpModule from './ExpModule.js';
+import SkillModule from './SkillModule.js';
+import FurnPartModule from './FurnPartModule.js';
+import BuildMatModule from './BuildMatModule.js';
+import ShpVocModule from './ShpVocModule.js';
 
 class ResourceCalculator extends Component {
     state = {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {StyleSheet, Text, View, FlatList, Dimensions, ScrollView, Image } from 'react-native'
 
-import default_styles from '../assets/Stylesheet/styles.js';
+import default_styles from '../../assets/Stylesheet/styles.js';
 
 
 const dataList = [{key:''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}
