@@ -69,9 +69,6 @@ export default class App extends Component {
     let sectionUC = []; //Uncommon section
     let sectionR = []; //Rare section
     let sectionVR = []; //Very rare section
-    //switch(){}
-    /*
-     */
     for (var key in stageDict) {
       if (stageDict[key] > 99) {
         sectionG.push(this.showSectionItem(key, stageDict[key]));
