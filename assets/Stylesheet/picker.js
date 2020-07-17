@@ -16,7 +16,6 @@ const picker = StyleSheet.create({
   },
   underline:{
     width:'80%',
-    marginBottom:-15,
     borderColor:'#aaa',
     borderBottomWidth: 1
   },
