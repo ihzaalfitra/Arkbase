@@ -1,4 +1,30 @@
 import React, {Component} from 'react';
+import {View, Text} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Gridview from './GridView.js';
+import GridView from './GridView.js';
+import Details from './Details.js';
+
+const Stack = createStackNavigator();
+
+class Material extends Component{
+    render() {
+        return(
+            <Stack.Navigator initialRouteName="GridView">
+                <Stack.Screen 
+                    name="GridView" 
+                    component={GridView}
+                    options={{
+                        headerShown: false
+                    }}
+                />
+                <Stack.Screen 
+                    name="Details" 
+                    component={Details}
+                />
+            </Stack.Navigator>
+        )
+    }
+}
+
+export default Material;

@@ -1,7 +1,17 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, View, FlatList, Dimensions, ScrollView, Image } from 'react-native'
+import {
+    StyleSheet, 
+    Text, 
+    View, 
+    FlatList, 
+    Dimensions, 
+    ScrollView, 
+    Image,
+    TouchableOpacity 
+} from 'react-native'
 
 import default_styles from '../../assets/Stylesheet/styles.js';
+import firebase from '../../assets/Firebase/FirebaseDatabase.js';
 
 
 const dataList = [{key:''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}
@@ -28,15 +38,18 @@ export default class App extends Component {
     }
 
     _renderItem = ({item, index}) => {
+      const {navigation} = this.props;
       let{itemStyle, itemText, itemInvisible} = styles
       if(item.empty){
         return <View style = {[itemStyle, itemInvisible]}/>
       }
       return (
-
-        <View style = {itemStyle}>
+        <TouchableOpacity 
+          style = {itemStyle}
+          onPress={() => navigation.push('Details')}
+        >
           <Text style = {itemText}>{item.key}</Text>
-        </View>
+        </TouchableOpacity>
       )
     }
 
@@ -45,17 +58,15 @@ export default class App extends Component {
 
       return (
         <View style = {{container,backgroundColor:'#000',paddingTop: 45,flex:9}}>
-			<ScrollView>
-				<Text style={default_styles.header}>Materials
-				</Text>
-		        <FlatList style = {{marginTop: 30}}
-					data = {this.formatData(dataList, numColumns)}
-		          	renderItem = {this._renderItem}
-		          	keyExtractor = {(item, index) => index.toString()}
-		          	numColumns = {numColumns}
-				/>
-		  </ScrollView>
-
+			    <ScrollView>
+			    	<Text style={default_styles.header}>Materials</Text>
+		          <FlatList style = {{marginTop: 30}}
+			    		  data = {this.formatData(dataList, numColumns)}
+		            renderItem = {this._renderItem}
+		            keyExtractor = {(item, index) => index.toString()}
+		            numColumns = {numColumns}
+			    	  />
+		      </ScrollView>
         </View>
       )
     }
