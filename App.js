@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {NavigationContainer,DefaultTheme} from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import Material from './Component/Material/GridView`.js';
+import Material from './Component/Material/GridView.js';
 import ResourceCalculator from './Component/ResourceCalculator/ResourceCalculator.js';
 
 const Tab = createMaterialTopTabNavigator();
