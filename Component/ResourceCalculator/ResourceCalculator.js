@@ -21,6 +21,8 @@ class ResourceCalculator extends Component {
         resource: "none",
         errorStatement:'',
 
+        isLoaded: false,
+
         expOpExpReqAllElite: [],
         expOpLevelLimit: [],
         expData: [],
@@ -38,41 +40,46 @@ class ResourceCalculator extends Component {
     };
 
 	checkSelectedResource(selectedResource) {
-		switch(selectedResource) {
-			case "none":
-				return;
-				break;
-			case "exp":
-                return(
-                    <ExpModule expReq={this.state.expOpExpReqAllElite} levelLimit={this.state.expOpLevelLimit} stageData={this.state.expData}/>
-                );
-				break;
-			case "lmd":
-                return(
-                    <LmdModule lmdData={this.state.lmdData}/>
-                );
-                break;
-            case "skill":
-                return(
-                    <SkillModule skillData={this.state.skillData}/>
-                );
-                break;
-            case "furnPart":
-                return(
-                    <FurnPartModule furnPartData={this.state.furnPartData}/>
-                );
-                break;
-            case "buildMat":
-                return(
-                    <BuildMatModule buildingData={this.state.buildMatBuildingData} buildMatData={this.state.buildMatBuildMatData}/>
-                );
-                break;
-            case "voucher":
-                return(
-                    <ShpVocModule shpVocData={this.state.shpVocData}/>
-                );
-                break;
-		}
+        if(this.state.isLoaded) {
+            switch(selectedResource) {
+                case "none":
+                    return;
+                    break;
+                case "exp":
+                    return(
+                        <ExpModule expReq={this.state.expOpExpReqAllElite} levelLimit={this.state.expOpLevelLimit} stageData={this.state.expData}/>
+                    );
+                    break;
+                case "lmd":
+                    return(
+                        <LmdModule lmdData={this.state.lmdData}/>
+                    );
+                    break;
+                case "skill":
+                    return(
+                        <SkillModule skillData={this.state.skillData}/>
+                    );
+                    break;
+                case "furnPart":
+                    return(
+                        <FurnPartModule furnPartData={this.state.furnPartData}/>
+                    );
+                    break;
+                case "buildMat":
+                    return(
+                        <BuildMatModule buildingData={this.state.buildMatBuildingData} buildMatData={this.state.buildMatBuildMatData}/>
+                    );
+                    break;
+                case "voucher":
+                    return(
+                        <ShpVocModule shpVocData={this.state.shpVocData}/>
+                    );
+                    break;
+            }
+        }
+        else{
+            return
+        }
 	}
 
     loadOpDatabase() {
@@ -89,7 +96,7 @@ class ResourceCalculator extends Component {
         let tempLimit = [];
         let stageData = [];
 
-        firebase.database().ref(refDirExpReq).once('value', (snapshot) => {
+        return firebase.database().ref(refDirExpReq).once('value', (snapshot) => {
             elite0 = snapshot.child("E0").val();
             elite1 = snapshot.child("E1").val();
             elite2 = snapshot.child("E2").val();
@@ -99,30 +106,42 @@ class ResourceCalculator extends Component {
             allElite.push(elite2);
 
             this.setState({expOpExpReqAllElite: allElite});
-        });
-
-        firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
-            levelLimit.push(tempLimit);
-            snapshot.forEach((snapchild) => {
-                tempLimit = snapchild.val();
+        })
+        .then(() => 
+            firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
                 levelLimit.push(tempLimit);
-            });
-            this.setState({expOpLevelLimit: levelLimit});
-        });
-
-        firebase.database().ref(refDirStageData).once('value', (snapshot) => {
-            snapshot.forEach((snapchild) => {
-                stageData.push(snapchild.val());
-            });
-            this.setState({expData: stageData});
-        });
+                snapshot.forEach((snapchild) => {
+                    tempLimit = snapchild.val();
+                    levelLimit.push(tempLimit);
+                });
+                this.setState({expOpLevelLimit: levelLimit});
+            })
+        )
+        .then(() => 
+            firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
+                levelLimit.push(tempLimit);
+                snapshot.forEach((snapchild) => {
+                    tempLimit = snapchild.val();
+                    levelLimit.push(tempLimit);
+                });
+                this.setState({expOpLevelLimit: levelLimit});
+            })
+        )
+        .then(() =>
+            firebase.database().ref(refDirStageData).once('value', (snapshot) => {
+                snapshot.forEach((snapchild) => {
+                    stageData.push(snapchild.val());
+                });
+                this.setState({expData: stageData});
+            })
+        );
     }
 
     loadLmdDatabase() {
         let refDir = "CalculationData/Farming/Lmd";
         let data = [];
 
-        firebase.database().ref(refDir).once('value', (snapshot) => {
+        return firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -134,7 +153,7 @@ class ResourceCalculator extends Component {
         let refDir = "CalculationData/Farming/Skill";
         let data = [];
 
-        firebase.database().ref(refDir).once('value', (snapshot) => {
+        return firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -145,7 +164,7 @@ class ResourceCalculator extends Component {
         let refDir = "CalculationData/Farming/FurniturePart"
         let data = [];
 
-        firebase.database().ref(refDir).once('value', (snapshot) => {
+        return firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -159,26 +178,27 @@ class ResourceCalculator extends Component {
         let buildingData = {};
         let buildMatData = {};
 
-        firebase.database().ref(refDirBuilding).once('value', (snapshot) => {
+        return firebase.database().ref(refDirBuilding).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 buildingData[snapchild.key] = snapchild.val();
             });
             this.setState({buildMatBuildingData: buildingData});
-        });
-
-        firebase.database().ref(refDirBuildMat).once('value', (snapshot) => {
-            snapshot.forEach((snapchild) => {
-                buildMatData[snapchild.key] = snapchild.val();
-            });
-            this.setState({buildMatBuildMatData: buildMatData});
-        });
+        })
+        .then(() =>
+            firebase.database().ref(refDirBuildMat).once('value', (snapshot) => {
+                snapshot.forEach((snapchild) => {
+                    buildMatData[snapchild.key] = snapchild.val();
+                });
+                this.setState({buildMatBuildMatData: buildMatData});
+            })
+        );
     }
 
     loadShpVocDatabase() {
         let refDir = "CalculationData/Farming/ShopVoucher"
         let data = [];
 
-        firebase.database().ref(refDir).once('value', (snapshot) => {
+        return firebase.database().ref(refDir).once('value', (snapshot) => {
             snapshot.forEach((snapchild) => {
                 data.push(snapchild.val());
             });
@@ -187,12 +207,19 @@ class ResourceCalculator extends Component {
     }
 
     componentDidMount() {
-        this.loadOpDatabase();
-        this.loadLmdDatabase();
-        this.loadSkillDatabase();
-        this.loadFurnPartDatabase();
-        this.loadBuildMatDatabase();
-        this.loadShpVocDatabase();
+        // this.loadOpDatabase();
+        // this.loadLmdDatabase();
+        // this.loadSkillDatabase();
+        // this.loadFurnPartDatabase();
+        // this.loadBuildMatDatabase();
+        // this.loadShpVocDatabase();
+        this.loadLmdDatabase()
+        .then(this.loadSkillDatabase())
+        .then(this.loadFurnPartDatabase())
+        .then(this.loadShpVocDatabase())
+        .then(this.loadOpDatabase())
+        .then(this.loadBuildMatDatabase())
+        .then(this.setState({isLoaded: true}));
     }
 
     render() {
