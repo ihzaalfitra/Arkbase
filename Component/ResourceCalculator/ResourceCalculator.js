@@ -134,7 +134,7 @@ class ResourceCalculator extends Component {
                 });
                 this.setState({expData: stageData});
             })
-        );
+        )
     }
 
     loadLmdDatabase() {
@@ -207,12 +207,7 @@ class ResourceCalculator extends Component {
     }
 
     componentDidMount() {
-        // this.loadOpDatabase();
-        // this.loadLmdDatabase();
-        // this.loadSkillDatabase();
-        // this.loadFurnPartDatabase();
-        // this.loadBuildMatDatabase();
-        // this.loadShpVocDatabase();
+        // console.log(this.loadLmdDatabase());
         this.loadLmdDatabase()
         .then(this.loadSkillDatabase())
         .then(this.loadFurnPartDatabase())
