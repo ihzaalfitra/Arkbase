@@ -9,8 +9,9 @@ import {
   ScrollView,
   SafeAreaView,
   Image,
-  TouchableWithoutFeedback,
+  //TouchableWithoutFeedback,
 } from "react-native";
+import { useDeviceOrientation } from "@react-native-community/hooks";
 
 //Test data
 const stageDict = {
@@ -29,12 +30,13 @@ const stageDict = {
   "1-1": 10,
 };
 
-export default class App extends Component {
+const { landscape } = useDeviceOrientation();
 
+export default class App extends Component {
   state = {
     data: [],
-    isLoaded: false
-  }
+    isLoaded: false,
+  };
 
   showSelected = () => {
     //fetch item here
@@ -61,7 +63,7 @@ export default class App extends Component {
     return (
       <View style={styles.sectionItem}>
         <Text style={styles.itemText}>{stage}</Text>
-        <Text style={styles.descriptorText}>{percentage}</Text>
+        <Text style={styles.descriptorText}>{percentage}%</Text>
       </View>
     );
   };
@@ -69,78 +71,38 @@ export default class App extends Component {
   showSections = () => {
     //Retrieves all stage data and formats section and title
     //assuming data is key pair values - {stage:percentage}
-    //let content = []; //Compiled content
-    let sectionG = []; //Guaranteed section
-    let sectionC = []; //Common section
-    let sectionUC = []; //Uncommon section
-    let sectionR = []; //Rare section
-    let sectionVR = []; //Very rare section
-    for (var key in stageDict) {
-      if (stageDict[key] > 99) {
-        sectionG.push(this.showSectionItem(key, stageDict[key]));
-      } else if (stageDict[key] > 74) {
-        sectionC.push(this.showSectionItem(key, stageDict[key]));
-      } else if (stageDict[key] > 49) {
-        sectionUC.push(this.showSectionItem(key, stageDict[key]));
-      } else if (stageDict[key] > 24) {
-        sectionR.push(this.showSectionItem(key, stageDict[key]));
-      } else {
-        sectionVR.push(this.showSectionItem(key, stageDict[key]));
-      }
+    let content = []; //Compiled content
+
+    for (let key in stageDict) {
+      content.push(this.showSectionItem(key, stageDict[key]));
     }
+
     return (
-      <ScrollView
-        style={styles.body}
-        contentContainerStyle={styles.bodyContent}
-      >
-        <View style={styles.section}>
-          <View style={styles.sectionTitle}>
-            <Text style={styles.title}>Guaranteed drop stages</Text>
-          </View>
-          {sectionG}
+      <View style={styles.section}>
+        <View style={styles.sectionTitle}>
+          <Text style={styles.title}>Stage Data</Text>
         </View>
+        <View style={styles.sectionBody}>{content}</View>
 
-        <View style={styles.section}>
-          <View style={styles.sectionTitle}>
-            <Text style={styles.title}>Common drop stages</Text>
-          </View>
-          {sectionC}
+        <View style={styles.sectionTitle}>
+          <Text style={styles.title}>Crafting Materials</Text>
         </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionTitle}>
-            <Text style={styles.title}>Uncommon drop stages</Text>
-          </View>
-          {sectionUC}
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionTitle}>
-            <Text style={styles.title}>Rare drop stages</Text>
-          </View>
-          {sectionR}
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionTitle}>
-            <Text style={styles.title}>Very rare drop stages</Text>
-          </View>
-          {sectionVR}
-        </View>
-      </ScrollView>
+      </View>
     );
   };
 
   componentDidMount() {
-    this.setState({data: this.props.route.params.data});
-    this.setState({isLoaded: true});
+    this.setState({ data: this.props.route.params.data });
+    this.setState({ isLoaded: true });
   }
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>{this.state.isLoaded ? this.state.data.data.name : ""}</Text>
+          <Text style={styles.headerText}>
+            {this.state.isLoaded ? this.state.data.data.name : ""}
+          </Text>
           {/* --replace search icon here--
           <TouchableWithoutFeedback
             onPress={() => console.log("search pressed")}
@@ -159,7 +121,12 @@ export default class App extends Component {
 
         <View style={styles.iconArea}>{this.showSelected()}</View>
 
-        {this.showSections}
+        <ScrollView
+          style={styles.body}
+          contentContainerStyle={styles.bodyContent}
+        >
+          {this.showSections()}
+        </ScrollView>
         <ExpoStatusBar style="auto" />
       </SafeAreaView>
     );
@@ -217,6 +184,7 @@ const styles = StyleSheet.create({
     width: "90%",
     flexDirection: "row",
     flexWrap: "wrap",
+    marginBottom: 30,
     justifyContent: "flex-start",
   },
   sectionItem: {
