@@ -1,67 +1,107 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, View, FlatList, Dimensions, ScrollView, Image } from 'react-native'
+import {
+    StyleSheet, 
+    Text, 
+    View, 
+    FlatList, 
+    Dimensions, 
+    ScrollView, 
+    Image,
+    TouchableOpacity 
+} from 'react-native'
 
 import default_styles from '../../assets/Stylesheet/styles.js';
-
-
-const dataList = [{key:''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}
-,{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}
-,{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}]
+import firebase from '../../assets/Firebase/FirebaseDatabase.js';
 
 
 
-const numColumns = 4
-const WIDTH =  Dimensions.get('window').width
+const numColumns = 4;
+const WIDTH =  Dimensions.get('window').width;
 
-export default class App extends Component {
+class App extends Component {
 
+  state = {
+    matDatabase: [],
+    isLoaded: false
+  };
 
-    formatData = (dataList, numColumns) => {
-      const totalRows = Math.floor(dataList.length / numColumns)
-      let totalLastRows = dataList.length - (totalRows * numColumns)
+  loadDatabase() {
+    let ref = "Material";
+    let groupId = [];
+    let data = [];
+    let database = [];
 
-      while(totalLastRows !== 0 && totalLastRows !== numColumns){
-        dataList.push({key: 'Blank',empty : true})
-        totalLastRows++
-      }
-      return dataList
+    return firebase.database().ref(ref).once('value', (snapshot) => {
+      snapshot.forEach((snapchild) => {
+        groupId.push(snapchild.key)
+        data.push(snapchild.val());
+      });
+      data.forEach((item, index) => {
+        item.forEach((subitem, subindex) => {
+          database.push({
+            id: groupId[index] + "/" + subindex.toString(),
+            data: subitem
+          });
+        });
+      });
+      this.setState({matDatabase: database});
+    });
+  }
+  
+  formatData = (dataList, numColumns) => {
+    const totalRows = Math.floor(dataList.length / numColumns)
+    let totalLastRows = dataList.length - (totalRows * numColumns)
+
+    while(totalLastRows !== 0 && totalLastRows !== numColumns){
+      dataList.push({key: 'Blank',empty : true})
+      totalLastRows++
     }
+    return dataList
+  }
 
-    _renderItem = ({item, index}) => {
-      let{itemStyle, itemText, itemInvisible} = styles
-      if(item.empty){
-        return <View style = {[itemStyle, itemInvisible]}/>
-      }
-      return (
-
-        <View style = {itemStyle}>
-          <Text style = {itemText}>{item.key}</Text>
-        </View>
-      )
+  _renderItem = ({item, index}) => {
+    const {navigation} = this.props;
+    let{itemStyle, itemText, itemInvisible} = styles
+    if(item.empty){
+      return <View style = {[itemStyle, itemInvisible]}/>
     }
+    return (
+      <TouchableOpacity 
+        style = {itemStyle}
+        onPress={() => navigation.push('Details', {
+          data: this.state.matDatabase[index]
+        })}
+      >
+        <Text style = {itemText}>{item.data.name}</Text>
+      </TouchableOpacity>
+    )
+  }
 
-    render(){
-      let {container, itemText} = styles
+  componentDidMount() {
+    this.loadDatabase()
+    .then(() => this.setState({isLoaded: true}));
+  }
 
-      return (
-        <View style = {{container,backgroundColor:'#000',paddingTop: 45,flex:9}}>
-			<ScrollView>
-				<Text style={default_styles.header}>Materials
-				</Text>
+  render(){
+    let {container, itemText} = styles
+
+    return (
+      <View style = {{container,backgroundColor:'#000',paddingTop: 45,flex:9}}>
+		    <ScrollView>
+		    	<Text style={default_styles.header}>Materials</Text>
 		        <FlatList style = {{marginTop: 30}}
-					data = {this.formatData(dataList, numColumns)}
-		          	renderItem = {this._renderItem}
-		          	keyExtractor = {(item, index) => index.toString()}
-		          	numColumns = {numColumns}
-				/>
-		  </ScrollView>
-
-        </View>
-      )
-    }
-
+		    		  data = {this.state.matDatabase}
+		          renderItem = {this._renderItem}
+		          keyExtractor = {(item, index) => index.toString()}
+		          numColumns = {numColumns}
+		    	  />
+		    </ScrollView>
+      </View>
+    )
+  }
 }
 
+export default App;
 
 const styles = StyleSheet.create(
   {
@@ -89,7 +129,7 @@ const styles = StyleSheet.create(
   },
   itemText: {
     color:'#fff',
-    fontSize:30
+    fontSize:10
   },
   itemInvisible:{
     backgroundColor:'transparent'

@@ -30,6 +30,12 @@ const stageDict = {
 };
 
 export default class App extends Component {
+
+  state = {
+    data: [],
+    isLoaded: false
+  }
+
   showSelected = () => {
     //fetch item here
     let item = "Onirock";
@@ -125,11 +131,16 @@ export default class App extends Component {
     );
   };
 
+  componentDidMount() {
+    this.setState({data: this.props.route.params.data});
+    this.setState({isLoaded: true});
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Materials</Text>
+          <Text style={styles.headerText}>{this.state.isLoaded ? this.state.data.data.name : ""}</Text>
           {/* --replace search icon here--
           <TouchableWithoutFeedback
             onPress={() => console.log("search pressed")}
