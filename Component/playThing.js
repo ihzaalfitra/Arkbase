@@ -18,10 +18,6 @@ class ResourceCalculator extends Component {
 		orientation:this.isPortrait()?'portraite':'landscape'
     };
 
-	Dimensions.addEventListener('change', () => {
-        this.setState({orientation: this.isPortrait() ? 'portraite' : 'landscape'});
-    });
-
 	render() {
 
         return(
