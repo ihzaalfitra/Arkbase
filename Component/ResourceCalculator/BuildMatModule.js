@@ -13,9 +13,7 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class BuildMatModule extends Component {
     state = {
-
 		errorStatement:'',
-
         building: "none",
         currentPhase: 0,
         targetedPhase: 0,
