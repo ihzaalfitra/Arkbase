@@ -74,9 +74,12 @@ class ExpModule extends Component {
 		)
 			{this.setState({errorStatement:'Current level cannot be greater or equal than targeted level'});}
 
+
 		//currentLevel or targetedLevel is not a number
 		else if (isNaN(currentLevel) || isNaN(targetedLevel))
 			{this.setState({errorStatement:'Please enter a number'});}
+
+
 
 		//currentLevel is zero
 		else if (currentLevel == 0)
@@ -90,6 +93,7 @@ class ExpModule extends Component {
 		else if (levelLimit[rarity][currentElite] == -1 || levelLimit[rarity][targetedElite] == -1)
 			{this.setState({errorStatement:'This rarity does not have this elite'});}
 
+
 		//currentLevel exceed levelLimit of that rarity and elite
 		else if (currentLevel > levelLimit[rarity][currentElite])
 			{this.setState({errorStatement:'Level limit for E'+currentElite+' '+rarity+' star operator is '+levelLimit[rarity][currentElite]});}
@@ -101,9 +105,8 @@ class ExpModule extends Component {
 			this.setState({errorStatement:''});
 	        while((currentElite <= targetedElite) && !(currentElite == targetedElite && currentLevel >= targetedLevel)) {
 	            if(currentLevel == levelLimit[rarity][currentElite]) {
-					currentElite++;
 	                currentLevel = 1;
-					break;
+	                currentElite++;
 	            }
 		        totalExp += expReqPerLevel[currentElite][currentLevel];
 				currentLevel++;
