@@ -9,6 +9,7 @@ import {
     Image,
     TouchableOpacity 
 } from 'react-native'
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 
 import default_styles from '../../assets/Stylesheet/styles.js';
 import firebase from '../../assets/Firebase/FirebaseDatabase.js';
@@ -96,6 +97,7 @@ class App extends Component {
 		          numColumns = {numColumns}
 		    	  />
 		    </ScrollView>
+        <ExpoStatusBar style="auto" />
       </View>
     )
   }

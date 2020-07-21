@@ -6,6 +6,8 @@ import {
     ScrollView,
 	Dimensions
 } from 'react-native';
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+
 import firebase from '../../assets/Firebase/FirebaseDatabase.js';
 import styles from '../../assets/Stylesheet/styles.js';
 import picker from '../../assets/Stylesheet/picker.js';
@@ -248,7 +250,7 @@ class ResourceCalculator extends Component {
                     </View>
                     </View>
                 </ScrollView>
-
+                <ExpoStatusBar style="auto" />
 			</View>
         )
     }

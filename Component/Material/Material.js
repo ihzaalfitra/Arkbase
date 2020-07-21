@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import GridView from './GridView.js';
-import Details from './Details.js';
+import Details from './DummyDetail.js';
 
 const Stack = createStackNavigator();
 
