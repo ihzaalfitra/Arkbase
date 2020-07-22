@@ -2,6 +2,7 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar"; //Notch Settings for Android
 import React, { Component } from "react";
 import {
+  Dimensions,
   StyleSheet,
   StatusBar,
   Text,
@@ -11,7 +12,9 @@ import {
   Image,
   //TouchableWithoutFeedback,
 } from "react-native";
-import { useDeviceOrientation } from "@react-native-community/hooks";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
+//const isPortrait = true;
 
 //Test data
 const stageDict = {
@@ -30,7 +33,11 @@ const stageDict = {
   "1-1": 10,
 };
 
-const { landscape } = useDeviceOrientation();
+const craftDict = {
+  "item 1": 2,
+  "item 2": 2,
+  "item 3": 3,
+};
 
 export default class App extends Component {
   state = {
@@ -38,9 +45,31 @@ export default class App extends Component {
     isLoaded: false,
   };
 
+  constructor() {
+    super();
+    /**
+     * Returns true if the screen is in portrait mode
+     */
+    const isPortrait = () => {
+      const dim = Dimensions.get("screen");
+      return dim.height > dim.width;
+    };
+
+    this.state = {
+      orientation: isPortrait() ? "portrait" : "landscape",
+    };
+
+    // Event Listener for orientation changes
+    Dimensions.addEventListener("change", () => {
+      this.setState({
+        orientation: isPortrait() ? "portrait" : "landscape",
+      });
+    });
+  }
+
   showSelected = () => {
     //fetch item here
-    let item = "Onirock";
+    let item = "Orirock";
     return (
       <View style={styles.borderedIcon}>
         <Image
@@ -58,7 +87,7 @@ export default class App extends Component {
     );
   };
 
-  showSectionItem = (stage, percentage) => {
+  showStageEntry = (stage, percentage) => {
     //Formats section's item
     return (
       <View style={styles.sectionItem}>
@@ -68,24 +97,52 @@ export default class App extends Component {
     );
   };
 
+  showCraftEntry = (item, number) => {
+    return (
+      <TouchableOpacity>
+        <View style={styles.borderedIcon}>
+          <Image
+            //blurRadius={1}
+            fadeDuration={1000}
+            style={styles.icon}
+            source={{
+              width: 70,
+              height: 70,
+              uri: "https://picsum.photos/200",
+            }}
+          />
+          <Text style={styles.text}>
+            {item} (x{number})
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   showSections = () => {
     //Retrieves all stage data and formats section and title
     //assuming data is key pair values - {stage:percentage}
-    let content = []; //Compiled content
+    let stageContent = [];
+    let craftContent = [];
 
     for (let key in stageDict) {
-      content.push(this.showSectionItem(key, stageDict[key]));
+      stageContent.push(this.showStageEntry(key, stageDict[key]));
+    }
+
+    for (let key in craftDict) {
+      craftContent.push(this.showCraftEntry(key, craftDict[key]));
     }
 
     return (
       <View style={styles.section}>
         <View style={styles.sectionTitle}>
-          <Text style={styles.title}>Stage Data</Text>
+          <Text style={styles.title}>Stage Drops</Text>
         </View>
-        <View style={styles.sectionBody}>{content}</View>
+        <View style={styles.sectionBody}>{stageContent}</View>
 
         <View style={styles.sectionTitle}>
           <Text style={styles.title}>Crafting Materials</Text>
+          <View style={styles.sectionBody}>{craftContent}</View>
         </View>
       </View>
     );
@@ -119,14 +176,26 @@ export default class App extends Component {
           */}
         </View>
 
-        <View style={styles.iconArea}>{this.showSelected()}</View>
-
-        <ScrollView
-          style={styles.body}
-          contentContainerStyle={styles.bodyContent}
+        <View
+          style={{
+            flex: this.state.orientation === "portrait" ? 1 : 0.9,
+            flexDirection:
+              this.state.orientation === "portrait" ? "column" : "row",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          {this.showSections()}
-        </ScrollView>
+          <View style={styles.iconArea}>{this.showSelected()}</View>
+
+          <ScrollView
+            style={styles.body}
+            contentContainerStyle={styles.bodyContent}
+          >
+            {this.showSections()}
+          </ScrollView>
+        </View>
+
         <ExpoStatusBar style="auto" />
       </SafeAreaView>
     );
@@ -144,6 +213,7 @@ const styles = StyleSheet.create({
   header: {
     flex: 0.1,
     width: "100%",
+    marginBottom: 10,
     backgroundColor: "#282828",
     justifyContent: "center",
     alignItems: "center",
@@ -152,8 +222,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 24,
   },
+  subcontainer: {
+    flex: 0.9,
+  },
   iconArea: {
-    flex: 0.2,
+    flex: 0.3,
     width: "100%",
     marginBottom: 20,
     backgroundColor: "#282828",
@@ -198,7 +271,7 @@ const styles = StyleSheet.create({
   borderedIcon: {
     width: 100,
     height: 100,
-    margin: 25,
+    margin: 15,
     borderWidth: 2,
     borderColor: "#fff",
     justifyContent: "center",
