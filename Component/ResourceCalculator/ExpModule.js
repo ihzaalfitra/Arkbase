@@ -4,7 +4,8 @@ import {
     View,
     TouchableOpacity,
     Picker,
-    TextInput
+    TextInput,
+	ScrollView
 } from 'react-native';
 
 import styles from '../../assets/Stylesheet/styles.js';
@@ -107,6 +108,7 @@ class ExpModule extends Component {
 	            if(currentLevel == levelLimit[rarity][currentElite]) {
 	                currentLevel = 1;
 	                currentElite++;
+					break;
 	            }
 		        totalExp += expReqPerLevel[currentElite][currentLevel];
 				currentLevel++;
@@ -123,13 +125,13 @@ class ExpModule extends Component {
 		//no errorStatement
 		if(this.state.errorStatement==''){
 			return(
-				<View>
-				<Text style={styles.textRequire}>Require:</Text>
-				<Text style={styles.textLeft}>{parseInt(this.state.totalExpNeeded)} exp</Text>
-				<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
-				<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
-				<Text style={styles.textLeft}> </Text>
-				<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra EXP</Text>
+				<View style={{width:'80%'}}>
+					<Text style={styles.textRequire}>Require:</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalExpNeeded)} exp</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
+					<Text style={styles.textLeft}> </Text>
+					<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra EXP</Text>
 				</View>
 			)
 		//uninitialized errorStatement
@@ -146,17 +148,27 @@ class ExpModule extends Component {
 			)
 		}
 	}
+	async scrollToEnd(){
+		await this.getResult();
+		this.refs.scrollView.scrollTo(0);
+	}
 	//change the style of component underline if there's an error
 	styleUnderline(value,componentType,component){
 		//check whether error statement is thrown or not. if not, use normal color
 		if(this.state.errorStatement==('' || -1) ){
 			if(componentType=='picker'){
-				return(
-					picker.underline
-				)
+				if(component == 'currentElite' || component ==  'targetedElite'){
+					return(
+						picker.underline_100
+					)
+				}else{
+					return(
+						picker.underline
+					)
+				}
 			}else{
 				return(
-					styles.input
+					styles.input_100
 				)
 			}
 		}else{
@@ -198,14 +210,17 @@ class ExpModule extends Component {
 								this.state.opCurrentElite == this.state.opTargetedElite &&
 								this.state.opCurrentLevel >= this.state.opTargetedLevel
 							) ||
-							this.state.opCurrentElite > this.state.opTargetedElite
+							(
+								this.state.opCurrentElite > this.state.opTargetedElite &&
+								this.state.opTargetedElite != -1
+							)
 						){
 							return(
-								picker.underlineError
+								picker.underlineError_100
 							)
 						}else{
 							return(
-								picker.underline
+								picker.underline_100
 							)
 						}
 					break;
@@ -219,11 +234,11 @@ class ExpModule extends Component {
 							this.state.opCurrentElite > this.state.opTargetedElite
 						){
 							return(
-								picker.underlineError
+								picker.underlineError_100
 							)
 						}else{
 							return(
-								picker.underline
+								picker.underline_100
 							)
 						}
 					break;
@@ -240,11 +255,11 @@ class ExpModule extends Component {
 							)
 						){
 							return(
-								styles.inputError
+								styles.inputError_100
 							)
 						}else{
 							return(
-								styles.input
+								styles.input_100
 							)
 						}
 					break;
@@ -261,22 +276,28 @@ class ExpModule extends Component {
 							)
 						){
 							return(
-								styles.inputError
+								styles.inputError_100
 							)
 						}else{
 							return(
-								styles.input
+								styles.input_100
 							)
 						}
 					break;
 				default:
 					if(componentType=='picker'){
-						return(
-							picker.underline
-						)
+						if(component == (currentElite || targetedElite)){
+							return(
+								picker.underline_100
+							)
+						}else{
+							return(
+								picker.underline
+							)
+						}
 					}else{
 						return(
-							styles.input
+							styles.input_100
 						)
 					}
 					break;
@@ -285,7 +306,7 @@ class ExpModule extends Component {
 	}
     render() {
         return(
-            <View style={picker.container}>
+            <ScrollView style={picker.containerScrollView} contentContainerStyle={picker.scrollViewAlignItems} ref='scrollView'>
                 <View style={this.styleUnderline(this.state.stage,'picker', 'stage')}>
                     <Picker
                         style={picker.style}
@@ -315,52 +336,64 @@ class ExpModule extends Component {
                         <Picker.Item label="6 Stars" value={6}/>
                     </Picker>
                 </View>
-                <View style={this.styleUnderline(this.state.currentElite,'picker', 'currentElite')}>
-                    <Picker
-                        style={picker.style}
-                        selectedValue={this.state.opCurrentElite}
-                        onValueChange={(itemValue, itemIndex) => this.setState({opCurrentElite: itemValue})}
-                    >
-                        <Picker.Item label="Select current elite" value={-1}/>
-                        <Picker.Item label="E0" value={0}/>
-                        <Picker.Item label="E1" value={1}/>
-                        <Picker.Item label="E2" value={2}/>
-                    </Picker>
-                </View>
-                <TextInput
-                    style={this.styleUnderline(this.state.opCurrentLevel, 'textInput', 'currentLevel')}
-                    placeholder="Current Level"
-                    value={this.input}
-                    onChangeText={(input) => this.setState({opCurrentLevel: input})}
-                    keyboardType="numeric"
-                />
-                <View style={this.styleUnderline(this.state.opTargetedElite,'picker', 'targetedElite')}>
-                    <Picker
-                        style={picker.style}
-                        selectedValue={this.state.opTargetedElite}
-                        onValueChange={(itemValue, itemIndex) => this.setState({opTargetedElite: itemValue})}
-                    >
-                        <Picker.Item label="Select targeted elite" value={-1}/>
-                        <Picker.Item label="E0" value={0}/>
-                        <Picker.Item label="E1" value={1}/>
-                        <Picker.Item label="E2" value={2}/>
-                    </Picker>
-                </View>
-                <TextInput
-                    style={this.styleUnderline(this.state.opTargetedLevel, 'textInput', 'targetedLevel')}
-                    placeholder="Targeted Level"
-                    value={this.input}
-                    onChangeText={(input) => this.setState({opTargetedLevel: input})}
-                    keyboardType="numeric"
-                />
+				<View style={{width:'80%',flex:1,flexDirection:'row'}}>
+					<View style={{flex:1,marginRight:10}}>
+		                <View style={this.styleUnderline(this.state.currentElite,'picker', 'currentElite')}>
+		                    <Picker
+		                        style={picker.style}
+		                        selectedValue={this.state.opCurrentElite}
+		                        onValueChange={(itemValue, itemIndex) => this.setState({opCurrentElite: itemValue})}
+		                    >
+		                        <Picker.Item label="Current elite" value={-1}/>
+		                        <Picker.Item label="E0" value={0}/>
+		                        <Picker.Item label="E1" value={1}/>
+		                        <Picker.Item label="E2" value={2}/>
+		                    </Picker>
+		                </View>
+					</View>
+					<View style={{flex:1,marginLeft:10}}>
+						<View style={this.styleUnderline(this.state.opTargetedElite,'picker', 'targetedElite')}>
+		                    <Picker
+		                        style={picker.style}
+		                        selectedValue={this.state.opTargetedElite}
+		                        onValueChange={(itemValue, itemIndex) => this.setState({opTargetedElite: itemValue})}
+		                    >
+		                        <Picker.Item label="Targeted elite" value={-1}/>
+		                        <Picker.Item label="E0" value={0}/>
+		                        <Picker.Item label="E1" value={1}/>
+		                        <Picker.Item label="E2" value={2}/>
+		                    </Picker>
+		                </View>
+					</View>
+				</View>
+				<View style={{width:'80%',flex:1,flexDirection:'row'}}>
+					<View style={{flex:1,marginRight:10}}>
+		                <TextInput
+		                    style={this.styleUnderline(this.state.opCurrentLevel, 'textInput', 'currentLevel')}
+		                    placeholder="Current Level"
+		                    value={this.input}
+		                    onChangeText={(input) => this.setState({opCurrentLevel: input})}
+		                    keyboardType="numeric"
+		                />
+					</View>
+					<View style={{flex:1,marginLeft:10}}>
+						<TextInput
+		                    style={this.styleUnderline(this.state.opTargetedLevel, 'textInput', 'targetedLevel')}
+		                    placeholder="Targeted Level"
+		                    value={this.input}
+		                    onChangeText={(input) => this.setState({opTargetedLevel: input})}
+		                    keyboardType="numeric"
+		                />
+					</View>
+				</View>
                 <TouchableOpacity
-                    onPress={() => this.calculateExp(parseInt(this.state.opRarity), parseInt(this.state.opCurrentElite), parseInt(this.state.opCurrentLevel), parseInt(this.state.opTargetedElite), parseInt(this.state.opTargetedLevel), parseInt(this.state.sanityUsed), parseInt(this.state.dropAmount))}
+                    onPress={() => this.calculateExp(parseInt(this.state.opRarity), parseInt(this.state.opCurrentElite), parseInt(this.state.opCurrentLevel), parseInt(this.state.opTargetedElite), parseInt(this.state.opTargetedLevel), parseInt(this.state.sanityUsed), parseInt(this.state.dropAmount)), this.scrollToEnd()}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
                 </TouchableOpacity>
 				{this.getResult()}
-            </View>
+            </ScrollView>
         )
     }
 }
