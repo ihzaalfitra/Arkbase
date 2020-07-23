@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     fontSize:16,
     borderColor:'#aaa',
     borderBottomWidth: 1
-},
+	},
   inputError:{
     backgroundColor:'#151515',
     marginTop:40,
@@ -86,7 +86,32 @@ const styles = StyleSheet.create({
     fontSize:16,
     borderColor:'#f22',
     borderBottomWidth: 1
-  }
+},
+input_100:{
+  backgroundColor:'#151515',
+  marginTop:40,
+  marginBottom:-10,
+  color:'#eee',
+  paddingHorizontal:12,
+  paddingVertical:6,
+  width:'100%',
+  fontSize:16,
+  borderColor:'#aaa',
+  borderBottomWidth: 1
+  },
+inputError_100:{
+  backgroundColor:'#151515',
+  marginTop:40,
+  marginBottom:-10,
+  color:'#eee',
+  paddingHorizontal:12,
+  paddingVertical:6,
+  width:'100%',
+  fontSize:16,
+  borderColor:'#f22',
+  borderBottomWidth: 1
+}
+
 });
 
 export default styles;

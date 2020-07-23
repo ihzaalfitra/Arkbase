@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, Text, View, FlatList, Dimensions, ScrollView, Image } from 'react-native'
+import {StyleSheet, Text, View, FlatList, Dimensions, ScrollView, Image, SafeAreaView } from 'react-native'
 
 import default_styles from '../../assets/Stylesheet/styles.js';
 
@@ -8,14 +8,32 @@ const dataList = [{key:''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}
 ,{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}
 ,{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''},{key: ''}, {key: ''}, {key: ''}, {key: ''}, {key: ''}]
 
-
-
-const numColumns = 4
-const WIDTH =  Dimensions.get('window').width
-
 export default class App extends Component {
+	constructor() {
+		super();
 
+	    /**
+	    * Returns true if the screen is in portrait mode
+	    */
+	    const isPortrait = () => {
+	      const dim = Dimensions.get('screen');
+	      return dim.height > dim.width;
+	    };
 
+	    this.state = {
+		  numColumns: isPortrait() ? 4 : 8,
+		  width:Dimensions.get('window').width
+	    };
+
+	    // Event Listener for orientation changes
+	    Dimensions.addEventListener('change', () => {
+	    	this.setState({
+        		numColumns: isPortrait() ? 4 : 8,
+				width:Dimensions.get('window').width
+      		});
+	    });
+
+	}
     formatData = (dataList, numColumns) => {
       const totalRows = Math.floor(dataList.length / numColumns)
       let totalLastRows = dataList.length - (totalRows * numColumns)
@@ -33,8 +51,19 @@ export default class App extends Component {
         return <View style = {[itemStyle, itemInvisible]}/>
       }
       return (
-
-        <View style = {itemStyle}>
+        <View style = {{
+			backgroundColor: '#000',
+		    alignItems: 'center',
+		    justifyContent : 'center',
+		    flex:1,
+		    margin : 30,
+		    borderWidth: 2,
+		    borderRadius: 10,
+		    marginHorizontal: 10,
+		    marginVertical: 30,
+		    borderColor: '#fff',
+		    height:this.state.width/this.state.numColumns-10
+		}}>
           <Text style = {itemText}>{item.key}</Text>
         </View>
       )
@@ -49,13 +78,13 @@ export default class App extends Component {
 				<Text style={default_styles.header}>Materials
 				</Text>
 		        <FlatList style = {{marginTop: 30}}
-					data = {this.formatData(dataList, numColumns)}
+					data = {this.formatData(dataList, this.state.numColumns)}
 		          	renderItem = {this._renderItem}
 		          	keyExtractor = {(item, index) => index.toString()}
-		          	numColumns = {numColumns}
+		          	numColumns = {this.state.numColumns}
+					key = {this.state.numColumns}
 				/>
-		  </ScrollView>
-
+		  	</ScrollView>
         </View>
       )
     }
@@ -68,24 +97,6 @@ const styles = StyleSheet.create(
   container: {
     flex:1,
     paddingTop : 40,
-
-
-  },
-  itemStyle:{
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent : 'center',
-    height : 100,
-    flex:1,
-    margin : 30,
-    borderWidth: 2,
-    borderRadius: 10,
-    marginHorizontal: 10,
-    marginVertical: 30,
-    borderColor: '#fff',
-    height: WIDTH/ numColumns,
-
-
   },
   itemText: {
     color:'#fff',

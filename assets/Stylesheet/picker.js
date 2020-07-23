@@ -14,6 +14,13 @@ const picker = StyleSheet.create({
     width:'100%',
     alignItems:'center'
   },
+  containerScrollView: {
+    width:'100%',
+    flex:1
+  },
+  scrollViewAlignItems:{
+	  alignItems:'center',
+  },
   underline:{
     width:'80%',
     borderColor:'#aaa',
@@ -21,7 +28,17 @@ const picker = StyleSheet.create({
   },
   underlineError:{
     width:'80%',
-    marginBottom:-15,
+    borderColor:'#f22',
+    borderBottomWidth: 1
+  },
+  underline_100:{
+	width:'100%',
+    borderColor:'#aaa',
+    borderBottomWidth: 1,
+	textAlign:'center'
+  },
+  underlineError_100:{
+    width:'100%',
     borderColor:'#f22',
     borderBottomWidth: 1
   },
