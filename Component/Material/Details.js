@@ -10,11 +10,9 @@ import {
   ScrollView,
   SafeAreaView,
   Image,
+  TouchableOpacity,
   //TouchableWithoutFeedback,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
-//const isPortrait = true;
 
 //Test data
 const stageDict = {
@@ -142,8 +140,8 @@ export default class App extends Component {
 
         <View style={styles.sectionTitle}>
           <Text style={styles.title}>Crafting Materials</Text>
-          <View style={styles.sectionBody}>{craftContent}</View>
         </View>
+        <View style={styles.sectionBody}>{craftContent}</View>
       </View>
     );
   };
