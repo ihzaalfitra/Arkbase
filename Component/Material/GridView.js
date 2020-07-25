@@ -23,6 +23,7 @@ class App extends Component {
 
   state = {
     matDatabase: [],
+    matReq: [],
     isLoaded: false
   };
 
@@ -31,6 +32,10 @@ class App extends Component {
     let groupId = [];
     let data = [];
     let database = [];
+    let matReqWithId = [];
+    let matReqWithName = [];
+    let matReqWithNameSub = [];
+    let dropStage = {};
 
     return firebase.database().ref(ref).once('value', (snapshot) => {
       snapshot.forEach((snapchild) => {
@@ -43,8 +48,25 @@ class App extends Component {
             id: groupId[index] + "/" + subindex.toString(),
             data: subitem
           });
+          matReqWithId.push(subitem.matReq ? subitem.matReq : []);
         });
       });
+      // console.log(matReqWithId);
+      matReqWithId.forEach((item) => {
+        matReqWithNameSub = [];
+        item.forEach((subitem) => {
+          dropStage =  database.filter(obj => {
+            return obj.id === subitem.matId;
+          });
+          matReqWithNameSub.push({
+            name: dropStage[0].data.name,
+            pictId: dropStage[0].data.pictId,
+            amount: subitem.amount
+          });
+        });
+        matReqWithName.push(matReqWithNameSub);
+      });
+      this.setState({matReq: matReqWithName});
       this.setState({matDatabase: database});
     });
   }
@@ -70,7 +92,8 @@ class App extends Component {
       <TouchableOpacity 
         style = {itemStyle}
         onPress={() => navigation.push('Details', {
-          data: this.state.matDatabase[index]
+          data: this.state.matDatabase[index],
+          matReq: this.state.matReq[index]
         })}
       >
         <Text style = {itemText}>{item.data.name}</Text>

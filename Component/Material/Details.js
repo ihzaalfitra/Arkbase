@@ -14,33 +14,37 @@ import {
   //TouchableWithoutFeedback,
 } from "react-native";
 
-//Test data
-const stageDict = {
-  "5-3": 150,
-  "5-2": 125,
-  "5-1": 100,
-  "4-3": 90,
-  "4-2": 80,
-  "4-1": 75,
-  "3-3": 70,
-  "3-2": 60,
-  "3-1": 50,
-  "2-3": 45,
-  "2-2": 30,
-  "2-1": 25,
-  "1-1": 10,
-};
+// Test data
+// const stageDict = {
+//   "5-3": 150,
+//   "5-2": 125,
+//   "5-1": 100,
+//   "4-3": 90,
+//   "4-2": 80,
+//   "4-1": 75,
+//   "3-3": 70,
+//   "3-2": 60,
+//   "3-1": 50,
+//   "2-3": 45,
+//   "2-2": 30,
+//   "2-1": 25,
+//   "1-1": 10,
+// };
 
-const craftDict = {
-  "item 1": 2,
-  "item 2": 2,
-  "item 3": 3,
-};
+// const craftDict = {
+//   "item 1": 2,
+//   "item 2": 2,
+//   "item 3": 3,
+// };
+
+// let picPath = '';
 
 export default class App extends Component {
   state = {
     data: [],
+    matReq: [],
     isLoaded: false,
+    picPath: ''
   };
 
   constructor() {
@@ -65,7 +69,7 @@ export default class App extends Component {
     });
   }
 
-  showSelected = () => {
+  showSelected = (picPath) => {
     //fetch item here
     let item = "Orirock";
     return (
@@ -74,11 +78,8 @@ export default class App extends Component {
           //blurRadius={1}
           fadeDuration={1000}
           style={styles.icon}
-          source={{
-            width: 70,
-            height: 70,
-            uri: "https://picsum.photos/200",
-          }}
+          source={picPath}
+          resizeMode="stretch"
         />
         <Text style={styles.text}>{item}</Text>
       </View>
@@ -122,14 +123,23 @@ export default class App extends Component {
     //assuming data is key pair values - {stage:percentage}
     let stageContent = [];
     let craftContent = [];
+    let stageDict = this.state.isLoaded && this.state.data.data.drop ? this.state.data.data.drop : [];
+    let craftDict = this.state.isLoaded && this.state.matReq ? this.state.matReq : [];
+    // for (let key in stageDict) {
+    //   stageContent.push(this.showStageEntry(key, stageDict[key]));
+    // }
 
-    for (let key in stageDict) {
-      stageContent.push(this.showStageEntry(key, stageDict[key]));
-    }
+    stageDict.forEach((item) => {
+      stageContent.push(this.showStageEntry(item.stageName, item.dropRate));
+    });
 
-    for (let key in craftDict) {
-      craftContent.push(this.showCraftEntry(key, craftDict[key]));
-    }
+    // for (let key in craftDict) {
+    //   craftContent.push(this.showCraftEntry(key, craftDict[key]));
+    // }
+
+    craftDict.forEach((item) => {
+      craftContent.push(this.showCraftEntry(item.name, item.amount));
+    })
 
     return (
       <View style={styles.section}>
@@ -147,8 +157,13 @@ export default class App extends Component {
   };
 
   componentDidMount() {
+    let picPath = '../../assets/Graphic/Material/' + this.props.route.params.data.data.picId;
+    // console.log(picPath);
     this.setState({ data: this.props.route.params.data });
+    this.setState({picPath: picPath})
+    this.setState({matReq: this.props.route.params.matReq})
     this.setState({ isLoaded: true });
+    console.log(this.state.isLoaded ? this.state.picPath : "LOL");
   }
 
   render() {
@@ -184,7 +199,7 @@ export default class App extends Component {
             alignItems: "center",
           }}
         >
-          <View style={styles.iconArea}>{this.showSelected()}</View>
+          <View style={styles.iconArea}>{this.showSelected(this.state.picPath)}</View>
 
           <ScrollView
             style={styles.body}
@@ -204,7 +219,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#282828",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -265,6 +280,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     margin: 2,
+    width: 70,
+    height: 70,
   },
   borderedIcon: {
     width: 100,
