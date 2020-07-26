@@ -44,7 +44,7 @@ export default class App extends Component {
     data: [],
     matReq: [],
     isLoaded: false,
-    picPath: ''
+    picId: ''
   };
 
   constructor() {
@@ -69,19 +69,21 @@ export default class App extends Component {
     });
   }
 
-  showSelected = (picPath) => {
+  showSelected = (picId) => {
     //fetch item here
-    let item = "Orirock";
+    // let item = (this.state.isLoaded ? this.state.data.data.name : "");
+	const num = Math.round(Math.random())?1:2;
+	// let img = this.state.isLoaded ? require('../../assets/Graphic/Material/' + name): "";
     return (
       <View style={styles.borderedIcon}>
+
         <Image
           //blurRadius={1}
           fadeDuration={1000}
           style={styles.icon}
-          source={picPath}
+          source={{uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+picId}}
           resizeMode="stretch"
         />
-        <Text style={styles.text}>{item}</Text>
       </View>
     );
   };
@@ -157,10 +159,10 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    let picPath = '../../assets/Graphic/Material/' + this.props.route.params.data.data.picId;
+    const picId = this.props.route.params.data.data.picId;
     // console.log(picPath);
     this.setState({ data: this.props.route.params.data });
-    this.setState({picPath: picPath})
+    this.setState({picId: picId})
     this.setState({matReq: this.props.route.params.matReq})
     this.setState({ isLoaded: true });
     console.log(this.state.isLoaded ? this.state.picPath : "LOL");
@@ -199,7 +201,7 @@ export default class App extends Component {
             alignItems: "center",
           }}
         >
-          <View style={styles.iconArea}>{this.showSelected(this.state.picPath)}</View>
+          <View style={styles.iconArea}>{this.showSelected(this.state.picId)}</View>
 
           <ScrollView
             style={styles.body}
