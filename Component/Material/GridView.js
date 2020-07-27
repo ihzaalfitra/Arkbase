@@ -26,6 +26,13 @@ constructor() {
 	  const dim = Dimensions.get('screen');
 	  return dim.height > dim.width;
 	};
+	this.state = {
+	    matDatabase: [],
+	    matReq: [],
+	    isLoaded: false,
+	  	numColumns: isPortrait() ? 4 : 8,
+	  	width:Dimensions.get('window').width
+    };
 	// Event Listener for orientation changes
 	Dimensions.addEventListener('change', () => {
 		this.setState({
@@ -35,13 +42,7 @@ constructor() {
 	});
 
 }
-  state = {
-    matDatabase: [],
-    matReq: [],
-    isLoaded: false,
-	numColumns: isPortrait() ? 4 : 8,
-	width:Dimensions.get('window').width
-  };
+
 
   loadDatabase() {
     let ref = "Material";
