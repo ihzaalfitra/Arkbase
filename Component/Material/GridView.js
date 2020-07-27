@@ -107,7 +107,18 @@ constructor() {
     }
     return (
       <TouchableOpacity
-        style = {itemStyle}
+        style = {{
+			backgroundColor: '#000',
+		    alignItems: 'center',
+		    justifyContent : 'center',
+		    flex:1,
+		    borderWidth: 2,
+		    borderRadius: 10,
+		    marginHorizontal: 5,
+		    marginVertical: 5,
+		    borderColor: '#fff',
+		    height:this.state.width/this.state.numColumns+20
+		}}
         onPress={() => navigation.push('Details', {
           data: this.state.matDatabase[index],
           matReq: this.state.matReq[index]
@@ -138,7 +149,7 @@ constructor() {
     let {container, itemText} = styles
 
     return (
-      <View style = {{container,backgroundColor:'#000',paddingTop: 45,flex:9}}>
+      <View style = {{container,backgroundColor:'#000',paddingTop: 15,flex:9}}>
 		    <ScrollView>
 		    	<Text style={default_styles.header}>Materials</Text>
 		        <FlatList style = {{marginTop: 30}}
@@ -149,7 +160,6 @@ constructor() {
 				  key= {this.state.numColumns}
 		    	  />
 		    </ScrollView>
-        <ExpoStatusBar style="auto" />
       </View>
     )
   }

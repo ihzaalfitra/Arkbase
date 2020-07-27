@@ -10,15 +10,15 @@ class Material extends Component{
     render() {
         return(
             <Stack.Navigator initialRouteName="GridView">
-                <Stack.Screen 
-                    name="GridView" 
+                <Stack.Screen
+                    name="GridView"
                     component={GridView}
                     options={{
                         headerShown: false
                     }}
                 />
-                <Stack.Screen 
-                    name="Details" 
+                <Stack.Screen
+                    name="Details"
                     component={Details}
                 />
             </Stack.Navigator>
