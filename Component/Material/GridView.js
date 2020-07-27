@@ -133,7 +133,7 @@ constructor() {
             width: 70,
             height: 70
           }}
-          resizeMode="stretch"
+          resizeMode="contain"
         />
         <Text style = {itemText}>{item.data.name}</Text>
       </TouchableOpacity>
