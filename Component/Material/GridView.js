@@ -60,7 +60,7 @@ class App extends Component {
           });
           matReqWithNameSub.push({
             name: dropStage[0].data.name,
-            pictId: dropStage[0].data.pictId,
+            picId: dropStage[0].data.picId,
             amount: subitem.amount
           });
         });
@@ -96,6 +96,17 @@ class App extends Component {
           matReq: this.state.matReq[index]
         })}
       >
+        <Image
+          //blurRadius={1}
+          fadeDuration={1000}
+          style={styles.icon}
+          source={{
+            uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+item.data.picId,
+            width: 70,
+            height: 70
+          }}
+          resizeMode="stretch"
+        />
         <Text style = {itemText}>{item.data.name}</Text>
       </TouchableOpacity>
     )
@@ -154,7 +165,8 @@ const styles = StyleSheet.create(
   },
   itemText: {
     color:'#fff',
-    fontSize:10
+    fontSize:10,
+    textAlign: "center"
   },
   itemInvisible:{
     backgroundColor:'transparent'

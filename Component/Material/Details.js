@@ -105,15 +105,13 @@ export default class App extends Component {
           <Image
             //blurRadius={1}
             fadeDuration={1000}
-            style={styles.icon}
+            style={[styles.icon, {width: 50, height: 50}]}
             source={{
-              width: 70,
-              height: 70,
-              uri: "https://picsum.photos/200",
+              uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+item.picId,
             }}
           />
           <Text style={styles.text}>
-            {item} (x{number})
+            {item.name} (x{number})
           </Text>
         </View>
       </TouchableOpacity>
@@ -140,7 +138,7 @@ export default class App extends Component {
     // }
 
     craftDict.forEach((item) => {
-      craftContent.push(this.showCraftEntry(item.name, item.amount));
+      craftContent.push(this.showCraftEntry(item, item.amount));
     })
 
     return (
@@ -159,13 +157,12 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    const picId = this.props.route.params.data.data.picId;
+    let picId = this.props.route.params.data.data.picId;
     // console.log(picPath);
     this.setState({ data: this.props.route.params.data });
     this.setState({picId: picId})
     this.setState({matReq: this.props.route.params.matReq})
     this.setState({ isLoaded: true });
-    console.log(this.state.isLoaded ? this.state.picPath : "LOL");
   }
 
   render() {
@@ -320,5 +317,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#fff",
+    fontSize: 10,
+    textAlign: "center"
   },
 });
