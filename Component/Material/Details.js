@@ -82,7 +82,7 @@ export default class App extends Component {
           fadeDuration={1000}
           style={styles.icon}
           source={{uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+picId}}
-          resizeMode="stretch"
+          resizeMode="contain"
         />
       </View>
     );
@@ -109,6 +109,7 @@ export default class App extends Component {
             source={{
               uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+item.picId,
             }}
+            resizeMode="contain"
           />
           <Text style={styles.text}>
             {item.name} (x{number})
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   sectionBody: {
-    width: "90%",
+    width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
     marginBottom: 30,
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
   sectionItem: {
     flexDirection: "row",
     margin: 15,
-    width: "35%",
+    width: "40%",
   },
   icon: {
     margin: 2,
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
   },
   descriptorText: {
     height: 30,
-    width: 60,
+    width: 80,
     fontSize: 20,
     color: "#fff",
     textAlign: "center",

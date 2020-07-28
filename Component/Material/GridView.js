@@ -113,10 +113,9 @@ constructor() {
 		    justifyContent : 'center',
 		    flex:1,
 		    borderWidth: 2,
-		    borderRadius: 10,
 		    marginHorizontal: 5,
 		    marginVertical: 5,
-		    borderColor: '#fff',
+		    borderColor: '#292929',
 		    height:this.state.width/this.state.numColumns+20
 		}}
         onPress={() => navigation.push('Details', {
