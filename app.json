@@ -19,7 +19,7 @@
     "ios": {
 		"requireFullScreen":true,
 	  	"bundleIdentifier": "com.katabo.arkbase",
-      	"buildNumber": "0.0.1",
+      	"buildNumber": "0.1.0",
       	"supportsTablet": true
     },
     "android": {
