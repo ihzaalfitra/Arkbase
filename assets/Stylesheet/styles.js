@@ -36,7 +36,9 @@ const styles = StyleSheet.create({
   textError: {
     textAlign: 'left',
     color: '#f22',
-    width:'80%',
+	marginHorizontal:'10%',
+	flex:1,
+	flexWrap:'wrap',
     fontSize:16,
   },
   textRequire: {

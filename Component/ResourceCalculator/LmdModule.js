@@ -17,6 +17,7 @@ class LmdModule extends Component {
         stage: 0,
         sanityUsed: 0,
         dropAmount: 0,
+		ownedValue:0,
         targetedValue: 0,
         totalSanity: 0,
         totalRun: 0,
@@ -29,7 +30,13 @@ class LmdModule extends Component {
         this.setState({sanityUsed: data["sanityUsed"]});
     }
 
-    calculateLMD(target, sanity, drop) {
+    calculateLMD(owned, target, sanity, drop) {
+		if(owned==''){
+			owned=0;
+		}else{
+			owned=parseFloat(owned);
+		}
+		target=target-owned;
         let runAmount = Math.ceil(target / drop);
         let overflow = (drop*runAmount) - target;
         this.setState({totalRun: runAmount});
@@ -37,7 +44,11 @@ class LmdModule extends Component {
         this.setState({overflow: overflow});
 		if (sanity == 0 && drop == 0) {
 			this.setState({errorStatement: 'Please select stage.'})
-		}else if(target == 0 || isNaN(target)){
+		}else if(isNaN(owned)){
+			this.setState({errorStatement: 'Owned amount must be a number.'})
+		}else if(owned >= target){
+			this.setState({errorStatement: 'Owned amount cannot be greater or equal than targeted amount.'})
+		}else if(target <= 0 || isNaN(target)){
 			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
 		}else{
 			this.setState({errorStatement: ''})
@@ -69,11 +80,83 @@ class LmdModule extends Component {
 			)
 		}
 	}
-
+	//change the style of component underline if there's an error
+	styleUnderline(value,componentType,component){
+		//check whether error statement is thrown or not. if not, use normal color
+		if(this.state.errorStatement==('' || -1) ){
+			if(componentType=='picker'){
+				return(
+					picker.underline
+				)
+			}else{
+				return(
+					styles.input
+				)
+			}
+		}else{
+			switch(component){
+				//input component error parameter, must be specifically to each of the input to make the error specific
+				case 'stage':
+					//error parameter
+					if(
+						this.state.stage == 0
+					){
+						//if error, change underline to error style
+						return(
+							picker.underlineError
+						)
+					}else{
+						//if not error, use normal underline
+						return(
+							picker.underline
+						)
+					}
+					break;
+				case 'ownedValue':
+					if(value==''){
+						value=0;
+					}else{
+						value=parseFloat(value);
+					}
+					if(isNaN(value)){
+						return(
+							styles.inputError
+						)
+					}else{
+						return(
+							styles.input
+						)
+					}
+					break;
+				case 'targetedValue':
+					if(value <= 0 || isNaN(value)){
+						return(
+							styles.inputError
+						)
+					}else{
+						return(
+							styles.input
+						)
+					}
+					break;
+				default:
+					if(componentType=='picker'){
+						return(
+							picker.underline
+						)
+					}else{
+						return(
+							styles.input
+						)
+					}
+					break;
+			}
+		}
+	}
     render() {
         return(
             <View style={picker.container}>
-                <View style={picker.underline}>
+                <View style={this.styleUnderline(this.state.stage,'picker', 'stage')}>
                     <Picker
                         style={picker.style}
                         selectedValue={this.state.stage}
@@ -88,14 +171,21 @@ class LmdModule extends Component {
                     </Picker>
                 </View>
                 <TextInput
-                    style={styles.input}
+                    style={this.styleUnderline(this.state.ownedValue, 'textInput', 'ownedValue')}
+                    placeholder="Owned LMD amount"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({ownedValue: input})}
+                    keyboardType="numeric"
+                />
+				<TextInput
+                    style={this.styleUnderline(parseFloat(this.state.targetedValue), 'textInput', 'targetedValue')}
                     placeholder="Target LMD amount"
                     value={this.input}
                     onChangeText={(input) => this.setState({targetedValue: input})}
                     keyboardType="numeric"
                 />
                 <TouchableOpacity
-                    onPress= {() => this.calculateLMD(parseFloat(this.state.targetedValue), parseFloat(this.state.sanityUsed), parseFloat(this.state.dropAmount))}
+                    onPress= {() => this.calculateLMD(this.state.ownedValue, parseFloat(this.state.targetedValue), parseFloat(this.state.sanityUsed), parseFloat(this.state.dropAmount))}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Calculate</Text>

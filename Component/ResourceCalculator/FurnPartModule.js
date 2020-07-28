@@ -31,13 +31,14 @@ class FurnPartModule extends Component {
 
     calculateFurnPart(target, sanity, drop) {
 		if(
-			this.state.stage == 0 ||
-			isNaN(target) ||
-			isNaN(sanity) ||
-			isNaN(drop) ||
-			target == 0
+			this.state.stage == 0
 		){
-			this.setState({errorStatement:'Input is incorrect.'});
+			this.setState({errorStatement:'Please select stage.'});
+		}else if(
+			target <= 0 ||
+			isNaN(target)
+		){
+			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
 		}else{
 			this.setState({errorStatement:''});
 	        let runAmount = Math.ceil(target / drop);
@@ -73,10 +74,69 @@ class FurnPartModule extends Component {
 			)
 		}
 	}
+
+	//change the style of component underline if there's an error
+	styleUnderline(value,componentType,component){
+		//check whether error statement is thrown or not. if not, use normal color
+		if(this.state.errorStatement==('' || -1) ){
+			if(componentType=='picker'){
+				return(
+					picker.underline
+				)
+			}else{
+				return(
+					styles.input
+				)
+			}
+		}else{
+			switch(component){
+				//input component error parameter, must be specifically to each of the input to make the error specific
+				case 'stage':
+					//error parameter
+					if(
+						this.state.stage == 0
+					){
+						//if error, change underline to error style
+						return(
+							picker.underlineError
+						)
+					}else{
+						//if not error, use normal underline
+						return(
+							picker.underline
+						)
+					}
+					break;
+				case 'targetedValue':
+					if(value <= 0 || isNaN(value)){
+						return(
+							styles.inputError
+						)
+					}else{
+						return(
+							styles.input
+						)
+					}
+					break;
+				default:
+					if(componentType=='picker'){
+						return(
+							picker.underline
+						)
+					}else{
+						return(
+							styles.input
+						)
+					}
+					break;
+			}
+		}
+	}
+
     render() {
         return(
             <View style={picker.container}>
-                <View style={picker.underline}>
+                <View style={this.styleUnderline(this.state.stage,'picker', 'stage')}>
                     <Picker
                         style={picker.style}
                         selectedValue={this.state.stage}
@@ -91,8 +151,8 @@ class FurnPartModule extends Component {
                     </Picker>
                 </View>
                 <TextInput
-                    style={styles.input}
-                    placeholder="Target Furniture Part amount"
+                    style={this.styleUnderline(this.state.ownedValue, 'textInput', 'targetedValue')}
+                    placeholder="Targeted Furniture Part amount"
                     value={this.input}
                     onChangeText={(input) => this.setState({targetedValue: input})}
                     keyboardType="numeric"

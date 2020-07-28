@@ -13,7 +13,7 @@ import picker from '../../assets/Stylesheet/picker.js';
 
 class BuildMatModule extends Component {
     state = {
-		errorStatement:'',
+		errorStatement:-1,
         building: "none",
         currentPhase: 0,
         targetedPhase: 0,
@@ -28,14 +28,15 @@ class BuildMatModule extends Component {
         let matUsed = [];
         let matAmount = [];
         let matIndex = 0;
-		if (
-			selectedBuilding == 'none' ||
-			(currentPhase==0 && targetedPhase==0) ||
-			isNaN(currentPhase) ||
-			isNaN(targetedPhase) ||
-			currentPhase >= targetedPhase
-		){
-			this.setState({errorStatement: "Input is incorrect"});
+		if(selectedBuilding == 'none'){
+			this.setState({errorStatement: "Please select a building"});
+
+        }else if(currentPhase==-1 && targetedPhase==-1){
+			this.setState({errorStatement: "Please select building phases"});
+        }else if(currentPhase >= targetedPhase){
+			this.setState({errorStatement: "Current phase cannot be greater or equal to targeted phase"});
+        }else if(targetedPhase == 0){
+			this.setState({errorStatement: "Targeted phase cannot be zero"});
         }else if(currentPhase == 0 && selectedBuilding == "controlCenter" ){
 			this.setState({errorStatement: "Control Center current phase cannot be zero"});
 		}else if(targetedPhase > building["maxPhase"]){
@@ -59,6 +60,91 @@ class BuildMatModule extends Component {
 		this.setState({matUsed: matUsed});
         this.setState({matAmount: matAmount});
     }
+
+	//change the style of component underline if there's an error
+	styleUnderline(value,componentType,component){
+		//check whether error statement is thrown or not. if not, use normal color
+		if(this.state.errorStatement==('' || -1) ){
+			if(componentType=='picker'){
+				return(
+					picker.underline
+				)
+			}else{
+				return(
+					styles.input
+				)
+			}
+		}else{
+			switch(component){
+				//input component error parameter, must be specifically to each of the input to make the error specific
+				case 'building':
+					//error parameter
+					if(
+						value == 'none'
+					){
+						//if error, change underline to error style
+						return(
+							picker.underlineError
+						)
+					}else{
+						//if not error, use normal underline
+						return(
+							picker.underline
+						)
+					}
+					break;
+				case 'currentPhase':
+					if(
+						(this.state.currentPhase==0 && this.state.targetedPhase==0) ||
+						isNaN(this.state.currentPhase) ||
+						this.state.currentPhase >= this.state.targetedPhase ||
+						this.state.currentPhase < 0 ||
+						this.state.currentPhase == 0 && this.state.building == "controlCenter"
+					){
+						//if error, change underline to error style
+						return(
+							picker.underlineError
+						)
+					}else{
+						//if not error, use normal underline
+						return(
+							picker.underline
+						)
+					}
+					break;
+				case 'targetedPhase':
+					if(
+						(this.state.currentPhase==0 && this.state.targetedPhase==0) ||
+						isNaN(this.state.targetedPhase) ||
+						this.state.currentPhase >= this.state.targetedPhase ||
+						this.state.targetedPhase <= 0 ||
+						this.state.targetedPhase > this.state.buildingData[this.state.building]["maxPhase"]
+					){
+						//if error, change underline to error style
+						return(
+							picker.underlineError
+						)
+					}else{
+						//if not error, use normal underline
+						return(
+							picker.underline
+						)
+					}
+					break;
+				default:
+					if(componentType=='picker'){
+						return(
+							picker.underline
+						)
+					}else{
+						return(
+							styles.input
+						)
+					}
+					break;
+			}
+		}
+	}
 
     getResult() {
 		if(this.state.errorStatement==''){
@@ -133,7 +219,7 @@ class BuildMatModule extends Component {
     render() {
         return(
             <View style={picker.container}>
-                <View style={picker.underline}>
+                <View style={this.styleUnderline(this.state.building,'picker', 'building')}>
                     <Picker
                         style={picker.style}
                         selectedValue={this.state.building}
@@ -151,20 +237,38 @@ class BuildMatModule extends Component {
                         <Picker.Item label="Training Room" value="trainingRoom"/>
                     </Picker>
                 </View>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Current Phase"
-                    value={this.input}
-                    onChangeText={(input) => this.setState({currentPhase: input})}
-					keyboardType="numeric"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Targeted Phase"
-                    value={this.input}
-                    onChangeText={(input) => this.setState({targetedPhase: input})}
-					keyboardType="numeric"
-                />
+				<View style={this.styleUnderline(this.state.currentPhase,'picker', 'currentPhase')}>
+                    <Picker
+                        style={picker.style}
+                        selectedValue={this.state.currentPhase}
+                        onValueChange={(itemValue, itemIndex) => this.setState({currentPhase: itemValue})}
+                    >
+                        <Picker.Item label="Current phase" value="-1"/>
+                        <Picker.Item label="0" value="0"/>
+						<Picker.Item label="1" value="1"/>
+						<Picker.Item label="2" value="2"/>
+						<Picker.Item label="3" value="3"/>
+						<Picker.Item label="4" value="4"/>
+						<Picker.Item label="5" value="5"/>
+                    </Picker>
+                </View>
+
+				<View style={this.styleUnderline(this.state.targetedPhase,'picker', 'targetedPhase')}>
+					<Picker
+						style={picker.style}
+						selectedValue={this.state.targetedPhase}
+						onValueChange={(itemValue, itemIndex) => this.setState({targetedPhase: itemValue})}
+					>
+						<Picker.Item label="Targeted phase" value="-1"/>
+						<Picker.Item label="0" value="0"/>
+						<Picker.Item label="1" value="1"/>
+						<Picker.Item label="2" value="2"/>
+						<Picker.Item label="3" value="3"/>
+						<Picker.Item label="4" value="4"/>
+						<Picker.Item label="5" value="5"/>
+					</Picker>
+				</View>
+
                 <TouchableOpacity
                     onPress={() => this.calculateBuildMat(this.state.building, parseInt(this.state.currentPhase), parseInt(this.state.targetedPhase))}
                     style={styles.button}

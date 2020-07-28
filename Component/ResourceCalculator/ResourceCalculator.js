@@ -109,7 +109,7 @@ class ResourceCalculator extends Component {
 
             this.setState({expOpExpReqAllElite: allElite});
         })
-        .then(() => 
+        .then(() =>
             firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
                 levelLimit.push(tempLimit);
                 snapshot.forEach((snapchild) => {
@@ -119,7 +119,7 @@ class ResourceCalculator extends Component {
                 this.setState({expOpLevelLimit: levelLimit});
             })
         )
-        .then(() => 
+        .then(() =>
             firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
                 levelLimit.push(tempLimit);
                 snapshot.forEach((snapchild) => {
@@ -238,12 +238,12 @@ class ResourceCalculator extends Component {
                           onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue})}
                         >
                           <Picker.Item label="Select resource" value={null}/>
-                          <Picker.Item label="BATTLE RECORD (EXP)" value={"exp"}/>
+						  <Picker.Item label="BATTLE RECORD (EXP)" value={"exp"}/>
+						  <Picker.Item label="BUILDING MATERIAL" value={"buildMat"}/>
+						  <Picker.Item label="FURNITURE PART" value={"furnPart"}/>
                           <Picker.Item label="LMD" value={"lmd"}/>
+						  <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
                           <Picker.Item label="SKILL SUMMARY" value={"skill"}/>
-                          <Picker.Item label="FURNITURE PART" value={"furnPart"}/>
-                          <Picker.Item label="BUILDING MATERIAL" value={"buildMat"}/>
-                          <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
                           </Picker>
                       </View>
                       {this.checkSelectedResource(this.state.resource)}

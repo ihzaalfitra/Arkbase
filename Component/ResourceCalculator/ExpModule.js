@@ -83,12 +83,12 @@ class ExpModule extends Component {
 
 
 		//currentLevel is zero
-		else if (currentLevel == 0)
-			{this.setState({errorStatement:'Current level cannot be zero'});}
+		else if (currentLevel <= 0)
+			{this.setState({errorStatement:'Current level cannot be zero or lower'});}
 
 		//targetedLevel is zero
-		else if (targetedLevel == 0)
-			{this.setState({errorStatement:'Targeted level cannot be zero'});}
+		else if (targetedLevel <= 0)
+			{this.setState({errorStatement:'Targeted level cannot be zero or lower'});}
 
 		//currentElite or targetedElite is not available for that rarity
 		else if (levelLimit[rarity][currentElite] == -1 || levelLimit[rarity][targetedElite] == -1)
@@ -365,7 +365,7 @@ class ExpModule extends Component {
 				<View style={{width:'80%',flex:1,flexDirection:'row'}}>
 					<View style={{flex:1,marginRight:10}}>
 		                <TextInput
-		                    style={this.styleUnderline(this.state.opCurrentLevel, 'textInput', 'currentLevel')}
+		                    style={this.styleUnderline(parseInt(this.state.opCurrentLevel), 'textInput', 'currentLevel')}
 		                    placeholder="Current Level"
 		                    value={this.input}
 		                    onChangeText={(input) => this.setState({opCurrentLevel: input})}
@@ -374,7 +374,7 @@ class ExpModule extends Component {
 					</View>
 					<View style={{flex:1,marginLeft:10}}>
 						<TextInput
-		                    style={this.styleUnderline(this.state.opTargetedLevel, 'textInput', 'targetedLevel')}
+		                    style={this.styleUnderline(parseInt(this.state.opTargetedLevel), 'textInput', 'targetedLevel')}
 		                    placeholder="Targeted Level"
 		                    value={this.input}
 		                    onChangeText={(input) => this.setState({opTargetedLevel: input})}

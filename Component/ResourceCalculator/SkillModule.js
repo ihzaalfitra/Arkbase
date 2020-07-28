@@ -23,13 +23,13 @@ class SkillModule extends Component {
     }
 
     calculateSkill(targetedSummary, targetedAmount) {
-		if(
-			isNaN(targetedSummary) ||
-			isNaN(targetedAmount) ||
-			targetedSummary == 0 ||
-			targetedAmount == 0
+		if(targetedSummary == 0){
+			this.setState({errorStatement:'Please select skill summary.'});
+		}else if(
+			targetedAmount <= 0 ||
+			isNaN(targetedAmount)
 		){
-			this.setState({errorStatement:'Input is incorrect.'});
+			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
 		}else{
 			this.setState({errorStatement:''});
 	        let data = this.state.data[targetedSummary];
@@ -73,10 +73,68 @@ class SkillModule extends Component {
 		}
 	}
 
+	//change the style of component underline if there's an error
+	styleUnderline(value,componentType,component){
+		//check whether error statement is thrown or not. if not, use normal color
+		if(this.state.errorStatement==('' || -1) ){
+			if(componentType=='picker'){
+				return(
+					picker.underline
+				)
+			}else{
+				return(
+					styles.input
+				)
+			}
+		}else{
+			switch(component){
+				//input component error parameter, must be specifically to each of the input to make the error specific
+				case 'targetedSummary':
+					//error parameter
+					if(
+						this.state.targetedSummary == 0
+					){
+						//if error, change underline to error style
+						return(
+							picker.underlineError
+						)
+					}else{
+						//if not error, use normal underline
+						return(
+							picker.underline
+						)
+					}
+					break;
+				case 'targetedAmount':
+					if(value <= 0 || isNaN(value)){
+						return(
+							styles.inputError
+						)
+					}else{
+						return(
+							styles.input
+						)
+					}
+					break;
+				default:
+					if(componentType=='picker'){
+						return(
+							picker.underline
+						)
+					}else{
+						return(
+							styles.input
+						)
+					}
+					break;
+			}
+		}
+	}
+
     render() {
         return(
             <View style={picker.container}>
-                <View style={picker.underline}>
+                <View style={this.styleUnderline(this.state.targetedSummary,'picker', 'targetedSummary')}>
                     <Picker
                         style={picker.style}
                         selectedValue={this.state.targetedSummary}
@@ -89,7 +147,7 @@ class SkillModule extends Component {
                     </Picker>
                 </View>
                 <TextInput
-                    style={styles.input}
+                    style={this.styleUnderline(this.state.targetedAmount, 'textInput', 'targetedAmount')}
                     placeholder="Target Skill Summary Amount"
                     value={this.input}
                     onChangeText={(input) => this.setState({targetedAmount: input})}
