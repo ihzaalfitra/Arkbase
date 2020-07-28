@@ -14,31 +14,6 @@ import {
   //TouchableWithoutFeedback,
 } from "react-native";
 
-// Test data
-// const stageDict = {
-//   "5-3": 150,
-//   "5-2": 125,
-//   "5-1": 100,
-//   "4-3": 90,
-//   "4-2": 80,
-//   "4-1": 75,
-//   "3-3": 70,
-//   "3-2": 60,
-//   "3-1": 50,
-//   "2-3": 45,
-//   "2-2": 30,
-//   "2-1": 25,
-//   "1-1": 10,
-// };
-
-// const craftDict = {
-//   "item 1": 2,
-//   "item 2": 2,
-//   "item 3": 3,
-// };
-
-// let picPath = '';
-
 export default class App extends Component {
   state = {
     data: [],
@@ -110,6 +85,7 @@ export default class App extends Component {
               uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+item.picId,
             }}
             resizeMode="contain"
+
           />
           <Text style={styles.text}>
             {item.name} (x{number})
@@ -118,7 +94,17 @@ export default class App extends Component {
       </TouchableOpacity>
     );
   };
-
+  showSectionsHeader = (headerTitle, value) =>{
+	  if(value.length){
+		  return(
+			  <View style={styles.sectionTitle}>
+			  	<Text style={styles.title}>{headerTitle}</Text>
+			  </View>
+		  )
+	  }else{
+		  return null;
+	  }
+  }
   showSections = () => {
     //Retrieves all stage data and formats section and title
     //assuming data is key pair values - {stage:percentage}
@@ -144,14 +130,9 @@ export default class App extends Component {
 
     return (
       <View style={styles.section}>
-        <View style={styles.sectionTitle}>
-          <Text style={styles.title}>Stage Drops</Text>
-        </View>
+	  	{this.showSectionsHeader('Stage Drops', stageDict)}
         <View style={styles.sectionBody}>{stageContent}</View>
-
-        <View style={styles.sectionTitle}>
-          <Text style={styles.title}>Crafting Materials</Text>
-        </View>
+		{this.showSectionsHeader('Crafting Materials', craftContent)}
         <View style={styles.sectionBody}>{craftContent}</View>
       </View>
     );
@@ -208,8 +189,6 @@ export default class App extends Component {
             {this.showSections()}
           </ScrollView>
         </View>
-
-        <ExpoStatusBar style="auto" />
       </SafeAreaView>
     );
   }
@@ -271,7 +250,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginBottom: 30,
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
   sectionItem: {
     flexDirection: "row",
