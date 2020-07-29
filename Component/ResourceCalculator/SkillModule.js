@@ -55,7 +55,7 @@ class SkillModule extends Component {
 					<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
 					<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
 					<Text style={styles.textLeft}> </Text>
-					<Text style={styles.textLeft}>You will get extra {parseInt(this.state.overflow)} extra Skull Summary</Text>
+					<Text style={styles.textLeft}>You will get extra {parseInt(this.state.overflow)} extra Skill Summary</Text>
 				</View>
 			)
 		//uninitialized errorStatement

@@ -148,7 +148,7 @@ constructor() {
     let {container, itemText} = styles
 
     return (
-      <View style = {{container,backgroundColor:'#000',paddingTop: 15,flex:9}}>
+      <View style = {{container,backgroundColor:'#000',paddingTop: 30,flex:9}}>
 		    <ScrollView>
 		    	<Text style={default_styles.header}>Materials</Text>
 		        <FlatList style = {{marginTop: 30}}
