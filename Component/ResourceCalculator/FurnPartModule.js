@@ -39,7 +39,12 @@ class FurnPartModule extends Component {
 			isNaN(target)
 		){
 			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
-		}else{
+		}
+		else if(parseInt(target) > Number.MAX_SAFE_INTEGER) {
+			this.setState({errorStatement: 'Value too big'});
+		}
+		else{
+			target = parseFloat(target);
 			this.setState({errorStatement:''});
 	        let runAmount = Math.ceil(target / drop);
 	        let overflow = (drop*runAmount) - target;
@@ -158,7 +163,7 @@ class FurnPartModule extends Component {
                     keyboardType="numeric"
                 />
                 <TouchableOpacity
-                    onPress={() => this.calculateFurnPart(parseFloat(this.state.targetedValue), parseFloat(this.state.sanityUsed), parseFloat(this.state.dropAmount))}
+                    onPress={() => this.calculateFurnPart(this.state.targetedValue, parseFloat(this.state.sanityUsed), parseFloat(this.state.dropAmount))}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Calculate</Text>

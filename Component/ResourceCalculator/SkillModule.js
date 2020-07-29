@@ -30,7 +30,13 @@ class SkillModule extends Component {
 			isNaN(targetedAmount)
 		){
 			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
-		}else{
+		}
+		else if(parseInt(targetedSummary) > Number.MAX_SAFE_INTEGER || parseInt(targetedAmount) > Number.MAX_SAFE_INTEGER) {
+			this.setState({errorStatement: 'Value too big'});
+		}
+		else{
+			targetedSummary = parseFloat(targetedSummary);
+			targetedAmount = parseFloat(targetedAmount);
 			this.setState({errorStatement:''});
 	        let data = this.state.data[targetedSummary];
 			let stageName = data["stageName"];
@@ -154,7 +160,7 @@ class SkillModule extends Component {
                     keyboardType="numeric"
                 />
                 <TouchableOpacity
-                    onPress={() => this.calculateSkill(parseInt(this.state.targetedSummary), parseInt(this.state.targetedAmount))}
+                    onPress={() => this.calculateSkill(this.state.targetedSummary, this.state.targetedAmount)}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Calculate</Text>

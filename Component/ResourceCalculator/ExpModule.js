@@ -38,6 +38,10 @@ class ExpModule extends Component {
     }
 
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanity, drop) {
+		if(parseInt(currentLevel) > Number.MAX_SAFE_INTEGER || parseInt(targetedLevel) > Number.MAX_SAFE_INTEGER) {
+			this.setState({errorStatement: "Value too big"});
+			return;
+		}
 		currentLevel = parseInt(currentLevel);
 		targetedLevel = parseInt(targetedLevel);
         let expReqPerLevel = this.state.opExpReqAllElite;
@@ -383,7 +387,7 @@ class ExpModule extends Component {
 					</View>
 				</View>
                 <TouchableOpacity
-                    onPress={() => this.calculateExp(parseInt(this.state.opRarity), parseInt(this.state.opCurrentElite), parseInt(this.state.opCurrentLevel), parseInt(this.state.opTargetedElite), parseInt(this.state.opTargetedLevel), parseInt(this.state.sanityUsed), parseInt(this.state.dropAmount))}
+                    onPress={() => this.calculateExp(parseInt(this.state.opRarity), parseInt(this.state.opCurrentElite), this.state.opCurrentLevel, parseInt(this.state.opTargetedElite), this.state.opTargetedLevel, parseInt(this.state.sanityUsed), parseInt(this.state.dropAmount))}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Calculate</Text>

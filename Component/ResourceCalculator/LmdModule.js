@@ -31,11 +31,12 @@ class LmdModule extends Component {
     }
 
     calculateLMD(owned, target, sanity, drop) {
-		if(owned==''){
-			owned=0;
-		}else{
-			owned=parseFloat(owned);
+		if(parseInt(owned) > Number.MAX_SAFE_INTEGER || parseInt(target) > Number.MAX_SAFE_INTEGER ) {
+			this.setState({errorStatement: "Value too big"});
+			return
 		}
+		owned=parseFloat(owned);
+		target = parseFloat(target);
 		target=target-owned;
         let runAmount = Math.ceil(target / drop);
         let overflow = (drop*runAmount) - target;
@@ -185,7 +186,7 @@ class LmdModule extends Component {
                     keyboardType="numeric"
                 />
                 <TouchableOpacity
-                    onPress= {() => this.calculateLMD(this.state.ownedValue, parseFloat(this.state.targetedValue), parseFloat(this.state.sanityUsed), parseFloat(this.state.dropAmount))}
+                    onPress= {() => this.calculateLMD(this.state.ownedValue, this.state.targetedValue, parseFloat(this.state.sanityUsed), parseFloat(this.state.dropAmount))}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Calculate</Text>
