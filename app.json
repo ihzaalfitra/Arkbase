@@ -29,7 +29,8 @@
       },
       "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
       "package": "com.katabo.arkbase",
-      "versionCode": 1
-    }
+      "versionCode": 3
+    },
+    "sdkVersion": "36.0.0"
   }
 }

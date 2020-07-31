@@ -112,7 +112,6 @@ class ExpModule extends Component {
 	            if(currentLevel == levelLimit[rarity][currentElite]) {
 	                currentLevel = 1;
 	                currentElite++;
-					break;
 	            }
 		        totalExp += expReqPerLevel[currentElite][currentLevel];
 				currentLevel++;
