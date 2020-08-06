@@ -6,6 +6,10 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Material from './Component/Material/Material.js';
 import ResourceCalculator from './Component/ResourceCalculator/ResourceCalculator.js';
 
+import {
+  AdMobBanner
+} from 'expo-ads-admob';
+
 const Tab = createMaterialTopTabNavigator();
 
 const MyTheme = {
@@ -27,8 +31,13 @@ class MainClass extends Component {
                     <Tab.Screen name="ResourceCalculator" component={ResourceCalculator} options={{title: 'Resource Calculator'}}/>
                     <Tab.Screen name="Material" component={Material} options={{title: 'Material'}}/>
                 </Tab.Navigator>
+				<AdMobBanner
+				style={{width:"100%",marginLeft:0,marginRight:0}}
+				bannerSize="fullBanner"
+				adUnitID="ca-app-pub-3940256099942544/6300978111"
+				servePersonalizedAds="false"
+				onDidFailToReceiveAdWithError={this.bannerError} />
             </NavigationContainer>
-
 		)
 	}
 }

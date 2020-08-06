@@ -29,7 +29,10 @@
       },
       "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
       "package": "com.katabo.arkbase",
-      "versionCode": 3
+      "versionCode": 3,
+	  "config": {
+        "googleMobileAdsAppId": "ca-app-pub-3996172719278664~9471857927"
+      }
     },
     "sdkVersion": "36.0.0"
   }
