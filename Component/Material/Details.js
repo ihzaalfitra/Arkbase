@@ -56,7 +56,7 @@ export default class App extends Component {
           //blurRadius={1}
           fadeDuration={1000}
           style={styles.icon}
-          source={{uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+picId}}
+          source={{uri:"https://cdn.ihzaa.com/arkbase/"+picId}}
           resizeMode="contain"
         />
       </View>
@@ -82,7 +82,7 @@ export default class App extends Component {
             fadeDuration={1000}
             style={[styles.icon, {width: 50, height: 50}]}
             source={{
-              uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+item.picId,
+              uri:"https://cdn.ihzaa.com/arkbase/"+item.picId,
             }}
             resizeMode="contain"
 

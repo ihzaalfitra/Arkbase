@@ -128,7 +128,7 @@ constructor() {
           fadeDuration={1000}
           style={styles.icon}
           source={{
-            uri:"https://raw.githubusercontent.com/hardwin27/Arkbase/hardwin/assets/Graphic/Material/"+item.data.picId,
+            uri:"https://cdn.ihzaa.com/arkbase/"+item.data.picId,
             width: 70,
             height: 70
           }}
