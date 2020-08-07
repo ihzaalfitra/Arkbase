@@ -31,10 +31,11 @@ class MainClass extends Component {
                     <Tab.Screen name="ResourceCalculator" component={ResourceCalculator} options={{title: 'Resource Calculator'}}/>
                     <Tab.Screen name="Material" component={Material} options={{title: 'Material'}}/>
                 </Tab.Navigator>
+				{/*under-nav admob*/}
 				<AdMobBanner
 				style={{width:"100%",marginLeft:0,marginRight:0}}
-				bannerSize="fullBanner"
-				adUnitID="ca-app-pub-3940256099942544/6300978111"
+				bannerSize="smartBannerLandscape"
+				adUnitID="ca-app-pub-3996172719278664/4877597674"
 				servePersonalizedAds="false"
 				onDidFailToReceiveAdWithError={this.bannerError} />
             </NavigationContainer>

@@ -190,12 +190,6 @@ export default class App extends Component {
           >
             {this.showSections()}
           </ScrollView>
-		  <AdMobBanner
-			  style={{width:"100%",marginLeft:0,marginRight:0}}
-			  bannerSize="fullBanner"
-			  adUnitID="ca-app-pub-3940256099942544/6300978111"
-			  servePersonalizedAds="false"
-			  onDidFailToReceiveAdWithError={this.bannerError} />
         </View>
       </SafeAreaView>
     );

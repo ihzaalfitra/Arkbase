@@ -4,7 +4,8 @@ import {
     View,
     Picker,
     ScrollView,
-	Dimensions
+	Dimensions,
+	KeyboardAvoidingView
 } from 'react-native';
 import {
   AdMobBanner
@@ -225,17 +226,18 @@ class ResourceCalculator extends Component {
     render() {
 
         return(
-			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
+			<KeyboardAvoidingView style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
 			<ScrollView>
 				<View style={{
 					alignItems:'center',
 				    backgroundColor:'#000',
 				}}>
                     <Text style={styles.header}>Resource Calculator</Text>
+					{/*under-title admob*/}
 					<AdMobBanner
 					style={{width:"100%",marginLeft:0,marginRight:0}}
-					bannerSize="fullBanner"
-					adUnitID="ca-app-pub-3940256099942544/6300978111"
+					bannerSize="smartBannerLandscape"
+					adUnitID="ca-app-pub-3996172719278664/3274524358"
 					servePersonalizedAds="false"
 					onDidFailToReceiveAdWithError={this.bannerError} />
 
@@ -261,7 +263,7 @@ class ResourceCalculator extends Component {
                     </View>
                 </ScrollView>
                 <ExpoStatusBar style="auto" />
-			</View>
+			</KeyboardAvoidingView>
         )
     }
 }
