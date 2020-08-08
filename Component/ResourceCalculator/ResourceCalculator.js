@@ -26,6 +26,7 @@ class ResourceCalculator extends Component {
         isLoaded: false,
 
         expOpExpReqAllElite: [],
+        expOpLmdReq: {},
         expOpLevelLimit: [],
         expData: [],
 
@@ -49,7 +50,7 @@ class ResourceCalculator extends Component {
                     break;
                 case "exp":
                     return(
-                        <ExpModule expReq={this.state.expOpExpReqAllElite} levelLimit={this.state.expOpLevelLimit} stageData={this.state.expData}/>
+                        <ExpModule expReq={this.state.expOpExpReqAllElite} lmdReq={this.state.expOpLmdReq} levelLimit={this.state.expOpLevelLimit} stageData={this.state.expData}/>
                     );
                     break;
                 case "lmd":
@@ -87,6 +88,7 @@ class ResourceCalculator extends Component {
     loadOpDatabase() {
         let refDir = "CalculationData/Operator/Leveling/";
         let refDirExpReq = refDir + "ExpReq";
+        let refDirLmdReq = refDir + "LmdReq";
         let refDirLevelLimit = refDir + "LevelLimit";
         let refDirStageData = "CalculationData/Farming/Exp"
 
@@ -94,6 +96,7 @@ class ResourceCalculator extends Component {
         let elite1 = [];
         let elite2 = [];
         let allElite = [];
+        let lmdReq = {};
         let levelLimit = [];
         let tempLimit = [];
         let stageData = [];
@@ -108,6 +111,15 @@ class ResourceCalculator extends Component {
             allElite.push(elite2);
 
             this.setState({expOpExpReqAllElite: allElite});
+        })
+        .then(() => {
+            firebase.database().ref(refDirLmdReq).once('value', (snapshot) => {
+                lmdReq = {
+                    "PromoteCost": snapshot.child("PromoteCost").val(),
+                    "UpgradeCost": snapshot.child("UpgradeCost").val()
+                };
+                this.setState({expOpLmdReq: lmdReq});
+            });
         })
         .then(() =>
             firebase.database().ref(refDirLevelLimit).once('value', (snapshot) => {
@@ -213,14 +225,13 @@ class ResourceCalculator extends Component {
         this.loadLmdDatabase()
         .then(this.loadSkillDatabase())
         .then(this.loadFurnPartDatabase())
-        .then(this.loadShpVocDatabase())
+        .then(this.loadShpVocDatabase())                
         .then(this.loadOpDatabase())
         .then(this.loadBuildMatDatabase())
         .then(this.setState({isLoaded: true}));
     }
 
     render() {
-
         return(
 			<View style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
 			<ScrollView>

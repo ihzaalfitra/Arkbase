@@ -22,12 +22,14 @@ class ExpModule extends Component {
         opCurrentLevel: 0,
         opTargetedElite: -1,
         opTargetedLevel: 0,
-        opExpReqAllElite: this.props.expReq,
+		opExpReqAllElite: this.props.expReq,
+		opLmdReq: this.props.lmdReq,
         opLevelLimit: this.props.levelLimit,
         stageData: this.props.stageData,
         totalExpNeeded: 0,
         totalRun: 0,
-        totalSanity: 0,
+		totalSanity: 0,
+		totalLmd: 0,
         overflow: 0
     }
 
@@ -45,8 +47,11 @@ class ExpModule extends Component {
 		currentLevel = parseInt(currentLevel);
 		targetedLevel = parseInt(targetedLevel);
         let expReqPerLevel = this.state.opExpReqAllElite;
-        let levelLimit = this.state.opLevelLimit;
-        let totalExp = 0;
+		let levelLimit = this.state.opLevelLimit;
+		let promoteCost = this.state.opLmdReq.PromoteCost	;
+		let upgradeCost = this.state.opLmdReq.UpgradeCost;
+		let totalExp = 0;
+		let totalCost = 0;
         let runAmount = 0;
         let overflow = 0;
 
@@ -110,10 +115,13 @@ class ExpModule extends Component {
 			this.setState({errorStatement:''});
 	        while((currentElite <= targetedElite) && !(currentElite == targetedElite && currentLevel >= targetedLevel)) {
 	            if(currentLevel == levelLimit[rarity][currentElite]) {
+					totalCost += promoteCost[rarity][currentElite];
 	                currentLevel = 1;
-	                currentElite++;
+					currentElite++;
+					continue;
 	            }
-		        totalExp += expReqPerLevel[currentElite][currentLevel];
+				totalExp += expReqPerLevel[currentElite][currentLevel];
+				totalCost += upgradeCost[currentElite][currentLevel];
 				currentLevel++;
 	        }
 		}
@@ -121,7 +129,8 @@ class ExpModule extends Component {
         overflow = (drop*runAmount) - totalExp;
         this.setState({totalExpNeeded: totalExp});
         this.setState({totalRun: runAmount});
-        this.setState({totalSanity: runAmount*sanity});
+		this.setState({totalSanity: runAmount*sanity});
+		this.setState({totalLmd: totalCost})
         this.setState({overflow: overflow});
     }
 	getResult(){
@@ -133,6 +142,7 @@ class ExpModule extends Component {
 					<Text style={styles.textLeft}>{parseInt(this.state.totalExpNeeded)} exp</Text>
 					<Text style={styles.textLeft}>{parseInt(this.state.totalRun)} run</Text>
 					<Text style={styles.textLeft}>{parseInt(this.state.totalSanity)} sanity</Text>
+					<Text style={styles.textLeft}>{parseInt(this.state.totalLmd)} LMD </Text>
 					<Text style={styles.textLeft}> </Text>
 					<Text style={styles.textLeft}>You will get {parseInt(this.state.overflow)} extra EXP</Text>
 				</View>
