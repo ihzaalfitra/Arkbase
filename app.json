@@ -3,13 +3,13 @@
     "name": "Arkbase",
     "slug": "Arkbase",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "default",
     "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
 
     "splash": {
       "image": "./assets/Graphic/arkbase-playstore.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#000000"
     },
     "updates": {
@@ -19,17 +19,22 @@
     "ios": {
 		"requireFullScreen":true,
 	  	"bundleIdentifier": "com.katabo.arkbase",
-      	"buildNumber": "0.1.0",
+      	"buildNumber": "0.1.1",
       	"supportsTablet": true
     },
     "android": {
+		"splash": {
+	      "mdpi": "./assets/Graphic/arkbase-playstore.png",
+	      "resizeMode": "native",
+	      "backgroundColor": "#000000"
+	    },
       "adaptiveIcon": {
         "backgroundColor": "#000",
         "foregroundImage": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png"
       },
       "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
       "package": "com.katabo.arkbase",
-      "versionCode": 3,
+      "versionCode": 4,
 	  "config": {
         "googleMobileAdsAppId": "ca-app-pub-3996172719278664~9471857927"
       }
