@@ -54,7 +54,7 @@ class ResourceCalculator extends Component {
                     break;
                 case "exp":
                     return(
-                        <ExpModule expReq={this.state.expOpExpReqAllElite} lmdReq={this.state.expOpLmdReq} levelLimit={this.state.expOpLevelLimit} stageData={this.state.expData}/>
+                        <ExpModule expReq={this.state.expOpExpReqAllElite} lmdReq={this.state.expOpLmdReq} levelLimit={this.state.expOpLevelLimit} stageData={this.state.expData} lmdData={this.state.lmdData}/>
                     );
                     break;
                 case "lmd":
@@ -229,7 +229,7 @@ class ResourceCalculator extends Component {
         this.loadLmdDatabase()
         .then(this.loadSkillDatabase())
         .then(this.loadFurnPartDatabase())
-        .then(this.loadShpVocDatabase())                
+        .then(this.loadShpVocDatabase())
         .then(this.loadOpDatabase())
         .then(this.loadBuildMatDatabase())
         .then(this.setState({isLoaded: true}));

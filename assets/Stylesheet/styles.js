@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
     color:'#eee',
     textAlign:'center',
     fontFamily:'monospace',
-    fontSize:40
+    fontSize:40,
+	marginTop:25
   },
   text: {
     textAlign: 'center',
