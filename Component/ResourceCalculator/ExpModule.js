@@ -171,7 +171,7 @@ class ExpModule extends Component {
 					<Text style={styles.textLeft}>{parseInt(this.state.totalSanityLmd)} sanity</Text>
 					<Text style={styles.textLeft}> </Text>
 					<Text style={styles.textLeft}>You will get {parseInt(this.state.overflowExp)} extra EXP</Text>
-					<Text style={styles.textLeft}>You will get {parseInt(this.state.overflowLmd)} extra Lmd</Text>
+					<Text style={[styles.textLeft,{marginBottom:10}]}>You will get {parseInt(this.state.overflowLmd)} extra Lmd</Text>
 				</View>
 			)
 		//uninitialized errorStatement

@@ -238,7 +238,7 @@ class ResourceCalculator extends Component {
     render() {
         return(
 			<KeyboardAvoidingView style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
-			<ScrollView>
+			<ScrollView ref={ ( ref ) => this.scrollView = ref } onContentSizeChange={ () => { this.scrollView.scrollToEnd( { animated: true } )} } >
 				<View style={{
 					alignItems:'center',
 				    backgroundColor:'#000',

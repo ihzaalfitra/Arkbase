@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: '#eee',
     width:'80%',
-    marginTop:40,
+    marginTop:20,
     fontSize:16,
   },
   buttonText: {
