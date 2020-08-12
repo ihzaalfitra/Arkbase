@@ -2,11 +2,14 @@
   "expo": {
     "name": "Arkbase",
     "slug": "Arkbase",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
-
     "splash": {
       "image": "./assets/Graphic/arkbase-playstore.png",
       "resizeMode": "contain",
@@ -15,12 +18,14 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-		"requireFullScreen":true,
-	  	"bundleIdentifier": "com.katabo.arkbase",
-      	"buildNumber": "0.1.0",
-      	"supportsTablet": true
+      "requireFullScreen": true,
+      "bundleIdentifier": "com.katabo.arkbase",
+      "buildNumber": "0.1.0",
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -29,8 +34,7 @@
       },
       "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
       "package": "com.katabo.arkbase",
-      "versionCode": 3
-    },
-    "sdkVersion": "36.0.0"
+      "versionCode": 5
+    }
   }
 }
