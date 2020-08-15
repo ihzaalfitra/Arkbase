@@ -7,6 +7,7 @@ import {
     Picker,
     TextInput
 } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics';
 
 import styles from '../../assets/Stylesheet/styles.js';
 import picker from '../../assets/Stylesheet/picker.js';
@@ -24,7 +25,7 @@ class BuildMatModule extends Component {
     }
 
     calculateBuildMat(selectedBuilding, currentPhase, targetedPhase) {
-        let building = this.state.buildingData[selectedBuilding];
+		let building = this.state.buildingData[selectedBuilding];
         let matUsed = [];
         let matAmount = [];
         let matIndex = 0;
@@ -55,7 +56,12 @@ class BuildMatModule extends Component {
                         matAmount[matIndex] += building["phase"][currentPhase]["matQuantity"][index];
                     }
                 });
-            }
+			}
+			Analytics.logEvent('CalculateBuildMatModule', {
+				building: building.name,
+				currentPhase: currentPhase,
+				targetedPhase: targetedPhase
+			});
 		}
 		this.setState({matUsed: matUsed});
         this.setState({matAmount: matAmount});
@@ -214,7 +220,11 @@ class BuildMatModule extends Component {
 				</View>
 			)
 		}
-    }
+	}
+	
+	componentDidMount() {
+		Analytics.setCurrentScreen('BuildMatModule');
+	}
 
     render() {
         return(

@@ -159,6 +159,7 @@ constructor() {
 				  key= {this.state.numColumns}
 		    	  />
 		    </ScrollView>
+        <ExpoStatusBar style="auto" />
       </View>
     )
   }

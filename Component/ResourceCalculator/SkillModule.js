@@ -6,6 +6,7 @@ import {
     Picker,
     TextInput
 } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics';
 
 import styles from '../../assets/Stylesheet/styles.js';
 import picker from '../../assets/Stylesheet/picker.js';
@@ -35,6 +36,9 @@ class SkillModule extends Component {
 			this.setState({errorStatement: 'Value too big'});
 		}
 		else{
+			Analytics.logEvent('TESTING', {
+				value: 'TEST123'
+			});
 			targetedSummary = parseFloat(targetedSummary);
 			targetedAmount = parseFloat(targetedAmount);
 			this.setState({errorStatement:''});
@@ -48,7 +52,11 @@ class SkillModule extends Component {
 	        this.setState({recommendedStage: stageName});
 	        this.setState({totalRun: runAmount});
 	        this.setState({totalSanity: runAmount*sanityUsed});
-	        this.setState({overflow: overflow});
+			this.setState({overflow: overflow});
+			Analytics.logEvent('CalculateSkillModule', {
+				targetedSummary: targetedSummary,
+				targetedAmount: targetedAmount
+			});
 		}
     }
 	getResult(){
@@ -135,6 +143,10 @@ class SkillModule extends Component {
 					break;
 			}
 		}
+	}
+
+	componentDidMount() {
+		Analytics.setCurrentScreen('SkillModule');
 	}
 
     render() {

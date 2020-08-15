@@ -13,6 +13,7 @@
     "splash": {
       "image": "./assets/Graphic/arkbase-playstore.png",
       "resizeMode": "contain",
+
       "backgroundColor": "#000000"
     },
     "updates": {
@@ -34,7 +35,22 @@
       },
       "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
       "package": "com.katabo.arkbase",
-      "versionCode": 5
+      "versionCode": 5,
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyDRNRHRSMKX_IMS7Tp118bpA-AxkLv1mWQ",
+          "authDomain": "arkbase-300520.firebaseapp.com",
+          "databaseURL": "https://arkbase-300520.firebaseio.com",
+          "projectId": "arkbase-300520",
+          "storageBucket": "arkbase-300520.appspot.com",
+          "messagingSenderId": "590435218387",
+          "appId": "1:590435218387:web:b8281bbbc395d09fec3526",
+          "measurementId": "G-ZZ4BB78GQ2"
+        }
+      }
     }
   }
 }

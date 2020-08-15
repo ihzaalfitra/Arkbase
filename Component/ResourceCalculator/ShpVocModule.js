@@ -6,6 +6,7 @@ import {
     Picker,
     TextInput
 } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics';
 
 import styles from '../../assets/Stylesheet/styles.js';
 import picker from '../../assets/Stylesheet/picker.js';
@@ -50,7 +51,11 @@ class ShpVocModule extends Component {
 	        let overflow = (drop*runAmount) - target;
 	        this.setState({totalRun: runAmount});
 	        this.setState({totalSanity: runAmount*sanity});
-	        this.setState({overflow: overflow});
+			this.setState({overflow: overflow});
+			Analytics.logEvent('CalculateShpVoc', {
+				stageIndex: this.state.stage,
+				target: target
+			});
 		}
     }
 	getResult(){
@@ -136,6 +141,11 @@ class ShpVocModule extends Component {
 			}
 		}
 	}
+
+	componentDidMount() {
+		Analytics.setCurrentScreen('ShpVocModule');
+	}
+
     render() {
         return(
             <View style={picker.container}>

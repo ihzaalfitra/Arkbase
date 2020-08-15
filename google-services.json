@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "590435218387",
+    "firebase_url": "https://arkbase-300520.firebaseio.com",
+    "project_id": "arkbase-300520",
+    "storage_bucket": "arkbase-300520.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590435218387:android:61ef8d99d9e38aa0ec3526",
+        "android_client_info": {
+          "package_name": "com.katabo.arkbase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "590435218387-26l5i57fuj9k80rgsaas1af91gsh86ek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVHlOjI-i0HD-ICK3Lmzbjxrk592P85vo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "590435218387-26l5i57fuj9k80rgsaas1af91gsh86ek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-3996172719278664~9471857927"
+    }
+  ],
+  "configuration_version": "1"
+}
