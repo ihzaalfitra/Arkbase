@@ -3,10 +3,9 @@
     "name": "Arkbase",
     "slug": "Arkbase",
     "platforms": ["ios", "android", "web"],
-    "version": "1.0.4",
+    "version": "1.1.0",
     "orientation": "default",
     "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
-
     "splash": {
       "image": "./assets/Graphic/arkbase-playstore.png",
       "resizeMode": "cover",
@@ -15,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
 		"requireFullScreen":true,
 	  	"bundleIdentifier": "com.katabo.arkbase",
@@ -34,12 +35,26 @@
       },
       "icon": "./assets/Graphic/ArkbaseLogo_android.icon_1024.png",
       "package": "com.katabo.arkbase",
-      "versionCode": 4,
+      "versionCode": 5,
+      "googleServicesFile": "./google-services.json",
 	  "config": {
         "googleMobileAdsAppId": "ca-app-pub-3996172719278664~9471857927"
 	  },
 	  "useNextNotificationsApi": true,
     },
-    "sdkVersion": "36.0.0"
+    "web": {
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyDRNRHRSMKX_IMS7Tp118bpA-AxkLv1mWQ",
+          "authDomain": "arkbase-300520.firebaseapp.com",
+          "databaseURL": "https://arkbase-300520.firebaseio.com",
+          "projectId": "arkbase-300520",
+          "storageBucket": "arkbase-300520.appspot.com",
+          "messagingSenderId": "590435218387",
+          "appId": "1:590435218387:web:b8281bbbc395d09fec3526",
+          "measurementId": "G-ZZ4BB78GQ2"
+        }
+      }
+    }
   }
 }

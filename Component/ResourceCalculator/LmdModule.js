@@ -6,6 +6,7 @@ import {
     Picker,
     TextInput
 } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics';
 
 import styles from '../../assets/Stylesheet/styles.js';
 import picker from '../../assets/Stylesheet/picker.js';
@@ -54,6 +55,11 @@ class LmdModule extends Component {
 			this.setState({errorStatement: "Value too big"});
 		}else{
 			this.setState({errorStatement: ''})
+			Analytics.logEvent('CalculateLmd', {
+				stageIndex: this.state.stage,
+				own: owned,
+				target: target
+			});
 		}
         let runAmount = Math.ceil(target / drop);
         let overflow = (drop*runAmount) - target;
@@ -160,6 +166,11 @@ class LmdModule extends Component {
 			}
 		}
 	}
+
+	componentDidMount() {
+		Analytics.setCurrentScreen('LmdModule');
+	}
+
     render() {
         return(
             <View style={picker.container}>

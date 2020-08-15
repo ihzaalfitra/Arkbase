@@ -7,6 +7,7 @@ import {
     TextInput,
 	ScrollView
 } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics';
 
 import styles from '../../assets/Stylesheet/styles.js';
 import picker from '../../assets/Stylesheet/picker.js';
@@ -127,6 +128,14 @@ class ExpModule extends Component {
 			{this.setState({errorStatement:'Level limit for E'+targetedElite+' '+rarity+' star operator is '+levelLimit[rarity][targetedElite]});}
 		else{
 			this.setState({errorStatement:''});
+			Analytics.logEvent('CalculateExp', {
+				stageIndex: this.state.stage,
+				rarity: rarity,
+				currentElite: currentElite,
+				currentLevel: currentLevel,
+				targetedElite: targetedElite,
+				targetedLevel: targetedLevel
+			});
 	        while((currentElite <= targetedElite) && !(currentElite == targetedElite && currentLevel >= targetedLevel)) {
 	            if(currentLevel == levelLimit[rarity][currentElite]) {
 					totalCost += promoteCost[rarity][currentElite];
@@ -355,6 +364,11 @@ class ExpModule extends Component {
 			}
 		}
 	}
+
+	componentDidMount() {
+		Analytics.setCurrentScreen('ExpModule');
+	}
+
     render() {
         return(
             <View style={picker.container}>

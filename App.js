@@ -5,6 +5,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import {
     View
 } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics';
 
 import Material from './Component/Material/Material.js';
 import ResourceCalculator from './Component/ResourceCalculator/ResourceCalculator.js';
@@ -30,24 +31,49 @@ const MyTheme = {
 };
 
 class MainClass extends Component {
+
+    //Function to get the screen name from the tab navigation
+    getActiveRouteName(navigationState) {
+        if (!navigationState) return null;
+        const route = navigationState.routes[navigationState.index];
+        // Parse the nested navigators
+        if (route.routes) return this.getActiveRouteName(route);
+        return route.name;
+    }
+
+    componentDidMount() {
+        //Enabling debugger for Analitics
+        Analytics.setDebugModeEnabled(true);
+
+        Analytics.setCurrentScreen('ResourceCalculator');
+    }
+
 	render(){
 		return(
-			<View style={{flex:1,backgroundColor:'#000'}}>
-				<NavigationContainer theme={MyTheme}>
-	                <Tab.Navigator tabBarPosition="bottom">
-	                    <Tab.Screen name="ResourceCalculator" component={ResourceCalculator} options={{title: 'Resource Calculator'}}/>
-	                    <Tab.Screen name="Material" component={Material} options={{title: 'Materials'}}/>
-						<Tab.Screen name="SanityCalculator" component={SanityCalculator} options={{title: 'Sanity Calculator'}}/>
-	                </Tab.Navigator>
-					{/*under-nav admob*/}
-					<AdMobBanner
-					style={{width:"100%",marginLeft:0,marginRight:0}}
-					bannerSize="smartBannerLandscape"
-					adUnitID="ca-app-pub-3996172719278664/4877597674"
-					servePersonalizedAds={true}
-					onDidFailToReceiveAdWithError={this.bannerError} />
-	            </NavigationContainer>
-			</View>
+            <NavigationContainer
+                theme={MyTheme}
+                onStateChange={(currentState, prevState) => {
+                    const currentScreen = this.getActiveRouteName(currentState);
+                    const prevScreen = this.getActiveRouteName(prevState);
+                    if (prevScreen !== currentScreen) {
+                        Analytics.setCurrentScreen(currentScreen);
+                    }
+                }}
+            >
+                <Tab.Navigator tabBarPosition="bottom">
+                    <Tab.Screen name="ResourceCalculator" component={ResourceCalculator} options={{title: 'Resource Calculator'}}/>
+                    <Tab.Screen name="Material" component={Material} options={{title: 'Material'}}/>
+					<Tab.Screen name="SanityCalculator" component={SanityCalculator} options={{title: 'Sanity Calculator'}}/>
+                </Tab.Navigator>
+				{/*under-nav admob*/}
+				<AdMobBanner
+				style={{width:"100%",marginLeft:0,marginRight:0}}
+				bannerSize="smartBannerLandscape"
+				adUnitID="ca-app-pub-3996172719278664/4877597674"
+				servePersonalizedAds={true}
+				onDidFailToReceiveAdWithError={this.bannerError} />
+            </NavigationContainer>
+
 		)
 	}
 }
