@@ -8,6 +8,9 @@ import {
 
 import Material from './Component/Material/Material.js';
 import ResourceCalculator from './Component/ResourceCalculator/ResourceCalculator.js';
+import SanityCalculator from './Component/SanityCalculator.js';
+
+import * as Notifications from 'expo-notifications';
 
 import {
   AdMobBanner
@@ -33,14 +36,15 @@ class MainClass extends Component {
 				<NavigationContainer theme={MyTheme}>
 	                <Tab.Navigator tabBarPosition="bottom">
 	                    <Tab.Screen name="ResourceCalculator" component={ResourceCalculator} options={{title: 'Resource Calculator'}}/>
-	                    <Tab.Screen name="Material" component={Material} options={{title: 'Material'}}/>
+	                    <Tab.Screen name="Material" component={Material} options={{title: 'Materials'}}/>
+						<Tab.Screen name="SanityCalculator" component={SanityCalculator} options={{title: 'Sanity Calculator'}}/>
 	                </Tab.Navigator>
 					{/*under-nav admob*/}
 					<AdMobBanner
 					style={{width:"100%",marginLeft:0,marginRight:0}}
 					bannerSize="smartBannerLandscape"
 					adUnitID="ca-app-pub-3996172719278664/4877597674"
-					servePersonalizedAds="false"
+					servePersonalizedAds={true}
 					onDidFailToReceiveAdWithError={this.bannerError} />
 	            </NavigationContainer>
 			</View>

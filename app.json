@@ -37,7 +37,8 @@
       "versionCode": 4,
 	  "config": {
         "googleMobileAdsAppId": "ca-app-pub-3996172719278664~9471857927"
-      }
+	  },
+	  "useNextNotificationsApi": true,
     },
     "sdkVersion": "36.0.0"
   }

@@ -249,7 +249,7 @@ class ResourceCalculator extends Component {
 					style={{width:"100%",marginLeft:0,marginRight:0}}
 					bannerSize="smartBannerLandscape"
 					adUnitID="ca-app-pub-3996172719278664/3274524358"
-					servePersonalizedAds="false"
+					servePersonalizedAds={true}
 					onDidFailToReceiveAdWithError={this.bannerError} />
 
                     <View style={picker.container}>

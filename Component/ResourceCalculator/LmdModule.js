@@ -31,29 +31,35 @@ class LmdModule extends Component {
     }
 
     calculateLMD(owned, target, sanity, drop) {
-		if(parseInt(owned) > Number.MAX_SAFE_INTEGER || parseInt(target) > Number.MAX_SAFE_INTEGER ) {
-			this.setState({errorStatement: "Value too big"});
-			return
+		let ownedRaw = owned;
+		let targetRaw = target;
+		if(owned==''){
+			owned=0;
+		}else{
+			owned = parseFloat(owned);
 		}
-		owned=parseFloat(owned);
 		target = parseFloat(target);
 		target=target-owned;
+		if (sanity == 0 && drop == 0) {
+			this.setState({errorStatement: 'Please select stage.'})
+		}else if(isNaN(owned)){
+			this.setState({errorStatement: 'Owned amount must be a number.'})
+		}else if(isNaN(target)){
+			this.setState({errorStatement: 'Target amount must be a number.'})
+		}else if(owned >= target){
+			this.setState({errorStatement: 'Owned amount cannot be greater or equal than targeted amount.'})
+		}else if(target <= 0 || isNaN(target)){
+			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
+		}else if(ownedRaw > Number.MAX_SAFE_INTEGER || targetRaw > Number.MAX_SAFE_INTEGER ) {
+			this.setState({errorStatement: "Value too big"});
+		}else{
+			this.setState({errorStatement: ''})
+		}
         let runAmount = Math.ceil(target / drop);
         let overflow = (drop*runAmount) - target;
         this.setState({totalRun: runAmount});
         this.setState({totalSanity: runAmount*sanity});
         this.setState({overflow: overflow});
-		if (sanity == 0 && drop == 0) {
-			this.setState({errorStatement: 'Please select stage.'})
-		}else if(isNaN(owned)){
-			this.setState({errorStatement: 'Owned amount must be a number.'})
-		}else if(owned >= target){
-			this.setState({errorStatement: 'Owned amount cannot be greater or equal than targeted amount.'})
-		}else if(target <= 0 || isNaN(target)){
-			this.setState({errorStatement: 'Target amount must be a number and cannot be zero or blank.'})
-		}else{
-			this.setState({errorStatement: ''})
-		}
     }
 
 	getResult(){
@@ -119,7 +125,7 @@ class LmdModule extends Component {
 					}else{
 						value=parseFloat(value);
 					}
-					if(isNaN(value)){
+					if(isNaN(value) || value > Number.MAX_SAFE_INTEGER){
 						return(
 							styles.inputError
 						)
@@ -130,7 +136,7 @@ class LmdModule extends Component {
 					}
 					break;
 				case 'targetedValue':
-					if(value <= 0 || isNaN(value)){
+					if(value <= 0 || isNaN(value) || value > Number.MAX_SAFE_INTEGER){
 						return(
 							styles.inputError
 						)

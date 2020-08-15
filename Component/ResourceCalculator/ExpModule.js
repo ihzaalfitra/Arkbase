@@ -52,10 +52,9 @@ class ExpModule extends Component {
     }
 
     calculateExp(rarity, currentElite, currentLevel, targetedElite, targetedLevel, sanityExp, dropExp, sanityLmd, dropLmd) {
-		if(parseInt(currentLevel) > Number.MAX_SAFE_INTEGER || parseInt(targetedLevel) > Number.MAX_SAFE_INTEGER) {
-			this.setState({errorStatement: "Value too big"});
-			return;
-		}
+		currentLevelRaw = currentLevel;
+		targetedLevelRaw = targetedLevel;
+
 		currentLevel = parseInt(currentLevel);
 		targetedLevel = parseInt(targetedLevel);
         let expReqPerLevel = this.state.opExpReqAllElite;
@@ -105,9 +104,8 @@ class ExpModule extends Component {
 		//currentLevel or targetedLevel is not a number
 		else if (isNaN(currentLevel) || isNaN(targetedLevel))
 			{this.setState({errorStatement:'Please enter a number'});}
-
-
-
+		else if(currentLevelRaw > Number.MAX_SAFE_INTEGER || targetedLevelRaw > Number.MAX_SAFE_INTEGER)
+			{this.setState({errorStatement: "Value too big"});}
 		//currentLevel is zero
 		else if (currentLevel <= 0)
 			{this.setState({errorStatement:'Current level cannot be zero or lower'});}
@@ -119,7 +117,6 @@ class ExpModule extends Component {
 		//currentElite or targetedElite is not available for that rarity
 		else if (levelLimit[rarity][currentElite] == -1 || levelLimit[rarity][targetedElite] == -1)
 			{this.setState({errorStatement:'This rarity does not have this elite'});}
-
 
 		//currentLevel exceed levelLimit of that rarity and elite
 		else if (currentLevel > levelLimit[rarity][currentElite])
@@ -299,6 +296,7 @@ class ExpModule extends Component {
 							isNaN(this.state.opCurrentLevel) ||
 							this.state.opCurrentLevel == '' ||
 							this.state.opCurrentLevel == 0 ||
+							this.state.opCurrentLevel > Number.MAX_SAFE_INTEGER ||
 							this.state.opLevelLimit[this.state.opRarity][this.state.currentElite] == -1 ||
 							this.state.opCurrentLevel > this.state.opLevelLimit[this.state.opRarity][this.state.opCurrentElite] ||
 							(
@@ -320,6 +318,7 @@ class ExpModule extends Component {
 							isNaN(this.state.opTargetedLevel) ||
 							this.state.opTargetedLevel == '' ||
 							this.state.opTargetedLevel == 0 ||
+							this.state.opTargetedLevel > Number.MAX_SAFE_INTEGER ||
 							this.state.opLevelLimit[this.state.opRarity][this.state.opTargetedElite] == -1 ||
 							this.state.opTargetedLevel > this.state.opLevelLimit[this.state.opRarity][this.state.opTargetedElite] ||
 							(

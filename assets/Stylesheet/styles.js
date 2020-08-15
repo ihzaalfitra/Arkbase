@@ -113,7 +113,11 @@ inputError_100:{
   fontSize:16,
   borderColor:'#f22',
   borderBottomWidth: 1
-}
+},
+
+  checkbox: {
+    alignSelf: "center",
+  },
 
 });
 

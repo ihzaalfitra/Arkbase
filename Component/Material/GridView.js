@@ -11,6 +11,9 @@ import {
     TouchableOpacity
 } from 'react-native'
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import {
+  AdMobBanner
+} from 'expo-ads-admob';
 
 import default_styles from '../../assets/Stylesheet/styles.js';
 import firebase from '../../assets/Firebase/FirebaseDatabase.js';
@@ -149,16 +152,25 @@ constructor() {
 
     return (
       <View style = {{container,backgroundColor:'#000',paddingTop: 30,flex:9}}>
-		    <ScrollView>
-		    	<Text style={default_styles.header}>Materials</Text>
-		        <FlatList style = {{marginTop: 30}}
-		    		  data = {this.state.matDatabase}
-		          renderItem = {this._renderItem}
-		          keyExtractor = {(item, index) => index.toString()}
-		          numColumns = {this.state.numColumns}
-				  key= {this.state.numColumns}
-		    	  />
-		    </ScrollView>
+	  		<FlatList
+				ListHeaderComponent={
+					<>
+						<Text style={default_styles.header}>Materials</Text>
+						<AdMobBanner
+						style={{width:"100%",marginLeft:0,marginRight:0}}
+						bannerSize="smartBannerLandscape"
+						adUnitID="ca-app-pub-3996172719278664/2164848008"
+						servePersonalizedAds={true}
+						onDidFailToReceiveAdWithError={this.bannerError} />
+					</>
+				}
+				style = {{marginTop: 30}}
+		    	data = {this.state.matDatabase}
+		        renderItem = {this._renderItem}
+		        keyExtractor = {(item, index) => index.toString()}
+		        numColumns = {this.state.numColumns}
+				key= {this.state.numColumns}
+		    />
       </View>
     )
   }
