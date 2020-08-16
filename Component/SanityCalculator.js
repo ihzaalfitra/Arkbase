@@ -5,14 +5,21 @@ import {
     ScrollView,
 	KeyboardAvoidingView,
     TouchableOpacity,
+	Vibration,
+	Platform,
     TextInput
 } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+// import CheckBox from '@react-native-community/checkbox';
+// import Constants from 'expo-constants';
+// import * as Permissions from 'expo-permissions';
 import {
   AdMobBanner
 } from 'expo-ads-admob';
 
-import * as Notifications from 'expo-notifications';
+//Note from IA :
+//legacy notification api, because expo-notifications is relatively new, there's an error that i can't found the solution
+//https://docs.expo.io/versions/latest/sdk/legacy-notifications/
+//import { Notifications } from 'expo';
 
 import firebase from '../assets/Firebase/FirebaseDatabase.js';
 import styles from '../assets/Stylesheet/styles.js';
@@ -31,8 +38,6 @@ class SanityCalculator extends Component {
 		time:0,
 		useMonthlyPackage:false
     }
-
-
     calculateSanity(owned, target, useMonthlyPackage) {
 		let ownedRaw = owned;
 		let targetRaw = target;
@@ -163,10 +168,12 @@ class SanityCalculator extends Component {
 			                    onChangeText={(input) => this.setState({targetedValue: input})}
 			                    keyboardType="numeric"
 			                />
-							<View style={{width:'80%',flexDirection:'row',alignItems:'center',marginTop:25,marginBottom:-25}}>
-								<CheckBox tintColors={{ true: 'white', false: 'white' }} value={this.state.useMonthlyPackage} onValueChange={(val) => this.setState({useMonthlyPackage:val})}/>
-								<Text style={styles.textLeft}>Use monthly package</Text>
-							</View>
+							{/*
+								<View style={{width:'80%',flexDirection:'row',alignItems:'center',marginTop:25,marginBottom:-25}}>
+									<CheckBox tintColors={{ true: 'white', false: 'white' }} value={this.state.useMonthlyPackage} onValueChange={(val) => this.setState({useMonthlyPackage:val})}/>
+									<Text style={styles.textLeft}>Use monthly package</Text>
+								</View>
+							*/}
 			                <TouchableOpacity
 			                    onPress= {()=>{this.calculateSanity(this.state.ownedValue,this.state.targetedValue,this.state.usemuseMonthlyPackage)}}
 			                    style={styles.button}
