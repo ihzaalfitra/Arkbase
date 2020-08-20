@@ -149,7 +149,8 @@ export default class App extends Component {
     this.setState({ isLoaded: true });
     Analytics.logEvent('MaterialDetail', {
       materialName: this.props.route.params.data.data.name
-    });
+    })
+    .catch((err) => console.log(err));
   }
 
   render() {
