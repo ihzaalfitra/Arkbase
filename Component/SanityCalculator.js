@@ -30,15 +30,16 @@ class SanityCalculator extends Component {
     date: "",
     time: 0,
     useMonthlyPackage: false,
+    useNotification: false,
   };
 
   // --Notification Functions--
-  setNotification(value) {
-    Keyboard.dismiss();
+  setNotification(value, state) {
+    //Keyboard.dismiss();
     let msValue = value * 60000;
     console.warn("Notification activated, time value set to " + msValue + "ms");
 
-    let bodyString = "Time: " + value + "minutes";
+    let bodyString = "Time elapsed should be " + value + " minutes";
 
     const localNotification = {
       title: "Notification Test",
@@ -48,7 +49,7 @@ class SanityCalculator extends Component {
     // Schedules the notification - note: make sure input (time)
     // is in the correct format (ms)
     const schedulingOptions = {
-      time: new Date().getTime() + Number(value),
+      time: new Date().getTime() + Number(msValue),
     };
 
     // Notifications show only when app is not active.
@@ -69,7 +70,7 @@ class SanityCalculator extends Component {
     let result = await Permissions.askAsync(Permissions.NOTIFICATIONS);
 
     if (Constants.isDevice && result.status === "granted") {
-      console.log("Notification permissions granted.");
+      //console.log("Notification permissions granted.");
     }
 
     // If we want to do something with the notification when the app
@@ -245,13 +246,15 @@ class SanityCalculator extends Component {
               >
                 <Text style={styles.buttonText}>Calculate</Text>
               </TouchableOpacity>
-              {this.getResult()}
               <TouchableOpacity
-                onPress={this.setNotification(this.state.timeAmount)}
+                onPress={() => {
+                  this.setNotification(this.state.timeAmount);
+                }}
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>Set Notification</Text>
               </TouchableOpacity>
+              {this.getResult()}
             </View>
           </View>
         </ScrollView>
