@@ -35,14 +35,16 @@ class SanityCalculator extends Component {
 
   // --Notification Functions--
   setNotification(value, state) {
-    //Keyboard.dismiss();
     let msValue = value * 60000;
     console.warn("Notification activated, time value set to " + msValue + "ms");
 
-    let bodyString = "Time elapsed should be " + value + " minutes";
+    let bodyString =
+      "Your target sanity value has been reached! Time elapsed: " +
+      value +
+      " minutes.";
 
     const localNotification = {
-      title: "Notification Test",
+      title: "Arkbase",
       body: bodyString,
     };
 
@@ -100,7 +102,7 @@ class SanityCalculator extends Component {
     } else if (owned >= target) {
       this.setState({
         errorStatement:
-          "Owned amount cannot be greater or equal than targeted amount.",
+          "Current amount cannot be greater or equal than targeted amount.",
       });
     } else if (target <= 0 || isNaN(target)) {
       this.setState({
@@ -123,12 +125,19 @@ class SanityCalculator extends Component {
     if (this.state.errorStatement == "") {
       return (
         <View style={{ width: "80%" }}>
-          <Text style={styles.textRequire}>Require:</Text>
-          <Text style={styles.textLeft}>{this.state.date} Date</Text>
-          <Text style={styles.textLeft}>{this.state.time} Time</Text>
-          <Text style={styles.textLeft}>
-            {parseInt(this.state.timeAmount)} minutes
+          <Text style={styles.textRequire}>
+            Time to target sanity: {parseInt(this.state.timeAmount)} minutes
           </Text>
+          <Text style={styles.textLeft}>Date: {this.state.date} </Text>
+          <Text style={styles.textLeft}>Time:{this.state.time} </Text>
+          <TouchableOpacity
+            onPress={() => {
+              this.setNotification(this.state.timeAmount);
+            }}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Set Notification</Text>
+          </TouchableOpacity>
         </View>
       );
       //uninitialized errorStatement
@@ -245,14 +254,6 @@ class SanityCalculator extends Component {
                 style={styles.button}
               >
                 <Text style={styles.buttonText}>Calculate</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  this.setNotification(this.state.timeAmount);
-                }}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>Set Notification</Text>
               </TouchableOpacity>
               {this.getResult()}
             </View>
