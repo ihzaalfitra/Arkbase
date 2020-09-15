@@ -4,6 +4,7 @@ import {
   View,
   ScrollView,
   KeyboardAvoidingView,
+  ToastAndroid,
   TouchableOpacity,
   TextInput,
 } from "react-native";
@@ -35,12 +36,6 @@ class SanityCalculator extends Component {
     let msValue = value * 60000;
     console.log("Notification activated, time value set to " + msValue + "ms");
 
-    // Notification contents when user sets timer
-    const setNotification = {
-      title: "Arkbase",
-      body: "Your sanity timer has been set! Time: " + value + " minutes",
-    };
-
     // Notification content when timer has elapsed
     const localNotification = {
       title: "Arkbase",
@@ -56,9 +51,16 @@ class SanityCalculator extends Component {
     // Notifications show only when app is not active.
     // (ie. another app being used or device's screen is locked)
     // Set notification (when user sets timer)
-    Notifications.scheduleLocalNotificationAsync(setNotification, {
-      time: new Date().getTime() + 1000, // Extra second to avoid bug
-    });
+    const showToastWithGravity = () => {
+      ToastAndroid.showWithGravityAndOffset(
+        "Your sanity timer has been set! Expected time: " + value + " minutes",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        25,
+        50
+      );
+    };
+    showToastWithGravity();
     // Scheduled notification
     Notifications.scheduleLocalNotificationAsync(
       localNotification,
