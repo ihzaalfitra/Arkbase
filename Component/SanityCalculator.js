@@ -4,10 +4,7 @@ import {
   View,
   ScrollView,
   KeyboardAvoidingView,
-  Keyboard,
   TouchableOpacity,
-  Vibration,
-  Platform,
   TextInput,
 } from "react-native";
 import { Notifications } from "expo";
@@ -34,18 +31,20 @@ class SanityCalculator extends Component {
   };
 
   // --Notification Functions--
-  setNotification(value, state) {
+  setNotification(value, target) {
     let msValue = value * 60000;
-    console.warn("Notification activated, time value set to " + msValue + "ms");
+    console.log("Notification activated, time value set to " + msValue + "ms");
 
-    let bodyString =
-      "Your target sanity value has been reached! Time elapsed: " +
-      value +
-      " minutes.";
+    // Notification contents when user sets timer
+    const setNotification = {
+      title: "Arkbase",
+      body: "Your sanity timer has been set! Time: " + value + " minutes",
+    };
 
+    // Notification content when timer has elapsed
     const localNotification = {
       title: "Arkbase",
-      body: bodyString,
+      body: "Your target sanity value of " + target + " has been reached!",
     };
 
     // Schedules the notification - note: make sure input (time)
@@ -56,6 +55,11 @@ class SanityCalculator extends Component {
 
     // Notifications show only when app is not active.
     // (ie. another app being used or device's screen is locked)
+    // Set notification (when user sets timer)
+    Notifications.scheduleLocalNotificationAsync(setNotification, {
+      time: new Date().getTime() + 1000, // Extra second to avoid bug
+    });
+    // Scheduled notification
     Notifications.scheduleLocalNotificationAsync(
       localNotification,
       schedulingOptions
@@ -126,13 +130,17 @@ class SanityCalculator extends Component {
       return (
         <View style={{ width: "80%" }}>
           <Text style={styles.textRequire}>
-            Time to target sanity: {parseInt(this.state.timeAmount)} minutes
+            Estimated time to target sanity: {parseInt(this.state.timeAmount)}{" "}
+            minutes
           </Text>
           <Text style={styles.textLeft}>Date: {this.state.date} </Text>
           <Text style={styles.textLeft}>Time:{this.state.time} </Text>
           <TouchableOpacity
             onPress={() => {
-              this.setNotification(this.state.timeAmount);
+              this.setNotification(
+                this.state.timeAmount,
+                this.state.targetedValue
+              );
             }}
             style={styles.button}
           >
