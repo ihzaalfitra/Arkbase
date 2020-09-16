@@ -11,8 +11,6 @@ import Material from './Component/Material/Material.js';
 import ResourceCalculator from './Component/ResourceCalculator/ResourceCalculator.js';
 import SanityCalculator from './Component/SanityCalculator.js';
 
-import * as Notifications from 'expo-notifications';
-
 import {
   AdMobBanner
 } from 'expo-ads-admob';
