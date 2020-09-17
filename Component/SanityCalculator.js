@@ -10,13 +10,21 @@ import {
 } from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
 
 import firebase from "../assets/Firebase/FirebaseDatabase.js";
 import styles from "../assets/Stylesheet/styles.js";
 import picker from "../assets/Stylesheet/picker.js";
 
+//List of all the custom font
+let customFonts = {
+  'Butler-Regular-Stencil': require('../assets/Butler_Regular_Stencil.otf'),
+};
+
 class SanityCalculator extends Component {
   state = {
+    fontsLoaded: false,
     errorStatement: -1,
     data: this.props.lmdData,
     stage: 0,
@@ -28,6 +36,12 @@ class SanityCalculator extends Component {
     useMonthlyPackage: false,
     useNotification: false,
   };
+
+  //method to load the font
+  _loadFontsAsync = async() => {
+    await Font.loadAsync(customFonts);
+    this.setState({fontsLoaded: true});
+}
 
   // --Notification Functions--
   setNotification(value, target) {
@@ -78,6 +92,8 @@ class SanityCalculator extends Component {
     // is active, we need to listen to notification events and
     // handle them in a callback
     Notifications.addListener(this.handleNotification);
+    this._loadFontsAsync();
+    
   }
   // End of notif functions
   // Note: Activate with setNotification
@@ -190,72 +206,78 @@ class SanityCalculator extends Component {
   }
 
   render() {
-    return (
-      <KeyboardAvoidingView
-        style={{ flex: 9, backgroundColor: "#000", paddingTop: 25 }}
-      >
-        <ScrollView
-          ref={(ref) => (this.scrollView = ref)}
-          onContentSizeChange={() => {
-            this.scrollView.scrollToEnd({ animated: true });
-          }}
-        >
-          <View
-            style={{
-              alignItems: "center",
-              backgroundColor: "#000",
-            }}
+    switch(this.state.fontsLoaded) {
+      case false:
+        return <AppLoading/>
+      case true:
+        return (
+          <KeyboardAvoidingView
+            style={{ flex: 9, backgroundColor: "#000", paddingTop: 35 }}
           >
-            <Text style={styles.header}>Sanity Calculator</Text>
-            <View style={picker.container}>
-              <TextInput
-                style={this.styleUnderline(
-                  this.state.ownedValue,
-                  "textInput",
-                  "ownedValue"
-                )}
-                placeholder="Current sanity"
-                value={this.input}
-                onChangeText={(input) => this.setState({ ownedValue: input })}
-                keyboardType="numeric"
-              />
-              <TextInput
-                style={this.styleUnderline(
-                  parseFloat(this.state.targetedValue),
-                  "textInput",
-                  "targetedValue"
-                )}
-                placeholder="Target sanity"
-                value={this.input}
-                onChangeText={(input) =>
-                  this.setState({ targetedValue: input })
-                }
-                keyboardType="numeric"
-              />
-              {/*
-								<View style={{width:'80%',flexDirection:'row',alignItems:'center',marginTop:25,marginBottom:-25}}>
-									<CheckBox tintColors={{ true: 'white', false: 'white' }} value={this.state.useMonthlyPackage} onValueChange={(val) => this.setState({useMonthlyPackage:val})}/>
-									<Text style={styles.textLeft}>Use monthly package</Text>
-								</View>
-							*/}
-              <TouchableOpacity
-                onPress={() => {
-                  this.calculateSanity(
-                    this.state.ownedValue,
-                    this.state.targetedValue,
-                    this.state.usemuseMonthlyPackage
-                  );
+            <ScrollView
+              ref={(ref) => (this.scrollView = ref)}
+              onContentSizeChange={() => {
+                this.scrollView.scrollToEnd({ animated: true });
+              }}
+            >
+              <View
+                style={{
+                  alignItems: "center",
+                  backgroundColor: "#000",
                 }}
-                style={styles.button}
               >
-                <Text style={styles.buttonText}>Calculate</Text>
-              </TouchableOpacity>
-              {this.getResult()}
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    );
+                <Text style={[styles.header, {fontFamily: 'Butler-Regular-Stencil', fontSize: 50, marginHorizontal: 20}]}>Sanity Calculator</Text>
+                <View style={picker.container}>
+                  <TextInput
+                    style={this.styleUnderline(
+                      this.state.ownedValue,
+                      "textInput",
+                      "ownedValue"
+                    )}
+                    placeholder="Current sanity"
+                    value={this.input}
+                    onChangeText={(input) => this.setState({ ownedValue: input })}
+                    keyboardType="numeric"
+                  />
+                  <TextInput
+                    style={this.styleUnderline(
+                      parseFloat(this.state.targetedValue),
+                      "textInput",
+                      "targetedValue"
+                    )}
+                    placeholder="Target sanity"
+                    value={this.input}
+                    onChangeText={(input) =>
+                      this.setState({ targetedValue: input })
+                    }
+                    keyboardType="numeric"
+                  />
+                  {/*
+                    <View style={{width:'80%',flexDirection:'row',alignItems:'center',marginTop:25,marginBottom:-25}}>
+                      <CheckBox tintColors={{ true: 'white', false: 'white' }} value={this.state.useMonthlyPackage} onValueChange={(val) => this.setState({useMonthlyPackage:val})}/>
+                      <Text style={styles.textLeft}>Use monthly package</Text>
+                    </View>
+                  */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.calculateSanity(
+                        this.state.ownedValue,
+                        this.state.targetedValue,
+                        this.state.usemuseMonthlyPackage
+                      );
+                    }}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>Calculate</Text>
+                  </TouchableOpacity>
+                  {this.getResult()}
+                </View>
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        );
+    }
+    
   }
 }
 

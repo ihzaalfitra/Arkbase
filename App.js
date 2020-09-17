@@ -17,7 +17,7 @@ import {
 } from 'expo-ads-admob';
 
 /*This line is to disable the ads for development
-PLEASE COMMENT THIS LINE WHEN AT DEVELOPMENT, AND UNCOMMENT IT BEFORE BUILDING*/
+PLEASE COMMENT THIS LINE BEFORE BUILD, AND UNCOMMENT IT WHEN AT DEVELOPMENT*/
 setTestDeviceIDAsync('EMULATOR');
 
 const Tab = createMaterialTopTabNavigator();

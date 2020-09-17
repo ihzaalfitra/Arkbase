@@ -24,7 +24,7 @@ import FurnPartModule from './FurnPartModule.js';
 import BuildMatModule from './BuildMatModule.js';
 import ShpVocModule from './ShpVocModule.js';
 
-
+//List of all the custom font
 let customFonts = {
     'Butler-Regular-Stencil': require('../../assets/Butler_Regular_Stencil.otf'),
 };
@@ -56,11 +56,10 @@ class ResourceCalculator extends Component {
         shpVocData: []
     };
 
+    //method to load the font
     _loadFontsAsync = async() => {
-        console.log("1");
         await Font.loadAsync(customFonts);
         this.setState({fontsLoaded: true});
-        console.log("2");
     }
 
 	checkSelectedResource(selectedResource) {
@@ -254,50 +253,50 @@ class ResourceCalculator extends Component {
     }
 
     render() {
-        if(this.state.fontsLoaded) {
-            return(
-                <KeyboardAvoidingView style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
-                <ScrollView ref={ ( ref ) => this.scrollView = ref } onContentSizeChange={ () => { this.scrollView.scrollToEnd( { animated: true } )} } >
-                    <View style={{
-                        alignItems:'center',
-                        backgroundColor:'#000',
-                    }}>
-                        <Text style={[styles.header, {fontFamily: 'Butler-Regular-Stencil'}]}>Resource Calculator</Text>
-                        {/*under-title admob*/}
-                        <AdMobBanner
-                        style={{width:"100%",marginLeft:0,marginRight:0}}
-                        bannerSize="smartBannerLandscape"
-                        adUnitID="ca-app-pub-3996172719278664/3274524358"
-                        servePersonalizedAds={true}
-                        onDidFailToReceiveAdWithError={this.bannerError} />
-    
-                        <View style={picker.container}>
-                          <View style={picker.underline}>
-                            <Picker
-                              style={picker.style}
-                              itemStyle={picker.itemStyle}
-                              selectedValue={this.state.resource}
-                              onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue})}
-                            >
-                              <Picker.Item label="Select resource" value={null}/>
-                              <Picker.Item label="BATTLE RECORD (EXP)" value={"exp"}/>
-                              <Picker.Item label="BUILDING MATERIAL" value={"buildMat"}/>
-                              <Picker.Item label="FURNITURE PART" value={"furnPart"}/>
-                              <Picker.Item label="LMD" value={"lmd"}/>
-                              <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
-                              <Picker.Item label="SKILL SUMMARY" value={"skill"}/>
-                              </Picker>
-                          </View>
-                          {this.checkSelectedResource(this.state.resource)}
-                        </View>
-                        </View>
-                    </ScrollView>
-                    <ExpoStatusBar style="auto" />
-                </KeyboardAvoidingView>
-            )
-        }
-        else {
-            return <AppLoading/>
+        switch(this.state.fontsLoaded) {
+            case false:
+                return <AppLoading/>
+            case true:
+                return(
+                    <KeyboardAvoidingView style={{flex:9,backgroundColor:'#000',paddingTop:25}}>
+                    <ScrollView ref={ ( ref ) => this.scrollView = ref } onContentSizeChange={ () => { this.scrollView.scrollToEnd( { animated: true } )} } >
+                        <View style={{
+                            alignItems:'center',
+                            backgroundColor:'#000',
+                        }}>
+                            <Text style={[styles.header, {fontFamily: 'Butler-Regular-Stencil', fontSize: 50}]}>Resource Calculator</Text>
+                            {/*under-title admob*/}
+                            {/* <AdMobBanner
+                            style={{width:"100%",marginLeft:0,marginRight:0}}
+                            bannerSize="smartBannerLandscape"
+                            adUnitID="ca-app-pub-3996172719278664/3274524358"
+                            servePersonalizedAds={true}
+                            onDidFailToReceiveAdWithError={this.bannerError} /> */}
+        
+                            <View style={picker.container}>
+                              <View style={picker.underline}>
+                                <Picker
+                                  style={picker.style}
+                                  itemStyle={picker.itemStyle}
+                                  selectedValue={this.state.resource}
+                                  onValueChange={(itemValue, itemIndex) => this.setState({resource: itemValue})}
+                                >
+                                  <Picker.Item label="Select resource" value={null}/>
+                                  <Picker.Item label="BATTLE RECORD (EXP)" value={"exp"}/>
+                                  <Picker.Item label="BUILDING MATERIAL" value={"buildMat"}/>
+                                  <Picker.Item label="FURNITURE PART" value={"furnPart"}/>
+                                  <Picker.Item label="LMD" value={"lmd"}/>
+                                  <Picker.Item label="SHOP VOUCHER" value={"voucher"}/>
+                                  <Picker.Item label="SKILL SUMMARY" value={"skill"}/>
+                                  </Picker>
+                              </View>
+                              {this.checkSelectedResource(this.state.resource)}
+                            </View>
+                            </View>
+                        </ScrollView>
+                        <ExpoStatusBar style="auto" />
+                    </KeyboardAvoidingView>
+                );
         }
     
     }

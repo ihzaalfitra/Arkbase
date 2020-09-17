@@ -11,9 +11,17 @@ import {
     TouchableOpacity
 } from 'react-native'
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import { AppLoading } from 'expo';
+import * as Font from 'expo-font';
 
 import default_styles from '../../assets/Stylesheet/styles.js';
 import firebase from '../../assets/Firebase/FirebaseDatabase.js';
+
+//List of all the custom font
+let customFonts = {
+  'Butler-Regular-Stencil': require('../../assets/Butler_Regular_Stencil.otf'),
+};
+
 
 class App extends Component {
 constructor() {
@@ -27,6 +35,7 @@ constructor() {
 	  return dim.height > dim.width;
 	};
 	this.state = {
+      fontsLoaded: false,
 	    matDatabase: [],
 	    matReq: [],
 	    isLoaded: false,
@@ -41,6 +50,12 @@ constructor() {
 		});
 	});
 
+}
+
+//method to load the font
+_loadFontsAsync = async() => {
+  await Font.loadAsync(customFonts);
+  this.setState({fontsLoaded: true});
 }
 
 
@@ -142,31 +157,37 @@ constructor() {
   componentDidMount() {
     this.loadDatabase()
     .then(() => this.setState({isLoaded: true}));
+    this._loadFontsAsync()
   }
 
   render(){
     let {container, itemText} = styles
 
-    return (
-      <View style = {{container,backgroundColor:'#000',paddingTop: 30,flex:9}}>
-
-		        <FlatList style = {{marginTop: 30}}
-					ListHeaderComponent={
-						<>
-							<Text style={default_styles.header}>Materials</Text>
-						</>
-					}
-
-					style = {{marginTop: 30}}
-		    		  data = {this.state.matDatabase}
-		          renderItem = {this._renderItem}
-		          keyExtractor = {(item, index) => index.toString()}
-		          numColumns = {this.state.numColumns}
-				  key= {this.state.numColumns}
-		    	  />
-        <ExpoStatusBar style="auto" />
-      </View>
-    )
+    switch(this.state.isLoaded) {
+      case false:
+        return <AppLoading/>
+      case true:
+        return (
+          <View style = {{container,backgroundColor:'#000' ,flex:9}}>
+    
+                <FlatList 
+              ListHeaderComponent={
+                <>
+                  <Text style={[default_styles.header, {fontFamily: 'Butler-Regular-Stencil', fontSize: 50, marginBottom: 30}]}>Materials</Text>
+                </>
+              }
+    
+              style = {{marginTop: 35}}
+                  data = {this.state.matDatabase}
+                  renderItem = {this._renderItem}
+                  keyExtractor = {(item, index) => index.toString()}
+                  numColumns = {this.state.numColumns}
+              key= {this.state.numColumns}
+                />
+            <ExpoStatusBar style="auto" />
+          </View>
+        )
+    }    
   }
 }
 
@@ -176,7 +197,6 @@ const styles = StyleSheet.create(
   {
   container: {
     flex:1,
-    paddingTop : 40,
   },
   itemText: {
     color:'#fff',
