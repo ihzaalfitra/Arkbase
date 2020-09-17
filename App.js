@@ -70,13 +70,12 @@ class MainClass extends Component {
                 </Tab.Navigator>
 				{/*under-nav admob*/}
 				<AdMobBanner
-				style={{width:"100%",marginLeft:0,marginRight:0}}
+				style={{width:"100%",marginLeft:0,marginRight:0,backgroundColor:'#000',height:'5%'}}
 				bannerSize="smartBannerLandscape"
 				adUnitID="ca-app-pub-3996172719278664/4877597674"
 				servePersonalizedAds={true}
 				onDidFailToReceiveAdWithError={this.bannerError} />
             </NavigationContainer>
-
 		)
 	}
 }

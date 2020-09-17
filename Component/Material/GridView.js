@@ -11,9 +11,6 @@ import {
     TouchableOpacity
 } from 'react-native'
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import {
-  AdMobBanner
-} from 'expo-ads-admob';
 
 import default_styles from '../../assets/Stylesheet/styles.js';
 import firebase from '../../assets/Firebase/FirebaseDatabase.js';
@@ -157,12 +154,6 @@ constructor() {
 					ListHeaderComponent={
 						<>
 							<Text style={default_styles.header}>Materials</Text>
-							<AdMobBanner
-							style={{width:"100%",marginLeft:0,marginRight:0}}
-							bannerSize="smartBannerLandscape"
-							adUnitID="ca-app-pub-3996172719278664/2164848008"
-							servePersonalizedAds={true}
-							onDidFailToReceiveAdWithError={this.bannerError} />
 						</>
 					}
 

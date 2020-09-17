@@ -10,8 +10,6 @@ import {
 } from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
-import Constants from "expo-constants";
-import { AdMobBanner } from "expo-ads-admob";
 
 import firebase from "../assets/Firebase/FirebaseDatabase.js";
 import styles from "../assets/Stylesheet/styles.js";
@@ -76,11 +74,6 @@ class SanityCalculator extends Component {
   async componentDidMount() {
     // Prompt notification permissions for ios
     let result = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-
-    if (Constants.isDevice && result.status === "granted") {
-      //console.log("Notification permissions granted.");
-    }
-
     // If we want to do something with the notification when the app
     // is active, we need to listen to notification events and
     // handle them in a callback
@@ -214,14 +207,6 @@ class SanityCalculator extends Component {
             }}
           >
             <Text style={styles.header}>Sanity Calculator</Text>
-            {/*under-title admob*/}
-            <AdMobBanner
-              style={{ width: "100%", marginLeft: 0, marginRight: 0 }}
-              bannerSize="smartBannerLandscape"
-              adUnitID="ca-app-pub-3996172719278664/7085878486"
-              servePersonalizedAds={true}
-              onDidFailToReceiveAdWithError={this.bannerError}
-            />
             <View style={picker.container}>
               <TextInput
                 style={this.styleUnderline(
