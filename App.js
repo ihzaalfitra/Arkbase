@@ -12,8 +12,13 @@ import ResourceCalculator from './Component/ResourceCalculator/ResourceCalculato
 import SanityCalculator from './Component/SanityCalculator.js';
 
 import {
-  AdMobBanner
+  AdMobBanner,
+  setTestDeviceIDAsync
 } from 'expo-ads-admob';
+
+/*This line is to disable the ads for development
+PLEASE COMMENT THIS LINE WHEN AT DEVELOPMENT, AND UNCOMMENT IT BEFORE BUILDING*/
+setTestDeviceIDAsync('EMULATOR');
 
 const Tab = createMaterialTopTabNavigator();
 
