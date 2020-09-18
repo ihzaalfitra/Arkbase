@@ -157,6 +157,7 @@ class SanityCalculator extends Component {
           >
             <Text style={styles.buttonText}>Set Notification</Text>
           </TouchableOpacity>
+          <Text style={styles.textLeft}>Pleaase turn off battery saver for this apps to recieve the notification</Text>
         </View>
       );
       //uninitialized errorStatement
